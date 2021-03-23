@@ -2,7 +2,7 @@
 #Date Started: 3/22/2021
 
 import pygame
-from constants import WIDTH, HEIGHT
+from Classes.constants import WIDTH, HEIGHT
 from Classes.game import Game
 
 FPS = 60
@@ -21,7 +21,6 @@ def main():
     game = Game(WIN)
     while running:
         clock.tick(FPS)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
