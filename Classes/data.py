@@ -17,19 +17,22 @@ class Data:
     def __init__(self, win):
         self.win = win
         self.deck = list(Card)
-        random.shuffle(self.deck)
+        #random.shuffle(self.deck)
         self.curr_bet = BIG_BLIND
         self.players = []
         self.pots = []
         self.table_cards = []
         self.player_hands = []
         self.dealer = 0
+        self.test_coversion()
+        '''
         self.init_players(8)
         self.deal()
         self.flop()
         self.turn()
         self.river()
         self.current_winner()
+        '''
 
     # @description - resets the data that changes with each hand
     # @param - None
@@ -121,7 +124,8 @@ class Data:
     # @param - card_rank   string 2-9 or T-A
     # @return - list of num_id. Needs to be a list because A can be high or low
     def conv_rank_to_int(self, card_rank):
-        m = re.fullmatch('[2-9]', card.rank)
+        card_rank = str(card_rank)
+        m = re.fullmatch('[2-9]', card_rank)
         if m != None: #2-9
             num_id = [int(card_rank)]
         else:
@@ -137,10 +141,16 @@ class Data:
                 num_id = [1,14]
         return num_id
 
+    def test_coversion(self):
+        for card in self.deck:
+            num_id = self.conv_rank_to_int(card.rank)
+            print(num_id)
+            
+
     # @description - will find straights, flushes, straight flushes, royal flushes
     # @param - player_num   finds the highest card type
     # @return - index of hand in HANDS
-    def check_straights_flushes(self, player_num)
+    def check_straights_flushes(self, player_num):
         player_cards = self.table_cards + self.player_hands[player_num]
         #1) store all values in a list 2) sort 3) increment values by one, if it successfully incremnets to next value
         # 5 times then it must be a straight 
@@ -148,7 +158,7 @@ class Data:
         for card in player_cards:
             player_cards_as_int.append(self.conv_rank_to_int(card.rank))
             #NOT DONE, testing card_rank conversion
-            
+
     # @description - determines a pair, 2 pair, 3 of kind, 4 of kind, and full house
     # @param - player_num  index of player being checked
     # @return - index of hand in HANDS
