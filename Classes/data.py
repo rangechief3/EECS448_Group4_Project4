@@ -11,6 +11,9 @@ from .player import Player
 class Data:
 
     #m = re.fullmatch('([2-9]|[ATJQK])[♣♦♠♥]', str(card))
+    # @description - SETS the game data, initializing the player classes
+    # @param - win    pygame WINDOW passed to players for printing purposes
+    # @return - None
     def __init__(self, win):
         self.win = win
         self.deck = list(Card)
@@ -28,18 +31,38 @@ class Data:
         self.river()
         self.current_winner()
 
+    # @description - resets the data that changes with each hand
+    # @param - None
+    # @return - None
+    def reset(self):
+        self.deck = list(Card)
+        random.shuffle(self.deck)
+        self.curr_bet = BIG_BLIND
+        self.pots = []
+        self.table_cards = []
+        self.player_hands = []
+        
+    # @description - Creates Player objects 
+    # @param - num_players   determines how many Player objects will be created
+    # @return - None
     def init_players(self, num_players):
         for i in range(num_players):
             self.players.append(Player(self.win, PLAYER_NAMES[i], i, START_STACK))
             #print(self.players[i].player_name)
-    
+
+    # @description - gives each player two cards, sending data to player and storing in self.player_hands
+    # @param - None
+    # @return - None
     def deal(self):
         for i in range(len(self.players)):
             hand = [self.deck.pop() for card in range(2)]
             self.player_hands.append(hand)
             self.players[i].receive_hand(hand)
             print(hand, self.players[i].player_name)
-   
+
+    # @description - draws three cards for the board, sending the data to players and storing in self.table_cards
+    # @param - None
+    # @return - None
     def flop(self):
         self.deck.pop() #burn one card before dealing
         for i in range(3):
@@ -48,6 +71,9 @@ class Data:
         for player in self.players:
             player.receive_board_cards(self.table_cards)
 
+    # @description - draws one card(the fourth on the board), and updates the data structures dependent on it
+    # @param - None
+    # @return - None
     def turn(self):
         self.deck.pop() #burn one card before_dealing
         self.table_cards.append(self.deck.pop())
@@ -55,6 +81,9 @@ class Data:
         for player in self.players:
             player.receive_board_cards(self.table_cards)
 
+    # @description - draws one card(the fifth on the board), and updates the data structures dependent on it
+    # @param - None
+    # @return - None
     def river(self):
         self.deck.pop() #burn one card before_dealing
         self.table_cards.append(self.deck.pop())
@@ -63,11 +92,17 @@ class Data:
         for player in self.players:
             player.receive_board_cards(self.table_cards)
 
+    # @description - determines the hands that each player has, and determines the winner
+    # @param - None
+    # @return - will return the winning player(s)
     def current_winner(self):
         for i in range(len(self.players)):
             hand_num = self.check_duplicates(i)
             print(self.players[i].player_name + " has a " + HANDS[hand_num])
 
+    # @description - determines if a player's hand is a flush
+    # @param - player_num   index of player being checked
+    # @return - True  if five cards of a suit exist 
     def is_flush(self, player_num): #returns true or false
         player_cards = self.table_cards + self.player_hands[player_num]
         suits = {}
@@ -82,6 +117,9 @@ class Data:
             return True
         return False
 
+    # @description - determines a pair, 2 pair, 3 of kind, 4 of kind, and full house
+    # @param - player_num  index of player being checked
+    # @return - index of hand in HANDS
     def check_duplicates(self, player_num): #will determine pairs, two pairs, three of a kind, four of a kind, full house
         player_cards = self.table_cards + self.player_hands[player_num]
         ranks = {} #dict with the number of a card as the key, points to the number of those cards
