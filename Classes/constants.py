@@ -10,3 +10,7 @@ BIG_BLIND = 10
 
 PLAYER_NAMES = ["Daniel Negreanu", "Bryn Kenney", "Phil Ivey", "Justin Bonomo",
                 "Erik Seidel", "Dan Smith", "Stephen Chidwick", "Tom Dwan"]
+SUITS = ['♣','♦','♠','♥']
+HANDS = ['High Card', 'Pair', 'Two Pair', 'Three of a kind', 
+        'Straight', 'Flush', 'Full House', 'Four of a kind',
+        'Straight Flush', 'Royal Flush']
