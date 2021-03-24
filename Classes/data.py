@@ -17,7 +17,7 @@ class Data:
     def __init__(self, win):
         self.win = win
         self.deck = list(Card)
-        #random.shuffle(self.deck)
+        random.shuffle(self.deck)
         self.curr_bet = BIG_BLIND
         self.players = []
         self.pots = []
@@ -25,14 +25,12 @@ class Data:
         self.player_hands = []
         self.dealer = 0
         self.test_coversion()
-        '''
         self.init_players(8)
         self.deal()
         self.flop()
         self.turn()
         self.river()
         self.current_winner()
-        '''
 
     # @description - resets the data that changes with each hand
     # @param - None
@@ -141,12 +139,6 @@ class Data:
                 num_id = [1,14]
         return num_id
 
-    def test_coversion(self):
-        for card in self.deck:
-            num_id = self.conv_rank_to_int(card.rank)
-            print(num_id)
-            
-
     # @description - will find straights, flushes, straight flushes, royal flushes
     # @param - player_num   finds the highest card type
     # @return - index of hand in HANDS
@@ -156,8 +148,30 @@ class Data:
         # 5 times then it must be a straight 
         player_cards_as_int = []
         for card in player_cards:
-            player_cards_as_int.append(self.conv_rank_to_int(card.rank))
-            #NOT DONE, testing card_rank conversion
+            rank_ints = self.conv_rank_to_int(card.rank)
+            for num in rank_ints:
+                player_cards_as_int.append(num)
+        player_cards_as_int.sort()
+
+        max_in_a_row = 0
+        for i in range(len(player_cards_as_int) - 1):
+            if (player_cards_as_int[i] + 1) == player_cards_as_int[i+1]:
+                max_in_a_row += 1
+                if max_in_a_row == 5:
+                    break
+            else:
+                max_in_a_row = 0
+        if max_in_a_row == 5 and self.is_flush(player_num):
+            royal_flush = [10, 11, 12, 13, 14] #must contain these items to have a royal flush
+            rflush = all(num1 in royal_flush for num2 in player_cards_as_int) #returns True if all elements in list1 exist in list2
+            if rFlush:
+                return 9 #royal flush
+            return 8 #straight flush
+        else:
+            if max_in_a_row == 5: #not a flush but a straight
+                return 4 #straight
+            return 5 #flush
+        
 
     # @description - determines a pair, 2 pair, 3 of kind, 4 of kind, and full house
     # @param - player_num  index of player being checked
