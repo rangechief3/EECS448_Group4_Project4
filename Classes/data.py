@@ -68,6 +68,20 @@ class Data:
             hand_num = self.check_duplicates(i)
             print(self.players[i].player_name + " has a " + HANDS[hand_num])
 
+    def is_flush(self, player_num): #returns true or false
+        player_cards = self.table_cards + self.player_hands[player_num]
+        suits = {}
+        max_in_suit = 0
+        for card in player_cards:
+            if card.suit in suits:
+                suits[card.suit] = suits[card.suite] + 1
+                max_in_suit = max(max_in_suit, suits[card.suit])
+            else:
+                suits[card.suit] = 1
+        if max_in_suit >= 5:
+            return True
+        return False
+
     def check_duplicates(self, player_num): #will determine pairs, two pairs, three of a kind, four of a kind, full house
         player_cards = self.table_cards + self.player_hands[player_num]
         ranks = {} #dict with the number of a card as the key, points to the number of those cards
