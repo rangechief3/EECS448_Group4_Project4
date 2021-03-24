@@ -24,7 +24,6 @@ class Data:
         self.table_cards = []
         self.player_hands = []
         self.dealer = 0
-        self.test_coversion()
         self.init_players(8)
         self.deal()
         self.flop()
@@ -42,7 +41,28 @@ class Data:
         self.pots = []
         self.table_cards = []
         self.player_hands = []
-        
+
+    '''
+    def test_flush(self): #used to set values of player cards rather than random
+        #['♣','♦','♠','♥']
+        self.player_hands.append([Card('K♥'), Card('2♥')]) #royal flush
+        self.player_hands.append([Card('8♥'), Card('9♥')]) #straight flush
+        self.player_hands.append([Card('7♦'), Card('7♥')]) #four of a kind
+        self.player_hands.append([Card('J♣'), Card('J♦')]) #full house
+        self.player_hands.append([Card('2♥'), Card('4♥')]) #flush
+        self.player_hands.append([Card('8♦'), Card('9♣')]) #straight
+        self.player_hands.append([Card('7♦'), Card('6♣')]) #3 of a kind
+        self.player_hands.append([Card('T♠'), Card('3♣')]) #2 pair
+        self.table_cards.append(Card('7♣'))
+        self.table_cards.append(Card('7♠'))
+        self.table_cards.append(Card('Q♥'))
+        self.table_cards.append(Card('J♥'))
+        self.table_cards.append(Card('T♥'))
+        for i in range(len(self.player_hands)):
+            print(self.player_hands[i], self.players[i].player_name)
+        self.current_winner()
+    '''
+
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
     # @return - None
@@ -55,6 +75,7 @@ class Data:
     # @param - None
     # @return - None
     def deal(self):
+        print("ROUND STARTING\n")
         for i in range(len(self.players)):
             hand = [self.deck.pop() for card in range(2)]
             self.player_hands.append(hand)
@@ -98,7 +119,7 @@ class Data:
     # @return - will return the winning player(s)
     def current_winner(self):
         for i in range(len(self.players)):
-            hand_num = self.check_duplicates(i)
+            hand_num = max(self.check_duplicates(i), self.check_straights_flushes(i))
             print(self.players[i].player_name + " has a " + HANDS[hand_num])
 
     # @description - determines if a player's hand is a flush
@@ -110,7 +131,7 @@ class Data:
         max_in_suit = 0
         for card in player_cards:
             if card.suit in suits:
-                suits[card.suit] = suits[card.suite] + 1
+                suits[card.suit] = suits[card.suit] + 1
                 max_in_suit = max(max_in_suit, suits[card.suit])
             else:
                 suits[card.suit] = 1
@@ -153,24 +174,29 @@ class Data:
                 player_cards_as_int.append(num)
         player_cards_as_int.sort()
 
-        max_in_a_row = 0
+        max_in_a_row = 1
         for i in range(len(player_cards_as_int) - 1):
             if (player_cards_as_int[i] + 1) == player_cards_as_int[i+1]:
                 max_in_a_row += 1
                 if max_in_a_row == 5:
                     break
             else:
-                max_in_a_row = 0
+                max_in_a_row = 1
         if max_in_a_row == 5 and self.is_flush(player_num):
-            royal_flush = [10, 11, 12, 13, 14] #must contain these items to have a royal flush
-            rflush = all(num1 in royal_flush for num2 in player_cards_as_int) #returns True if all elements in list1 exist in list2
-            if rFlush:
+            r_flush_lst = [10, 11, 12, 13, 14]
+            overlap = set(player_cards_as_int).intersection(r_flush_lst) #removes any items not in both lists
+            r_flush_lst = set(r_flush_lst)
+
+            if r_flush_lst == overlap: 
                 return 9 #royal flush
             return 8 #straight flush
         else:
             if max_in_a_row == 5: #not a flush but a straight
                 return 4 #straight
-            return 5 #flush
+            elif self.is_flush(player_num):
+                return 5 #flush'
+            else:
+                return 0 #neither straight nor flush
         
 
     # @description - determines a pair, 2 pair, 3 of kind, 4 of kind, and full house
