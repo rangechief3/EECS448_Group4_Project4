@@ -5,7 +5,7 @@ import random
 import re
 #from pokercards import cards
 from poker import Card
-from .constants import BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
+from .constants import SMALL_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
 from .player import Player
 
 class Data:
@@ -18,11 +18,11 @@ class Data:
         self.win = win
         self.deck = list(Card)
         random.shuffle(self.deck)
-        self.curr_bet = BIG_BLIND
         self.players = []
         self.pots = []
         self.table_cards = []
         self.player_hands = []
+        self.player_active = []
         self.dealer = 0
         self.init_players(8)
         self.deal()
@@ -31,37 +31,55 @@ class Data:
         self.river()
         self.current_winner()
 
+    # @description - gets the player bet for each player, keeping track of pots
+    # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
+    # @return - True  if a player takes down the pot  False  if two players remain
+    def get_player_bets(self):
+        # 1) get player_stacks(for keeping track of pots) 2) will take blinds, then go around for bets
+        # 3) determine who folds, updating self.player_active 4) if it goes around to original better w/o raise
+        # end betting
+        if bet_round >= 0  and bet_round <= 3:
+                player_stacks = []
+                for player in self.players:
+                    player_stacks.append(player.stack)
+                done_betting = False
+            if bet_round == 0:
+                self.players[self.dealer + 1].blind(SMALL_BLIND) #value may not be equal to blind if player has less
+                self.players[self.dealer + 2].blind(BIG_BLIND)
+                curr_bet = BIG_BLIND
+                curr_player = self.dealer + 3 #Under the gun
+            else:
+                curr_bet = 0
+                curr_player = self.dealer + 1 #small blind 
+            while not done_betting:
+                if curr_player >= len(self.players):
+                    curr_player - len(self.players)
+                #NOT DONE
+        else:
+            print("ERROR invalid betting turn")
+            
+    # @description - resets the data that changes with each hand
+    # @param - player_num   Int for player index   
+    # @param - amt   Int for amount bet
+    # @param - curr_bet Int for amount of current bet
+    # @return - None
+    def add_to_pot(self, player_num, amt, curr_bet):
+        # 1)check if the bet is less than the current bet,  if so a side pot
+        # needs to be created/ the current side pots need to be checked 
+        # 2) determine which players are eligible for a certain pot 
+        #yikes hard
+        #NOT DONE
+
     # @description - resets the data that changes with each hand
     # @param - None
     # @return - None
     def reset(self):
         self.deck = list(Card)
         random.shuffle(self.deck)
-        self.curr_bet = BIG_BLIND
+        self.curr_bet = 0
         self.pots = []
         self.table_cards = []
         self.player_hands = []
-
-    '''
-    def test_flush(self): #used to set values of player cards rather than random
-        #['♣','♦','♠','♥']
-        self.player_hands.append([Card('K♥'), Card('2♥')]) #royal flush
-        self.player_hands.append([Card('8♥'), Card('9♥')]) #straight flush
-        self.player_hands.append([Card('7♦'), Card('7♥')]) #four of a kind
-        self.player_hands.append([Card('J♣'), Card('J♦')]) #full house
-        self.player_hands.append([Card('2♥'), Card('4♥')]) #flush
-        self.player_hands.append([Card('8♦'), Card('9♣')]) #straight
-        self.player_hands.append([Card('7♦'), Card('6♣')]) #3 of a kind
-        self.player_hands.append([Card('T♠'), Card('3♣')]) #2 pair
-        self.table_cards.append(Card('7♣'))
-        self.table_cards.append(Card('7♠'))
-        self.table_cards.append(Card('Q♥'))
-        self.table_cards.append(Card('J♥'))
-        self.table_cards.append(Card('T♥'))
-        for i in range(len(self.player_hands)):
-            print(self.player_hands[i], self.players[i].player_name)
-        self.current_winner()
-    '''
 
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
@@ -69,6 +87,7 @@ class Data:
     def init_players(self, num_players):
         for i in range(num_players):
             self.players.append(Player(self.win, PLAYER_NAMES[i], i, START_STACK))
+            self.player_active.append(True)
             #print(self.players[i].player_name)
 
     # @description - gives each player two cards, sending data to player and storing in self.player_hands
@@ -231,7 +250,26 @@ class Data:
         else:
             return 0 #did not find anything
         
-                    
+          '''
+    def test_flush(self): #used to set values of player cards rather than random
+        #['♣','♦','♠','♥']
+        self.player_hands.append([Card('K♥'), Card('2♥')]) #royal flush
+        self.player_hands.append([Card('8♥'), Card('9♥')]) #straight flush
+        self.player_hands.append([Card('7♦'), Card('7♥')]) #four of a kind
+        self.player_hands.append([Card('J♣'), Card('J♦')]) #full house
+        self.player_hands.append([Card('2♥'), Card('4♥')]) #flush
+        self.player_hands.append([Card('8♦'), Card('9♣')]) #straight
+        self.player_hands.append([Card('7♦'), Card('6♣')]) #3 of a kind
+        self.player_hands.append([Card('T♠'), Card('3♣')]) #2 pair
+        self.table_cards.append(Card('7♣'))
+        self.table_cards.append(Card('7♠'))
+        self.table_cards.append(Card('Q♥'))
+        self.table_cards.append(Card('J♥'))
+        self.table_cards.append(Card('T♥'))
+        for i in range(len(self.player_hands)):
+            print(self.player_hands[i], self.players[i].player_name)
+        self.current_winner()
+    '''              
 
 
 
