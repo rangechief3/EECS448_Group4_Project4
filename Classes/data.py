@@ -5,7 +5,7 @@ import random
 import re
 #from pokercards import cards
 from poker import Card
-from .constants import SMALL_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
+from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
 from .player import Player
 
 class Data:
@@ -21,31 +21,41 @@ class Data:
         self.players = []
         self.pots = []
         self.table_cards = []
+        self.player_prev_bets = []
         self.player_hands = []
         self.player_active = []
         self.dealer = 0
         self.init_players(8)
         self.deal()
+        self.get_player_bets(0)
         self.flop()
+        self.get_player_bets(1)
         self.turn()
+        self.get_player_bets(2)
         self.river()
+        self.get_player_bets(3)
         self.current_winner()
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
     # @return - True  if a player takes down the pot  False  if two players remain
-    def get_player_bets(self):
+    def get_player_bets(self, bet_round):
         # 1) get player_stacks(for keeping track of pots) 2) will take blinds, then go around for bets
         # 3) determine who folds, updating self.player_active 4) if it goes around to original better w/o raise
         # end betting
         if bet_round >= 0  and bet_round <= 3:
-                player_stacks = []
-                for player in self.players:
-                    player_stacks.append(player.stack)
-                done_betting = False
+            player_stacks = []
+            for player in self.players:
+                player_stacks.append(player.stack)
+            done_betting = False
+            counter = 0
             if bet_round == 0:
-                self.players[self.dealer + 1].blind(SMALL_BLIND) #value may not be equal to blind if player has less
-                self.players[self.dealer + 2].blind(BIG_BLIND)
+                blind = self.players[self.dealer + 1].blind(SM_BLIND)
+                self.player_prev_bets[self.dealer + 1] = blind
+                self.add_to_pot(self.dealer + 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
+                blind = self.players[self.dealer + 2].blind(BIG_BLIND)
+                self.player_prev_bets[self.dealer + 2] = blind
+                self.add_to_pot(self.dealer + 2, blind, BIG_BLIND, bet_round)
                 curr_bet = BIG_BLIND
                 curr_player = self.dealer + 3 #Under the gun
             else:
@@ -53,8 +63,25 @@ class Data:
                 curr_player = self.dealer + 1 #small blind 
             while not done_betting:
                 if curr_player >= len(self.players):
-                    curr_player - len(self.players)
-                #NOT DONE
+                    curr_player -= len(self.players)
+                if self.player_active[curr_player]:
+                    bet = self.players[curr_player].bet(curr_bet, self.player_prev_bets[curr_player])
+                    self.player_prev_bets[curr_player] = bet
+                    if bet != -1:
+                        print(self.players[curr_player].player_name + " bet " + str(bet) + "!\n")
+                        self.add_to_pot(curr_player, bet, curr_bet, bet_round)
+                        if bet > curr_bet:
+                            counter = 0
+                            curr_bet = bet
+                    else:
+                        self.player_active[curr_player] = False
+                counter += 1
+                if counter == len(self.players):
+                    done_betting = True
+                curr_player += 1
+            for i in range(len(self.player_prev_bets)):
+                self.player_prev_bets[i] = 0
+            print(self.pots)
         else:
             print("ERROR invalid betting turn")
             
@@ -62,13 +89,23 @@ class Data:
     # @param - player_num   Int for player index   
     # @param - amt   Int for amount bet
     # @param - curr_bet Int for amount of current bet
+    # @param - bet_round Int for number of betting round (0-3)
     # @return - None
-    def add_to_pot(self, player_num, amt, curr_bet):
-        # 1)check if the bet is less than the current bet,  if so a side pot
-        # needs to be created/ the current side pots need to be checked 
-        # 2) determine which players are eligible for a certain pot 
-        #yikes hard
-        #NOT DONE
+    def add_to_pot(self, player_num, amt, curr_bet, bet_round):
+        #CASES
+        #  -no pot
+        #  -create side pot
+        #  -add to pot
+        #TESTING NO SIDE POTS
+        if len(self.pots) == 0:
+            
+            pot_list = [amt, bet_round, curr_bet, player_num, amt] #[total, betting round, current bet, player1 ... playerk]
+            self.pots.append(pot_list)
+        else:
+            for pot in self.pots:
+                if player_num not in pot:
+                    pot.append(player_num)
+                pot[0] += amt
 
     # @description - resets the data that changes with each hand
     # @param - None
@@ -88,6 +125,7 @@ class Data:
         for i in range(num_players):
             self.players.append(Player(self.win, PLAYER_NAMES[i], i, START_STACK))
             self.player_active.append(True)
+            self.player_prev_bets.append(0)
             #print(self.players[i].player_name)
 
     # @description - gives each player two cards, sending data to player and storing in self.player_hands
@@ -234,9 +272,11 @@ class Data:
                 max_of_a_kind = max(max_of_a_kind, ranks[card.rank])
             else:
                 ranks[card.rank] = 1
+        '''
         print(ranks)
         print("max of a kind", max_of_a_kind)
         print("pairs", pairs)
+        '''
         if max_of_a_kind == 4:
             return 7 #four of a kind
         elif max_of_a_kind == 3:
@@ -250,7 +290,7 @@ class Data:
         else:
             return 0 #did not find anything
         
-          '''
+    '''
     def test_flush(self): #used to set values of player cards rather than random
         #['♣','♦','♠','♥']
         self.player_hands.append([Card('K♥'), Card('2♥')]) #royal flush

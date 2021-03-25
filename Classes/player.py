@@ -11,8 +11,13 @@ class Player:
     def receive_board_cards(self, cards): #list of cards. WILL be duplicates
         pass
 
-    def bet(self, curr_bet):
-        pass #return 0 for check, curr_bet for call, higher value for raise, -1 for fold
+    def bet(self, curr_bet, prev_bet):
+        if curr_bet == 0:
+            self.stack -= (10 + prev_bet)
+            return 10 - prev_bet
+        self.stack -= (curr_bet + prev_bet)
+        return curr_bet - prev_bet
+        #return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         #reduce player stack by bet amount then return it
 
     def blind(self, blind_amt): #check if the player has that much, if so, return that much 
