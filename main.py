@@ -27,6 +27,7 @@ player.draw_board()
 other_players = []
 for i in range(len(PLAYER_NAMES)):
     other_players.append(Player(WIN, PLAYER_NAMES[i], i, 1000))
+    print(other_players[i])
     other_players[i].receive_hand([(i, 'J'), (i, 'K')])
 player.draw_opponents(other_players)
 
@@ -46,27 +47,35 @@ player.draw_opponents(other_players)
 # Drew card on board 3 K
 # Drew card on board 4 K
 # Drew card on board 5 K
+# Player Name: Daniel Negreanu --- Player Number: 0
 # Recieving cards for Daniel Negreanu
 # 	Card number: 0 Card suit: J
 # 	Card number: 0 Card suit: K
+# Player Name: Bryn Kenney --- Player Number: 1
 # Recieving cards for Bryn Kenney
 # 	Card number: 1 Card suit: J
 # 	Card number: 1 Card suit: K
+# Player Name: Phil Ivey --- Player Number: 2
 # Recieving cards for Phil Ivey
 # 	Card number: 2 Card suit: J
 # 	Card number: 2 Card suit: K
+# Player Name: Justin Bonomo --- Player Number: 3
 # Recieving cards for Justin Bonomo
 # 	Card number: 3 Card suit: J
 # 	Card number: 3 Card suit: K
+# Player Name: Erik Seidel --- Player Number: 4
 # Recieving cards for Erik Seidel
 # 	Card number: 4 Card suit: J
 # 	Card number: 4 Card suit: K
+# Player Name: Dan Smith --- Player Number: 5
 # Recieving cards for Dan Smith
 # 	Card number: 5 Card suit: J
 # 	Card number: 5 Card suit: K
+# Player Name: Stephen Chidwick --- Player Number: 6
 # Recieving cards for Stephen Chidwick
 # 	Card number: 6 Card suit: J
 # 	Card number: 6 Card suit: K
+# Player Name: Tom Dwan --- Player Number: 7
 # Recieving cards for Tom Dwan
 # 	Card number: 7 Card suit: J
 # 	Card number: 7 Card suit: K
