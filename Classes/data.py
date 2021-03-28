@@ -34,7 +34,8 @@ class Data:
         self.get_player_bets(2)
         self.river()
         self.get_player_bets(3)
-        self.current_winner()
+        winner, hand = self.current_winner()
+        print(self.players[winner].player_name + "WON with a " + HANDS[hand] + "!\n")
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
@@ -175,9 +176,16 @@ class Data:
     # @param - None
     # @return - will return the winning player(s)
     def current_winner(self):
+        best_hand = 0
+        player_winner = 0
         for i in range(len(self.players)):
             hand_num = max(self.check_duplicates(i), self.check_straights_flushes(i))
+            if hand_num > best_hand:
+                player_winner = i
+                best_hand = hand_num
+            best_hand = max(best_hand, hand_num)
             print(self.players[i].player_name + " has a " + HANDS[hand_num])
+        return player_winner, best_hand
 
     # @description - determines if a player's hand is a flush
     # @param - player_num   index of player being checked
