@@ -30,13 +30,13 @@ class Data:
         
         self.deal()
         self.get_player_bets(0)
-        '''
         self.flop()
         self.get_player_bets(1)
         self.turn()
         self.get_player_bets(2)
         self.river()
         self.get_player_bets(3)
+        '''
         winner, hand = self.current_winner()
         print(self.players[winner].player_name + " WON with a " + HANDS[hand] + "!\n")
         '''
@@ -48,7 +48,6 @@ class Data:
         # 1) get player_stacks(for keeping track of pots) 2) will take blinds, then go around for bets
         # 3) determine who folds, updating self.player_active 4) if it goes around to original better w/o raise
         # end betting
-        if bet_round >= 0  and bet_round <= 3:
             player_stacks = []
             for player in self.players:
                 player_stacks.append(player.stack)
@@ -57,24 +56,26 @@ class Data:
             counter = 0
             if bet_round == 0:
                 blind = self.players[self.dealer + 1].blind(SM_BLIND)
-                self.player_prev_bets[self.dealer + 1] = blind
+                self.player_prev_bets[self.dealer + 1] = blind #if someone raises they would have to call <bet> - <prevbet>
+                print(self.players[self.dealer + 1].player_name + " put in " + str(blind) + " as small blind!")
                 self.add_to_pot(self.dealer + 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
                 blind = self.players[self.dealer + 2].blind(BIG_BLIND)
                 self.player_prev_bets[self.dealer + 2] = blind
+                print(self.players[self.dealer + 2].player_name + " put in " + str(blind) + " as big blind!")
                 self.add_to_pot(self.dealer + 2, blind, BIG_BLIND, bet_round)
                 curr_bet = BIG_BLIND
                 curr_player = self.dealer + 3 #Under the gun
             else:
                 curr_bet = 0
                 curr_player = self.dealer + 1 #small blind 
-            while not done_betting:
+            while not done_betting:  #current player and current bet are set
                 if curr_player >= len(self.players):
-                    curr_player -= len(self.players)
+                    curr_player = 0
                 if self.player_active[curr_player]:
-                    bet = self.players[curr_player].bet(curr_bet, self.player_prev_bets[curr_player])
+                    bet = self.players[curr_player].bet(curr_bet, self.player_prev_bets[curr_player]) #WILL BECOME take_a_turn()
                     self.player_prev_bets[curr_player] = bet
-                    if bet != -1:
-                        print(self.players[curr_player].player_name + " bet " + str(bet) + "!\n")
+                    if bet != -1: # a fold
+                        print(self.players[curr_player].player_name + " bet " + str(bet) + "!")
                         self.add_to_pot(curr_player, bet, curr_bet, bet_round)
                         if bet > curr_bet:
                             counter = 0
@@ -82,14 +83,12 @@ class Data:
                     else:
                         self.player_active[curr_player] = False
                 counter += 1
-                if counter == len(self.players):
+                if counter == len(self.players): #if it has gone to all players without a raise
                     done_betting = True
                 curr_player += 1
-            for i in range(len(self.player_prev_bets)):
+            for i in range(len(self.player_prev_bets)): #resets player previous bets to zero at the concusion of the round
                 self.player_prev_bets[i] = 0
             print(self.pots)
-        else:
-            print("ERROR invalid betting turn")
             
     # @description - resets the data that changes with each hand
     # @param - player_num   Int for player index   
@@ -104,13 +103,17 @@ class Data:
         #  -add to pot
         #TESTING NO SIDE POTS
         if len(self.pots) == 0:
-            
-            pot_list = [amt, bet_round, curr_bet, player_num, amt] #[total, betting round, current bet, player1 ... playerk]
+            pot_list = [amt, bet_round, curr_bet, [player_num]] #[total, betting round, current bet, player1 ... playerk]
             self.pots.append(pot_list)
         else:
             for pot in self.pots:
-                if player_num not in pot:
-                    pot.append(player_num)
+                if bet_round > pot[1]:
+                    pot[1] = bet_round
+                    curr_bet = 0
+                if amt > pot[2]:
+                    pot[2] = amt
+                if player_num not in pot[3]:
+                    pot[3].append(player_num)
                 pot[0] += amt
 
     # @description - resets the data that changes with each hand
@@ -146,39 +149,51 @@ class Data:
             print(self.players[i].player_name)
             for j in range(2):
                 print(self.player_hands[i][j])
-            print('\n')
 
     # @description - draws three cards for the board, sending the data to players and storing in self.table_cards
     # @param - None
     # @return - None
     def flop(self):
         self.deck.pop() #burn one card before dealing
+        new_cards = []
+        print("FLOP!")
         for i in range(3):
-            self.table_cards.append(self.deck.pop())
-        #print(self.table_cards)
+            new_cards.append(self.deck.pop())
+            print(new_cards[i].str_rank, new_cards[i].str_suit)
+        self.table_cards.extend(new_cards)
+        
         for player in self.players:
-            player.receive_board_cards(self.table_cards)
+            player.receive_board_cards(new_cards)
 
     # @description - draws one card(the fourth on the board), and updates the data structures dependent on it
     # @param - None
     # @return - None
     def turn(self):
         self.deck.pop() #burn one card before_dealing
-        self.table_cards.append(self.deck.pop())
-        #print(self.table_cards)
+        new_card = []
+        new_card.append(self.deck.pop())
+        self.table_cards.extend(new_card)
+        print("TURN!")
+        for card in self.table_cards:
+            print(card.str_rank, card.str_suit)
+
         for player in self.players:
-            player.receive_board_cards(self.table_cards)
+            player.receive_board_cards(new_card)
 
     # @description - draws one card(the fifth on the board), and updates the data structures dependent on it
     # @param - None
     # @return - None
     def river(self):
         self.deck.pop() #burn one card before_dealing
-        self.table_cards.append(self.deck.pop())
-        print(self.table_cards)
-        print('\n')
+        new_card = []
+        new_card.append(self.deck.pop())
+        self.table_cards.extend(new_card)
+        print("RIVER")
+        for card in self.table_cards:
+            print(card.str_rank, card.str_suit)
+
         for player in self.players:
-            player.receive_board_cards(self.table_cards)
+            player.receive_board_cards(new_card)
 
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
