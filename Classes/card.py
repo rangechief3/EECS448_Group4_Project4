@@ -26,3 +26,6 @@ class Card:
                 self.str_rank = 'K'
             if self.rank == 12:
                 self.str_rank = 'A'
+
+    def __str__(self):
+        return "{0}  {1}".format(self.str_rank, self.str_suit)

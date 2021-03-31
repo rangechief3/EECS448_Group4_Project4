@@ -29,8 +29,8 @@ class Data:
         self.init_players(8)
         
         self.deal()
-        '''
         self.get_player_bets(0)
+        '''
         self.flop()
         self.get_player_bets(1)
         self.turn()
@@ -52,6 +52,7 @@ class Data:
             player_stacks = []
             for player in self.players:
                 player_stacks.append(player.stack)
+                
             done_betting = False
             counter = 0
             if bet_round == 0:
@@ -142,7 +143,10 @@ class Data:
             hand = [self.deck.pop() for card in range(2)]
             self.player_hands.append(hand)
             self.players[i].receive_hand(hand)
-            print(hand, self.players[i].player_name)
+            print(self.players[i].player_name)
+            for j in range(2):
+                print(self.player_hands[i][j])
+            print('\n')
 
     # @description - draws three cards for the board, sending the data to players and storing in self.table_cards
     # @param - None
