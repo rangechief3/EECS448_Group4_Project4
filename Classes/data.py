@@ -1,10 +1,10 @@
 # Auther: Jake Wagner
 # Date Started: 3.24.2021
+# Date branch made: 3.31.2021
 
 import random
 import re
-#from pokercards import cards
-from poker import Card
+from .card import Card
 from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
 from .player import Player
 
@@ -16,7 +16,8 @@ class Data:
     # @return - None
     def __init__(self, win):
         self.win = win
-        self.deck = list(Card)
+        
+        self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
         self.players = []
         self.pots = []
@@ -26,7 +27,9 @@ class Data:
         self.player_active = []
         self.dealer = 0
         self.init_players(8)
+        
         self.deal()
+        '''
         self.get_player_bets(0)
         self.flop()
         self.get_player_bets(1)
@@ -35,7 +38,8 @@ class Data:
         self.river()
         self.get_player_bets(3)
         winner, hand = self.current_winner()
-        print(self.players[winner].player_name + "WON with a " + HANDS[hand] + "!\n")
+        print(self.players[winner].player_name + " WON with a " + HANDS[hand] + "!\n")
+        '''
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
