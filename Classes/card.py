@@ -51,8 +51,8 @@ class Card:
 
     def draw(self, win, topX, topY):
         win.fill((255,255,255)) ############GET RID OF THIS
-        pygame.draw.rect(win, (0,0,0), (topX, topY, CARDW, CARDH))
-        pygame.draw.rect(win, (255,255,255), (topX + OUTLINEBUFF, topY + OUTLINEBUFF, CARDW - 2*OUTLINEBUFF, CARDH - 2*OUTLINEBUFF))
+        pygame.draw.rect(win, (0,0,0), (topX, topY, CARDW, CARDH), 7, 7)
+        pygame.draw.rect(win, (255,255,255), (topX + OUTLINEBUFF, topY + OUTLINEBUFF, CARDW - 2*OUTLINEBUFF, CARDH - 2*OUTLINEBUFF), 3, 3)
         win.blit(self.suit_pic, ((topX + CARDW//2) - self.suit_pic.get_width()//2, (topY + CARDH//2) - self.suit_pic.get_height()//2))
         font = pygame.font.SysFont('Arial',25)
         text = font.render(self.rank_str, 1, self.color)
