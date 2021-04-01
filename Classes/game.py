@@ -8,81 +8,41 @@ class Game:
 
     def update(self):
         pygame.display.update()
-    def gameCycle():
+    def gameCycle(self):
         playerArray = self.updatePlayers();
         self.deal();
         gamePhase = 0
+        self.update();
         while(gameInProgress == True)
         {
-            while(allplayerscall = False)
-            {
-                PlayerWhoRaised = -1;
-                for (i = 0; i< playerArray.length; i++)
-                {
-                    if(PlayerWhoRaised == i)
-                    {
-                        break;
-                    }
-                    playerBet = self.playerTurn(i);
-                    if (playerBet == currentbet)
-                    {
-                        #call
-                    }
-                    else if (playerBet > currentbet)
-                    {
-                        #raise
-                        PlayerWhoRaised = i;
-                        currentbet = playerBet;
-                    }
-                    else if (playerBet < currentbet)
-                    {
-                        #fold
-                    } 
-                    
-                }
+            Data.get_player_bets(gamePhase);  
 
-                allplayerscall = true;
-                for (i = 0; i< playerArray.length; i++)
-                {
-                    if (playerArray[i].bet != currentbet)
-                    {
-                        allplayerscall = false;
-                    }
-                }
-                
-            }
-            
-            
             if (gamePhase == 0)
             {
-                #doflop
+                self.data.flop();
+                self.update();
             }
             else if(gamePhase == 1)
             {
-                #flipnext card
+                self.data.turn();
+                self.update();
             }
             else if(gamePhase == 2)
             {
-                #flipnext card
+                self.data.river();
+                self.update();
             }
             else if(gamePhase == 3)
             {
-                #decide winner
-                #gameInProgress = false;
+                self.data.end_game(self);
+                gameInProgress = False;
+                self.update();
+                self.data.reset();
             }
             gamePhase++
         }
-        
-    def deal():
-        #give each player 2 cards
 
     def updatePlayers():
         #check if any players are wating in queue
         #check if any players want to leave
         #return player array
-
-    def playerTurn(playerNumber):
-        {
-            currPlayer = playerArray[i];
-            currPlayer
-        }
