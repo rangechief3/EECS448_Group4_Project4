@@ -19,13 +19,25 @@ class Game:
                 PlayerWhoRaised = -1;
                 for (i = 0; i< playerArray.length; i++)
                 {
-                    if(PlayerWhoRaised = i)
+                    if(PlayerWhoRaised == i)
                     {
                         break;
                     }
-                    #ask player their choice
-                    #if call continue
-                    #if raise then set that player to playerwhoraised and set current bet to their bet
+                    playerBet = self.playerTurn(i);
+                    if (playerBet == currentbet)
+                    {
+                        #call
+                    }
+                    else if (playerBet > currentbet)
+                    {
+                        #raise
+                        PlayerWhoRaised = i;
+                        currentbet = playerBet;
+                    }
+                    else if (playerBet < currentbet)
+                    {
+                        #fold
+                    } 
                     
                 }
 
@@ -69,4 +81,8 @@ class Game:
         #check if any players want to leave
         #return player array
 
-    
+    def playerTurn(playerNumber):
+        {
+            currPlayer = playerArray[i];
+            currPlayer
+        }
