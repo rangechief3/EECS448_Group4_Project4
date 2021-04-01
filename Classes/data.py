@@ -3,11 +3,15 @@
 # Date branch made: 3.31.2021
 
 import random
-import re
 from .card import Card
 from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
 from .player import Player
 
+###TODO
+# award_winners()
+# pot management
+# issue with high cards/determining winner for ALL cards not just the most important
+# calculating hand each turn and then sending to player. important for 
 class Data:
 
     #m = re.fullmatch('([2-9]|[ATJQK])[♣♦♠♥]', str(card))
@@ -27,7 +31,6 @@ class Data:
         self.player_active = []
         self.dealer = 0
         self.init_players(8)
-        
         self.deal()
         self.get_player_bets(0)
         self.flop()
@@ -36,10 +39,9 @@ class Data:
         self.get_player_bets(2)
         self.river()
         self.get_player_bets(3)
-        '''
-        winner, hand = self.current_winner()
-        print(self.players[winner].player_name + " WON with a " + HANDS[hand] + "!\n")
-        '''
+        winner, hand, high_card = self.current_winner()
+        print(self.players[winner].player_name + " WON with a " + HANDS[hand] + " High Card: " + str(high_card) +  "!\n")
+        
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
@@ -195,20 +197,53 @@ class Data:
         for player in self.players:
             player.receive_board_cards(new_card)
 
+    # @description - awards winning player earnings, resets data
+    # @param - None
+    # @return - None
+    def end_game(self):
+        winner, hand, high_card = self.current_winner()
+        self.award_winnings()
+        self.reset()
+
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
     # @return - will return the winning player(s)
     def current_winner(self):
         best_hand = 0
+        best_high_card = 0
         player_winner = 0
+        high_card_tiebreaker = 0
+        highest_duplicate_hand = 0
+        highest_duplicate_card = 0
+        highest_specials_hand = 0
+        highest_specials_card = 0
+
         for i in range(len(self.players)):
-            hand_num = max(self.check_duplicates(i), self.check_straights_flushes(i))
-            if hand_num > best_hand:
+            highest_duplicate_hand, highest_duplicate_card = self.check_duplicates(i)
+            highest_specials_hand, highest_duplicate_card = self.check_straights_flushes(i)
+            temp_hand_num = max(highest_duplicate_hand, highest_specials_hand)
+            
+            if highest_duplicate_hand > highest_specials_card:
+                temp_high_card = highest_duplicate_card
+            else:
+                temp_high_card = highest_specials_card
+
+            if temp_hand_num == best_hand: #i.e. both have a two pair
+                if temp_high_card > best_high_card:
+                    player_winner = i
+            elif temp_hand_num > best_hand:
                 player_winner = i
-                best_hand = hand_num
-            best_hand = max(best_hand, hand_num)
-            print(self.players[i].player_name + " has a " + HANDS[hand_num])
-        return player_winner, best_hand
+            #update the best hand and high cards    
+            best_hand = max(best_hand, temp_hand_num)
+            best_high_card = max(best_high_card, temp_high_card)
+            print(self.players[i].player_name + " has a " + HANDS[temp_hand_num])
+            player_info = []
+            for card in self.player_hands[i]:
+                player_info.append([card.str_rank + str(card.rank) + card.str_suit])
+            for card in self.table_cards:
+                player_info.append([card.str_rank + str(card.rank) + card.str_suit])
+            print(player_info)
+        return player_winner, best_hand, best_high_card
 
     # @description - determines if a player's hand is a flush
     # @param - player_num   index of player being checked
@@ -227,66 +262,50 @@ class Data:
             return True
         return False
     
-    # @description - converts card_rank to an integer for straight comparisons
-    # @param - card_rank   string 2-9 or T-A
-    # @return - list of num_id. Needs to be a list because A can be high or low
-    def conv_rank_to_int(self, card_rank):
-        card_rank = str(card_rank)
-        m = re.fullmatch('[2-9]', card_rank)
-        if m != None: #2-9
-            num_id = [int(card_rank)]
-        else:
-            if card_rank == 'T':
-                num_id = [10]
-            elif card_rank == 'J':
-                num_id = [11]
-            elif card_rank == 'Q':
-                num_id = [12]
-            elif card_rank == 'K':
-                num_id = [13]
-            elif card_rank == 'A':
-                num_id = [1,14]
-        return num_id
 
     # @description - will find straights, flushes, straight flushes, royal flushes
     # @param - player_num   finds the highest card type
     # @return - index of hand in HANDS
     def check_straights_flushes(self, player_num):
-        player_cards = self.table_cards + self.player_hands[player_num]
+        player_cards_temp = self.table_cards + self.player_hands[player_num]
         #1) store all values in a list 2) sort 3) increment values by one, if it successfully incremnets to next value
-        # 5 times then it must be a straight 
-        player_cards_as_int = []
-        for card in player_cards:
-            rank_ints = self.conv_rank_to_int(card.rank)
-            for num in rank_ints:
-                player_cards_as_int.append(num)
-        player_cards_as_int.sort()
+        # 5 times then it must be a straight
+        player_cards = []
+        for card in player_cards_temp:
+            player_cards.append(card.rank)
 
+        highest_card = 0
+        player_cards.sort()
         max_in_a_row = 1
-        for i in range(len(player_cards_as_int) - 1):
-            if (player_cards_as_int[i] + 1) == player_cards_as_int[i+1]:
+        for i in range(len(player_cards) - 1):
+            if (player_cards[i] + 1) == player_cards[i+1]:
                 max_in_a_row += 1
                 if max_in_a_row == 5:
+                    highest_card == player_cards[i+1]
                     break
             else:
                 max_in_a_row = 1
         if max_in_a_row == 5 and self.is_flush(player_num):
             r_flush_lst = [10, 11, 12, 13, 14]
-            overlap = set(player_cards_as_int).intersection(r_flush_lst) #removes any items not in both lists
+            overlap = set(player_cards).intersection(r_flush_lst) #removes any items not in both lists
             r_flush_lst = set(r_flush_lst)
 
             if r_flush_lst == overlap: 
-                return 9 #royal flush
-            return 8 #straight flush
+                
+                return 9, highest_card #royal flush
+            return 8, highest_card #straight flush
         else:
             if max_in_a_row == 5: #not a flush but a straight
-                return 4 #straight
+                return 4, highest_card #straight
             elif self.is_flush(player_num):
-                return 5 #flush'
+                for card in player_cards:
+                    highest_card =max(highest_card, card)       
+                return 5, highest_card #flush'
             else:
-                return 0 #neither straight nor flush
+                for card in player_cards:
+                    highest_card =max(highest_card, card)
+                return 0, highest_card #neither straight nor flush
         
-
     # @description - determines a pair, 2 pair, 3 of kind, 4 of kind, and full house
     # @param - player_num  index of player being checked
     # @return - index of hand in HANDS
@@ -294,53 +313,34 @@ class Data:
         player_cards = self.table_cards + self.player_hands[player_num]
         ranks = {} #dict with the number of a card as the key, points to the number of those cards
         max_of_a_kind = 1
+        highest_card = 0
         pairs = 0
         for card in player_cards:
             if card.rank in ranks:
                 if ranks[card.rank] == 1: #if this card has NOT been paired
                     pairs += 1
-                ranks[card.rank] = ranks[card.rank] + 1
+                ranks[card.rank] = ranks[card.rank] + 1 #denotes number of that kind
+                if ranks[card.rank] >= max_of_a_kind:
+                    highest_card = max(highest_card, card.rank)
                 max_of_a_kind = max(max_of_a_kind, ranks[card.rank])
             else:
                 ranks[card.rank] = 1
-        '''
-        print(ranks)
-        print("max of a kind", max_of_a_kind)
-        print("pairs", pairs)
-        '''
         if max_of_a_kind == 4:
-            return 7 #four of a kind
+            return 7, highest_card #four of a kind
         elif max_of_a_kind == 3:
             if pairs >= 2:
-                return 6 #full house
-            return 3 #three of a kind
+                return 6, highest_card #full house
+            return 3, highest_card #three of a kind
         elif pairs >= 2:
-            return 2 #two pairs
+            return 2, highest_card #two pairs
         elif pairs == 1:
-            return 1 #one pair
+            return 1, highest_card #one pair
         else:
-            return 0 #did not find anything
+            for card in player_cards:
+                highest_card = max(highest_card, card.rank)
+            return 0, highest_card #did not find anything
         
-    '''
-    def test_flush(self): #used to set values of player cards rather than random
-        #['♣','♦','♠','♥']
-        self.player_hands.append([Card('K♥'), Card('2♥')]) #royal flush
-        self.player_hands.append([Card('8♥'), Card('9♥')]) #straight flush
-        self.player_hands.append([Card('7♦'), Card('7♥')]) #four of a kind
-        self.player_hands.append([Card('J♣'), Card('J♦')]) #full house
-        self.player_hands.append([Card('2♥'), Card('4♥')]) #flush
-        self.player_hands.append([Card('8♦'), Card('9♣')]) #straight
-        self.player_hands.append([Card('7♦'), Card('6♣')]) #3 of a kind
-        self.player_hands.append([Card('T♠'), Card('3♣')]) #2 pair
-        self.table_cards.append(Card('7♣'))
-        self.table_cards.append(Card('7♠'))
-        self.table_cards.append(Card('Q♥'))
-        self.table_cards.append(Card('J♥'))
-        self.table_cards.append(Card('T♥'))
-        for i in range(len(self.player_hands)):
-            print(self.player_hands[i], self.players[i].player_name)
-        self.current_winner()
-    '''              
+             
 
 
 

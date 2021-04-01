@@ -6,12 +6,18 @@ class Player:
         self.player_name = player_name
         self.player_num = player_num
         self.stack = start_amt
+        self.hand_num = 0
+        self.high_card = 0
 
     def receive_hand(self, hand):
         pass
 
     def receive_board_cards(self, cards): #list of cards. WILL be duplicates
         pass
+
+    def receive_top_hand_and_card(self, hand_num, high_card): #both int
+        self.hand_num = hand_num
+        self.high_card = high_card
 
     def bet(self, curr_bet, prev_bet):
         if curr_bet == 0:
