@@ -49,15 +49,18 @@ class Card:
             if self.rank == 12:
                 self.str_rank = 'A'           
 
-    def draw(self, win, topX, topY):
+    def draw(self, win, topX, topY, front):
         win.fill((255,255,255)) ############GET RID OF THIS
-        pygame.draw.rect(win, (0,0,0), (topX, topY, CARDW, CARDH), 7, 7)
-        pygame.draw.rect(win, (255,255,255), (topX + OUTLINEBUFF, topY + OUTLINEBUFF, CARDW - 2*OUTLINEBUFF, CARDH - 2*OUTLINEBUFF), 3, 3)
-        win.blit(self.suit_pic, ((topX + CARDW//2) - self.suit_pic.get_width()//2, (topY + CARDH//2) - self.suit_pic.get_height()//2))
-        font = pygame.font.SysFont('Arial',25)
-        text = font.render(self.rank_str, 1, self.color)
-        win.blit(text, (topX + NUMBUFF, topY + NUMBUFF))
-        win.blit(text, (topX + CARDW - 2*NUMBUFF, topY + CARDH - 4*NUMBUFF))
+        if(front == True):
+            pygame.draw.rect(win, (0,0,0), (topX, topY, CARDW, CARDH), 7, 7)
+            pygame.draw.rect(win, (255,255,255), (topX + OUTLINEBUFF, topY + OUTLINEBUFF, CARDW - 2*OUTLINEBUFF, CARDH - 2*OUTLINEBUFF), 3, 3)
+            win.blit(self.suit_pic, ((topX + CARDW//2) - self.suit_pic.get_width()//2, (topY + CARDH//2) - self.suit_pic.get_height()//2))
+            font = pygame.font.SysFont('Arial',25)
+            text = font.render(self.rank_str, 1, self.color)
+            win.blit(text, (topX + NUMBUFF, topY + NUMBUFF))
+            win.blit(text, (topX + CARDW - 2*NUMBUFF, topY + CARDH - 4*NUMBUFF))
+        elif(front == False):
+            win.blit(BACK, (topX,topY))
 
     def __str__(self):
         return "{0}  {1}".format(self.str_rank, self.str_suit)
