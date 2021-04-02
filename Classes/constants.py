@@ -9,6 +9,7 @@ BOARD_RADIUS = 350
 INNER_BORDER_RADIUS = BOARD_RADIUS // 2
 CHIP_SIZE = 25
 INFO_BOX_WIDTH, INFO_BOX_HEIGHT = 235, 300
+GAP = 10
 # Other than the info and button box, OFFSET is used to push over the table along with eveything on the table over. Center table by making offset = 0.
 # Offset should only be used with x coordinates
 OFFSET = 150
@@ -16,6 +17,8 @@ CARD_WIDTH, CARD_HEIGHT = 50, 90
 MAG_CARD_WIDTH, MAG_CARD_HEIGHT = 100, 180
 INFO_BOX_X, INFO_BOX_Y = 150, 50
 BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y = 279, 105
+SMALL_CARD_FONT_SIZE = 25
+BIG_CARD_FONT_SIZE = 35
 
 BACKGROUND_COLOR = pygame.Color("#373737")
 BOARD_COLOR = pygame.Color("#114636")
