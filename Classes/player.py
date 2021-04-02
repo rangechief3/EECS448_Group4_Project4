@@ -1,5 +1,6 @@
 from . data import *
 from . constants import *
+from . button import *
 import time
 from . card import Card
 import gc
@@ -15,10 +16,11 @@ class Player:
         self.hand = []
         self.board_cards = []
         self.buttons = []
-        self.curr_hand = None       # Idk what this is
+        self.curr_hand = None
         self.playing = True
         self.chip_pos = self.get_chip_pos()
-        self.font = pygame.font.SysFont('Arial', 25)
+        self.card_pos = self.get_card_pos()
+        self.font = pygame.font.SysFont('Arial', SMALL_CARD_FONT_SIZE)
 
     # If needing to print out a player object, will return name and player number. To use in main: print(player)
     def __str__(self):
@@ -114,6 +116,8 @@ class Player:
     def draw_cards(self):
         # each card is an object from card class
         print(f'[player.py] Drawing cards on screen for player {self.player_name}')
+        self.hand[0].draw(self.win, self.card_pos[0], self.card_pos[1])
+        self.hand[1].draw(self.win, self.card_pos[0] + CARD_WIDTH + GAP, self.card_pos[1])
         pass
         # print(f'[player.py] Drawing {self.player_name} 1st card on screen: {self.hand[0].draw(self.win, 800, 800)}')
         # print(f'[player.py] Drawing {self.player_name} 2nd card on screen: {self.hand[1].draw(self.win, 500, 500)}')
@@ -124,11 +128,20 @@ class Player:
     # @return - nothing
     def draw_board_cards(self):
         print(f'[player.py] Drawing board cards on screen for player {self.player_name}')
-        pass
-        # print(f'[player.py] Drawing {self.player_name} 1st board card on screen: {self.board_cards[0].draw(self.win, 800, 800)}')
-        # print(f'[player.py] Drawing {self.player_name} 2nd board card on screen: {self.board_cards[1].draw(self.win, 500, 500)}')
-        # print(f'[player.py] Drawing {self.player_name} 3rd board card on screen: {self.board_cards[2].draw(self.win, 500, 500)}')
-        # Running into errors using Card.draw(), will fix tom
+        board_card_box = pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (560 + OFFSET, 365, BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y))
+        board_card_1 = self.board_cards[0][0].draw(self.win, 560 + 5 * 1 + OFFSET, 365 + 15 // 2)
+        board_card_2 = self.board_cards[0][1].draw(self.win, 560 + 5 * 2 + 1 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
+        board_card_3 = self.board_cards[0][2].draw(self.win, 560 + 5 * 3 + 2 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
+        try:
+            board_card_4 =self.board_cards[0][3].draw(self.win, 560 + 5 * 4 + 3 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
+        except:
+            print('[player.py] There are current only 3 board cards. Drawing 2 blank cards')
+            board_card_4 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 4 + 3 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
+        try:
+            board_card_5 =self.board_cards[0][4].draw(self.win, 560 + 5 * 5 + 4 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
+        except:
+            print('[player.py] There are current only 4 board cards. Drawing 1 blank cards')
+            board_card_5 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 5 + 4 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
 
     # @description - Draws all the other players cards
     # @param - nothing
@@ -143,19 +156,8 @@ class Player:
         self.win.fill(BACKGROUND_COLOR)
         board = pygame.draw.circle(self.win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS)
         inner_circle = pygame.draw.circle(self.win, WHITE, (WIDTH // 2 + OFFSET, HEIGHT // 2), INNER_BORDER_RADIUS, width=1)
-        # Not able to get all the player objects. I drew out what I think it should look like
-        # other_player = Data(self.win).players
-        # for player in other_players:
-        #     player.draw_chips()
-        #     player.draw_cards()
-        # self.draw_board_cards()
         self.draw_chips()       # Won't need if for loop works
-        board_card_box = pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (560 + OFFSET, 365, BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y))
-        board_card_1 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 1 + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
-        board_card_2 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 2 + 1 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
-        board_card_3 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 3 + 2 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
-        board_card_4 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 4 + 3 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
-        board_card_5 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 5 + 4 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
+        self.draw_board_cards()
         self.button_area()
 
     def draw_chips(self):
@@ -164,23 +166,22 @@ class Player:
         print(f'[player.py] Chip coordinates for {self.player_name}: {self.chip_pos}')
 
     def info(self):
-        # The cards might be too small for the way I have layed things out. To fix that I think adding in a box that shows
-        # the user's cards but bigger and just have the other players cards on the table (
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, 25, INFO_BOX_WIDTH, INFO_BOX_HEIGHT))
-        pygame.draw.rect(self.win, WHITE, (35, 35, MAG_CARD_WIDTH, MAG_CARD_HEIGHT))
-        pygame.draw.rect(self.win, WHITE, (35 + MAG_CARD_WIDTH + 15, 35, MAG_CARD_WIDTH, MAG_CARD_HEIGHT))
+        self.hand[0].draw_big(self.win, 35, 35)
+        self.hand[1].draw_big(self.win, 35 + MAG_CARD_WIDTH + 15, 35)
         self.win.blit(self.font.render(f'{self.player_name} Stack = {self.stack}', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30))
         self.win.blit(self.font.render(f'Idk what other info', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30 + TOKEN_FONT_SIZE))
 
     def button_area(self):
-        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT - 25, INFO_BOX_WIDTH, INFO_BOX_HEIGHT))
-        pygame.draw.rect(self.win, WHITE, (30, HEIGHT - INFO_BOX_HEIGHT + 10, INFO_BOX_WIDTH - 10, 40))
-        self.win.blit(self.font.render(f'Button area', True, BLACK), (30, HEIGHT - INFO_BOX_HEIGHT + 10))
-        pygame.draw.rect(self.win, WHITE, (30, HEIGHT - INFO_BOX_HEIGHT + 10 * 2 + 40 * 1, INFO_BOX_WIDTH - 10, 40))
-        pygame.draw.rect(self.win, WHITE, (30, HEIGHT - INFO_BOX_HEIGHT + 10 * 3 + 40 * 2, INFO_BOX_WIDTH - 10, 40))
+        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 100))
+        button1 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Button 1')
+        button1.draw()
+        button2 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Button 2')
+        button2.draw()
+        button3 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Button 3')
+        button3.draw()
 
     def get_chip_pos(self):
-        pass
         if self.player_num == 0:
             return (437.5, 400)
         elif self.player_num == 1:
@@ -198,7 +199,27 @@ class Player:
         elif self.player_num == 7:
             return (525, 225)
         else:
-            return "Error in get_pos()"
+            return "Error in get_chip_pos()"
+
+    def get_card_pos(self):
+        if self.player_num == 0:
+            return (475 - CARD_WIDTH, 400 - (CARD_WIDTH // 2))
+        elif self.player_num == 1:
+            return (582 - CARD_WIDTH, 663 - (CARD_WIDTH // 2))
+        elif self.player_num == 2:
+            return (850 - CARD_WIDTH, 775 - CARD_WIDTH - 30)
+        elif self.player_num == 3:
+            return (1117 - CARD_WIDTH, 663 - (CARD_WIDTH // 2))
+        elif self.player_num == 4:
+            return (1225 - CARD_WIDTH, 400 - (CARD_WIDTH // 2))
+        elif self.player_num == 5:
+            return (1112 - CARD_WIDTH, 133 - (CARD_WIDTH // 2))
+        elif self.player_num == 6:
+            return (850 - CARD_WIDTH, 25 - (CARD_WIDTH // 2) + 10)
+        elif self.player_num == 7:
+            return (582 - CARD_WIDTH, 133 - (CARD_WIDTH // 2))
+        else:
+            return "Error in get_card_pos()"
 
     def bet(self, curr_bet, prev_bet):
         ### This was for testing for me, so change this to be based on user input
@@ -213,7 +234,3 @@ class Player:
         return curr_bet - prev_bet
         # return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         # reduce player stack by bet amount then return it
-
-
-
-
