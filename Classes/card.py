@@ -50,7 +50,7 @@ class Card:
                 self.str_rank = 'A'           
 
     def draw(self, win, topX, topY, front):
-        win.fill((255,255,255)) ############GET RID OF THIS
+        #win.fill((255,255,255)) ############GET RID OF THIS
         if(front == True):
             pygame.draw.rect(win, (0,0,0), (topX, topY, CARDW, CARDH), 7, 7)
             pygame.draw.rect(win, (255,255,255), (topX + OUTLINEBUFF, topY + OUTLINEBUFF, CARDW - 2*OUTLINEBUFF, CARDH - 2*OUTLINEBUFF), 3, 3)
