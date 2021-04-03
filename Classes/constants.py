@@ -1,14 +1,8 @@
-<<<<<<< HEAD
-import pygame
-||||||| 6bf3205
-
-=======
 import pygame
 
 # desmos link: https://www.desmos.com/calculator/tibq5mmg3q
 # The desmos link makes it easier to know where to place draw things on screen. In pygame, y value gets higher so need to do Height - y to get the y value
 # Also I didn't inlcude the offset initially. Just add offset to the x coordiate
->>>>>>> player.py
 
 WIDTH, HEIGHT = 1400, 800
 BOARD_RADIUS = 350
@@ -33,24 +27,6 @@ BOARD_CARDS_BOX_COLOR = pygame.Color("#2f4f4f")
 #Poker values
 START_STACK = 1000
 SM_BLIND = 5
-<<<<<<< HEAD
-BIG_BLIND = 10
-
-PLAYER_NAMES = ["Daniel Negreanu", "Bryn Kenney", "Phil Ivey", "Justin Bonomo",
-                "Erik Seidel", "Dan Smith", "Stephen Chidwick", "Tom Dwan"]
-SUITS = ['♣','♦','♠','♥']
-HANDS = ['High Card', 'Pair', 'Two Pair', 'Three of a kind', 
-        'Straight', 'Flush', 'Full House', 'Four of a kind',
-        'Straight Flush', 'Royal Flush']
-
-HEART = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (36,28))
-DIAMOND = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (36,28))
-CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (36,28))
-SPADE = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (36,28))
-BACK = pygame.transform.scale(pygame.image.load('Pictures/Card_back.jpg'), (100,150))
-||||||| 6bf3205
-BIG_BLIND = 10
-=======
 BIG_BLIND = 10
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -68,4 +44,3 @@ SUITS = ['♣','♦','♠','♥']
 HANDS = ['High Card', 'Pair', 'Two Pair', 'Three of a kind',
         'Straight', 'Flush', 'Full House', 'Four of a kind',
         'Straight Flush', 'Royal Flush']
->>>>>>> player.py
