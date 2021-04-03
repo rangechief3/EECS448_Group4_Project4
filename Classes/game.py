@@ -8,8 +8,8 @@ class Game:
 
     def update(self):
         pygame.display.update()
-        self.data.players_draw()
-    
+        self.data.players_draw(0) #number of player to be drawn
+     
     def gameCycle(self):
         self.data.deal()
         gamePhase = 0

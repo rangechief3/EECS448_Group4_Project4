@@ -153,6 +153,12 @@ class Player:
             print('[player.py] There are current only 4 board cards. Drawing 1 blank cards')
             board_card_5 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 5 + 4 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
 
+    # @description - Draws the user interface
+    # @param - nothing
+    # @return - nothing
+    def draw(self):
+        self.draw_board()
+
     # @description - Draws all the other players cards
     # @param - nothing
     # @return - nothing

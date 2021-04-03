@@ -20,6 +20,12 @@ BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y = 279, 105
 SMALL_CARD_FONT_SIZE = 25
 BIG_CARD_FONT_SIZE = 35
 
+HEART = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (36,28))
+DIAMOND = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (36,28))
+CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (36,28))
+SPADE = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (36,28))
+BACK = pygame.transform.scale(pygame.image.load('Pictures/Card_back.jpg'), (100,150))
+
 BACKGROUND_COLOR = pygame.Color("#373737")
 BOARD_COLOR = pygame.Color("#114636")
 BOARD_CARDS_BOX_COLOR = pygame.Color("#2f4f4f")

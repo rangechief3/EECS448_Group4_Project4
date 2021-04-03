@@ -4,8 +4,6 @@
 import pygame
 from Classes.constants import WIDTH, HEIGHT, PLAYER_NAMES
 from Classes.game import Game
-
-
 FPS = 60
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))

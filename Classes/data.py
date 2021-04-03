@@ -47,8 +47,8 @@ class Data:
     # @description - will draw the proper player's board
     # @param - None
     # @return - None
-    def players_draw(self): #
-        pass
+    def players_draw(self, player_num): #
+        self.players[player_num].draw()
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
