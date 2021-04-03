@@ -208,43 +208,30 @@ class Data:
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
     # @return - will return the winning player(s)
-    def current_winner(self):
-        best_hand = 0
-        best_high_card = 0
-        player_winner = 0
-        high_card_tiebreaker = 0
-        highest_duplicate_hand = 0
-        highest_duplicate_card = 0
-        highest_specials_hand = 0
-        highest_specials_card = 0
-
+        def current_winner(self):
         for i in range(len(self.players)):
-            highest_duplicate_hand, highest_duplicate_card = self.check_duplicates(i)
-            highest_specials_hand, highest_duplicate_card = self.check_straights_flushes(i)
-            temp_hand_num = max(highest_duplicate_hand, highest_specials_hand)
-            
-            if highest_duplicate_hand > highest_specials_card:
-                temp_high_card = highest_duplicate_card
-            else:
-                temp_high_card = highest_specials_card
-
-            if temp_hand_num == best_hand: #i.e. both have a two pair
-                if temp_high_card > best_high_card:
-                    player_winner = i
-            elif temp_hand_num > best_hand:
-                player_winner = i
-            #update the best hand and high cards    
-            best_hand = max(best_hand, temp_hand_num)
-            best_high_card = max(best_high_card, temp_high_card)
-            print(self.players[i].player_name + " has a " + HANDS[temp_hand_num])
-            player_info = []
-            for card in self.player_hands[i]:
-                player_info.append([card.str_rank + str(card.rank) + card.str_suit])
-            for card in self.table_cards:
-                player_info.append([card.str_rank + str(card.rank) + card.str_suit])
-            print(player_info)
-        return player_winner, best_hand, best_high_card
-
+            hand_num = max(self.check_duplicates(i), self.check_straights_flushes(i))
+            print(self.players[i].player_name + " has a " + HANDS[hand_num])
+            if i = 0
+                bestHand = hand_num
+                playerWithBestHand = i
+            elif hand_num > bestHand   
+                bestHand = hand_num
+                playerWithBestHand = i
+            elif hand_num == bestHand
+                challenger = recieveCurrHand(i) 
+                currentWinner = recieveCurrHand(playerWithBestHand)
+                for j in range(5)
+                    if challenger[j] > currentWinner[j]
+                        playerWithBestHand = i
+                        break
+                    elif challenger[j] < currentWinner[j]
+                        break
+                    elif challenger [j] == currentWinner[j]
+                        tie = True
+                if tie
+                    #tie
+                
     # @description - determines if a player's hand is a flush
     # @param - player_num   index of player being checked
     # @return - True  if five cards of a suit exist 
@@ -341,9 +328,132 @@ class Data:
             return 0, highest_card #did not find anything
         
              
+    def getPlayerHand(self, player_num)
+        hand_num = max(self.check_duplicates(player_num), self.check_straights_flushes(player_num))
+        return hand_num
+
+def recieveCurrHand(self, player_num)
+        hand_num = getPlayerHand(player_num)
+        player_cards = self.table_cards + self.player_hands[player_num]
+        player_cards_as_int = []
+
+
+        if hand_num == 5 #flush
+            suits = {}
+            hand = {}
+            max_in_suit = 0
+            for card in player_cards:
+                if card.suit in suits:
+                 suits[card.suit] = suits[card.suit] + 1
+                 max_in_suit = max(max_in_suit, suits[card.suit])
+            for card in player_cards:
+                if card.suit == max_in_suit
+                    hand.append(card)
+            player_cards = hand
 
 
 
+        for card in player_cards:
+            rank_ints = self.conv_rank_to_int(card.rank)
+            for num in rank_ints:
+                player_cards_as_int.append(num)
+        player_cards_as_int.sort(reverse=true)
+
+        if hand_num == 0 #highcard
+            return hand_num, player_cards_as_int
+        elif hand_num == 1 #pair and 3 distinct cards
+            prev = None
+            for num in player_cards_as_int
+                if num == prev
+                    pair = num
+                    break
+            hand = [pair,pair]
+            for num in player_cards_as_int
+                if num != pair
+                    hand.append(num)          
+            return hand_num, hand
+        elif hand_num == 2 #two pair 1 high card
+            prev = None
+            pair = None
+            pair2 = None
+            for num in player_cards_as_int
+                if num == prev and pair == None
+                    pair = num
+                    hand = [pair, pair]
+                elif num == prev and pair2 = None
+                    pair2 = num
+                    hand.append(pair2)
+                    hand.append(pair2)
+            for num in player_cards_as_int
+                if num != pair or num != pair2
+                    hand.append(num)
+
+            return hand_num, hand
+        elif hand_num == 3 #three of a kind and 2 distinct cards
+            prev = None
+            for num in player_cards_as_int
+                if num == prev
+                    threeofakind = num
+                    break
+            hand = [threeofakind,threeofakind,threeofakind]
+            for num in player_cards_as_int
+                if num != threeofakind
+                    hand.append(num)          
+            return hand_num, hand
+        elif hand_num == 4 #straight no high card
+            prev = None
+            prev2 = None
+            for num in player_cards_as_int
+                if num+1 = prev and num+2 = prev2
+                    straightHighcard = prev2
+                    break
+                prev2 = prev
+                prev = num
+            hand = [straightHighcard, straightHighcard-1, straightHighcard-2, straightHighcard-3, straightHighcard-4]
+            return hand_num, hand
+        elif hand_num == 5 #flush
+            return hand_num, player_cards_as_int
+        elif hand_num == 6 #full house no highcard
+            prev = None
+            prev2 = None
+            for num in player_cards_as_int
+                if num == prev and num == prev2
+                    threeofakind = num
+                prev2 = prev
+                prev = num
+            prev = None
+            for num in player_cards_as_int
+                if num == prev and num != threeofakind
+                    pair = num
+                prev = num
+            hand = [threeofakind,threeofakind,threeofakind,pair,pair]
+            return hand_num, hand
+        elif hand_num == 7 #four of a kind 1 high card
+            prev = None
+            for num in player_cards_as_int
+                if num == prev
+                    fourofakind = num
+                    break
+            hand = [fourofakind,fourofakind,fourofakind,fourofakind]
+            for num in player_cards_as_int
+                if num != fourofakind
+                    hand.append(num)          
+            return hand_num, hand
+        elif hand_num == 8 #straight flush no high cards
+            prev = None
+            prev2 = None
+            for num in player_cards_as_int
+                if num+1 = prev and num+2 = prev2
+                    straightHighcard = prev2
+                    break
+                prev2 = prev
+                prev = num
+            hand = [straightHighcard, straightHighcard-1, straightHighcard-2, straightHighcard-3, straightHighcard-4]
+            return hand_num, hand
+        elif hand_num == 9 #royal flush no high cards
+            return hand_num, player_cards_as_int
+
+        
 
     
     
