@@ -1,0 +1,9 @@
+	For this project, we went with an object--oriented design paradigm. Our project was to create the game of poker. 
+When playing this game, it is usually done in such a way that there are several actors within the game, such as the game 
+itself, the players, the cards, etc. Each of these actors play a role within the game. For example, players can make bets 
+or fold and the game itself keeps track of how much money is in the pot and who should take a turn next. In terms of 
+software, each of these actors are an object, and as such, have different roles and functions within the project as a 
+whole. This lends itself to object—oriented design nicely, because we can assign the functions that need to exist within 
+poker to the various actors, or objects, that would be in charge of those functions in a real game of poker. From there, 
+we can interconnect the objects as they would in a real game.
+

@@ -1,0 +1,8 @@
+	Our group primarily used a structural design pattern. We looked at the game of poker as a whole, and broke it 
+down into its individual parts, thus creating a structural view of the game. From there, we used the “composite” structural 
+design pattern. We chose this because we looked at poker in a tree—like structure. Starting from the game itself, we have 
+the players and our data. Coming from our players, we have our buttons and our cards. Using the composite pattern, we can 
+implement this tree structure, as well as interconnect different branches of that tree. For example, the data class needs 
+to interact with the card class, because it looks after the deck and the cards on the table. Furthermore, the data class also 
+handles the list of players within our game. The composite pattern allows us to use these classes in a manner that allows for 
+this interdependence.

@@ -1,0 +1,7 @@
+	To estimate the time it would take us to complete our project, we used the lines of code method. To begin 
+our estimation, we made a rough estimate of how many lines it would take us to complete the project given the 
+complexity of our project. This estimate came out to be roughly 750 lines of code. From there, we used projects 
+one and two to determine how long it took us, on average, to write each line of code. Project 1 was completed in 
+58 hours with roughly 870 lines of code. Project 2 was completed in 28.25 hours with roughly 375 lines of code. 
+Using these two projects, we have a total of 86.25 hours and 1245 lines of code. Therefore, we estimated that it 
+takes us .067 hours per line of code. Finally, our total estimation of time to complete this project is 51.6 hours.

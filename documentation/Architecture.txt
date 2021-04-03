@@ -1,0 +1,8 @@
+	Our project has a 3—tier architecture. It can be boiled down into the three different layers of the traditional
+3—tier model, which has the presentation, logic, and data layers. At the surface, where the user interacts with the game, 
+we have the presentation tier, which consists of the user making their decisions and clicking a button to make a bet or 
+observing their cards to plan ahead. Once the player interacts with the game, the program moves down into the logic tier, 
+where it makes decisions about what the AI will do or how the player’s funds are impacted by their decision. To make these 
+logical decisions, the program needs the third and final layer, the data layer. Here, each of the classes have their values 
+stored, such as the list of cards in the deck and their order, or what cards the player has in their hand. Therefore, the 
+logic tier must interact with the data layer to make the necessary decisions to deliver to the presentation layer.
