@@ -15,6 +15,9 @@ class Player:
     def receive_board_cards(self, cards): #list of cards. WILL be duplicates
         pass
 
+    def receive_winnings(self, amt):
+        self.stack += amt
+
     def receive_top_hand_and_card(self, hand_num, high_card): #both int
         self.hand_num = hand_num
         self.high_card = high_card

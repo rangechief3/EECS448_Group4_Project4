@@ -14,7 +14,8 @@ class Game:
         self.data.deal()
         gamePhase = 0
         self.update()
-        while(gameInProgress == True)
+        gameInProgress = True
+        while(gameInProgress):
             self.data.get_player_bets(gamePhase)  
             if (gamePhase == 0):
                 self.data.flop()
@@ -26,10 +27,9 @@ class Game:
                 self.data.river()
             
             elif(gamePhase == 3):
-                self.data.end_game(self)
+                self.data.end_hand()
                 gameInProgress = False
             
             self.update()
-            
             gamePhase += 1
 

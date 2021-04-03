@@ -6,6 +6,7 @@ import random
 from .card import Card
 from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
 from .player import Player
+import time
 
 ###TODO
 # award_winners()
@@ -20,7 +21,6 @@ class Data:
     # @return - None
     def __init__(self, win):
         self.win = win
-        
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
         self.players = []
@@ -31,6 +31,7 @@ class Data:
         self.player_active = []
         self.dealer = 0
         self.init_players(8)
+        '''
         self.deal()
         self.get_player_bets(0)
         self.flop()
@@ -41,7 +42,13 @@ class Data:
         self.get_player_bets(3)
         winner, hand, high_card = self.current_winner()
         print(self.players[winner].player_name + " WON with a " + HANDS[hand] + " High Card: " + str(high_card) +  "!\n")
-        
+        '''
+
+    # @description - will draw the proper player's board
+    # @param - None
+    # @return - None
+    def players_draw(self): #
+        pass
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
@@ -105,7 +112,7 @@ class Data:
         #  -add to pot
         #TESTING NO SIDE POTS
         if len(self.pots) == 0:
-            pot_list = [amt, bet_round, curr_bet, [player_num]] #[total, betting round, current bet, player1 ... playerk]
+            pot_list = [amt, bet_round, curr_bet, [player_num]] #[total, betting round, current bet, [player1 ... playerk]]
             self.pots.append(pot_list)
         else:
             for pot in self.pots:
@@ -122,12 +129,13 @@ class Data:
     # @param - None
     # @return - None
     def reset(self):
-        self.deck = list(Card)
+        self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
         self.curr_bet = 0
         self.pots = []
         self.table_cards = []
         self.player_hands = []
+        time.sleep(3)
 
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
@@ -200,10 +208,20 @@ class Data:
     # @description - awards winning player earnings, resets data
     # @param - None
     # @return - None
-    def end_game(self):
+    def end_hand(self):
         winner, hand, high_card = self.current_winner()
-        self.award_winnings()
+        print(self.players[winner].player_name + " WON with a " + HANDS[hand] + " High Card: " + str(high_card) +  "!\n")
+        self.award_winnings(winner)
         self.reset()
+
+    # @description - gives winning player(s) moneey
+    # @param - winner index of player that wwon
+    # @return - None
+    def award_winnings(self, winner):
+        ###fix  it to account for differnt pots
+        ###bur assume for now only one pot
+        #pot = [total, betting round, current bet, player1 ... playerk]
+        self.players[winner].receive_winnings(self.pots[0][0])
 
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
