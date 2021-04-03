@@ -36,7 +36,6 @@ class Button:
 
     def draw(self, win):
         if(self.hidden == False):
-            #win.fill((255,255,255)) ############## GET RID OF THIS
             pygame.draw.rect(win, (0,0,0), (self.x, self.y, self.width, self.height), 0, 7)
             pygame.draw.rect(win, self.box_color, (self.x + self.border_width, self.y + self.border_width, self.width - 2*self.border_width, self.height - 2*self.border_width), 0, 3)
             font = pygame.font.SysFont('Arial',20)
