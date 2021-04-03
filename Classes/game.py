@@ -17,18 +17,15 @@ class Game:
         while(gameInProgress == True)
             self.data.get_player_bets(gamePhase)  
             if (gamePhase == 0):
-            
                 self.data.flop()
 
             elif(gamePhase == 1):
                 self.data.turn()
 
             elif(gamePhase == 2):
-    
                 self.data.river()
             
             elif(gamePhase == 3):
-
                 self.data.end_game(self)
                 gameInProgress = False
             
