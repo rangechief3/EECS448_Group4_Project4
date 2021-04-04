@@ -71,14 +71,13 @@ class Player:
     # @description - Gets a list of (number, suit), converts into Card object, stores Card objects into the self.hand list
     # @param - A list of numbers that will be the board cards
     # @return - nothing
-    def receive_board_cards(self, cards):  # list of cards. WILL be duplicates
+    def receive_board_cards(self, cards, str):  # list of cards. WILL be duplicates
         ###Same thing as above, it will come in as Card objects that can be accessed with Card.rank and card.suit
         ###Can Not just use append. Check if the card already exists in self.board_cards before using append
         ### the entire board will be sent each time so there will be duplicates
         print(f'[player.py] {self.player_name} has access to the board cards:')
-        self.board_cards.append(cards)
-        for i in range(len(self.board_cards)):
-            print(f'\t [player.py] {self.board_cards[0][i]}')
+        for card in cards:
+            self.board_cards.append(card)
 
     # @description - Adds money to the current players stack of money
     # @param - money that will be added to current players stack of money
@@ -121,13 +120,13 @@ class Player:
         ###Add drawing of the board and player symbols, etc.
 
     # @description - Draws each card from current players hand
-    # @param - nothing
+    # @param - front True if drawing front false if back
     # @return - nothing
-    def draw_cards(self):
+    def draw_cards(self, front):
         # each card is an object from card class
         print(f'[player.py] Drawing cards on screen for player {self.player_name}')
-        self.hand[0].draw(self.win, self.card_pos[0], self.card_pos[1])
-        self.hand[1].draw(self.win, self.card_pos[0] + CARD_WIDTH + GAP, self.card_pos[1])
+        self.hand[0].draw(self.win, self.card_pos[0], self.card_pos[1], front)
+        self.hand[1].draw(self.win, self.card_pos[0] + CARD_WIDTH + GAP, self.card_pos[1], front)
         pass
         # print(f'[player.py] Drawing {self.player_name} 1st card on screen: {self.hand[0].draw(self.win, 800, 800)}')
         # print(f'[player.py] Drawing {self.player_name} 2nd card on screen: {self.hand[1].draw(self.win, 500, 500)}')
@@ -138,6 +137,10 @@ class Player:
     # @return - nothing
     def draw_board_cards(self):
         print(f'[player.py] Drawing board cards on screen for player {self.player_name}')
+        for i, card in enumerate(self.board_cards):
+            #def draw(self, win, topX, topY, front):
+            card.draw(self.win, 560 + 5 *(i+1) + OFFSET + i* CARD_WIDTH, 365 + 15 // 2, True)
+        '''
         board_card_box = pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (560 + OFFSET, 365, BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y))
         board_card_1 = self.board_cards[0][0].draw(self.win, 560 + 5 * 1 + OFFSET, 365 + 15 // 2)
         board_card_2 = self.board_cards[0][1].draw(self.win, 560 + 5 * 2 + 1 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
@@ -152,12 +155,18 @@ class Player:
         except:
             print('[player.py] There are current only 4 board cards. Drawing 1 blank cards')
             board_card_5 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 5 + 4 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
+        '''
 
     # @description - Draws the user interface
-    # @param - nothing
+    # @param - other_players -- > list of players other than the current player
     # @return - nothing
-    def draw(self):
+    def draw(self, other_players):
         self.draw_board()
+        self.draw_chips() 
+        self.draw_board_cards()
+        self.draw_cards(True)
+        self.button_area()
+        self.draw_opponents(other_players)
 
     # @description - Draws all the other players cards
     # @param - nothing
@@ -165,16 +174,16 @@ class Player:
     def draw_opponents(self, other_players):
         print(f'[player.py] Drawing card/hands of other players')
         for player in other_players:
-            player.draw_cards()
+            player.draw_cards(False)
+            player.draw_chips()
         # Running into errors using Card.draw(), will fix tom
 
     def draw_board(self):
         self.win.fill(BACKGROUND_COLOR)
         board = pygame.draw.circle(self.win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS)
         inner_circle = pygame.draw.circle(self.win, WHITE, (WIDTH // 2 + OFFSET, HEIGHT // 2), INNER_BORDER_RADIUS, width=1)
-        self.draw_chips()       # Won't need if for loop works
-        self.draw_board_cards()
-        self.button_area()
+              # Won't need if for loop works
+        
 
     def draw_chips(self):
         pygame.draw.circle(self.win, WHITE, (self.chip_pos[0] + OFFSET, self.chip_pos[1]), CHIP_SIZE)
@@ -236,6 +245,10 @@ class Player:
             return (582 - CARD_WIDTH, 133 - (CARD_WIDTH // 2))
         else:
             return "Error in get_card_pos()"
+
+    def takeATurn(self, curr_bet, prev_bet):
+        time.sleep(0.25)
+        return self.bet(curr_bet, prev_bet)
 
     def bet(self, curr_bet, prev_bet):
         ### This was for testing for me, so change this to be based on user input

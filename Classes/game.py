@@ -1,5 +1,6 @@
 import pygame
 from .data import Data
+import time
 
 class Game:
     def __init__(self, win):
@@ -8,12 +9,13 @@ class Game:
 
     def update(self):
         pygame.display.update()
-        self.data.players_draw(0) #number of player to be drawn
+        self.data.players_draw(0) #index of player to be drawn
+        time.sleep(2)
      
     def gameCycle(self):
         self.data.deal()
         gamePhase = 0
-        self.update()
+        self.update() #should draw cards now
         gameInProgress = True
         while(gameInProgress):
             self.data.get_player_bets(gamePhase)  
@@ -27,9 +29,9 @@ class Game:
                 self.data.river()
             
             elif(gamePhase == 3):
-                self.data.end_hand()
+                self.data.end_game()
                 gameInProgress = False
             
-            self.update()
+            self.update() #should draw cards
             gamePhase += 1
 

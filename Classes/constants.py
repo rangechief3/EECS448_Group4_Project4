@@ -13,18 +13,25 @@ GAP = 10
 # Other than the info and button box, OFFSET is used to push over the table along with eveything on the table over. Center table by making offset = 0.
 # Offset should only be used with x coordinates
 OFFSET = 150
-CARD_WIDTH, CARD_HEIGHT = 50, 90
+CARD_WIDTH, CARD_HEIGHT = 50, 90 #50, 90 100, 150
 MAG_CARD_WIDTH, MAG_CARD_HEIGHT = 100, 180
 INFO_BOX_X, INFO_BOX_Y = 150, 50
 BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y = 279, 105
 SMALL_CARD_FONT_SIZE = 25
 BIG_CARD_FONT_SIZE = 35
 
+HEART = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (17,13))
+DIAMOND = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (17,13))
+CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (17,13))
+SPADE = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (17,13))
+BACK = pygame.transform.scale(pygame.image.load('Pictures/Card_back.jpg'), (CARD_WIDTH,CARD_HEIGHT))
+
+'''
 HEART = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (36,28))
 DIAMOND = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (36,28))
 CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (36,28))
 SPADE = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (36,28))
-BACK = pygame.transform.scale(pygame.image.load('Pictures/Card_back.jpg'), (100,150))
+'''
 
 BACKGROUND_COLOR = pygame.Color("#373737")
 BOARD_COLOR = pygame.Color("#114636")

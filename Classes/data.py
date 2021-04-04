@@ -6,7 +6,6 @@ import random
 from .card import Card
 from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
 from .player import Player
-import time
 
 ###TODO
 # award_winners()
@@ -21,6 +20,7 @@ class Data:
     # @return - None
     def __init__(self, win):
         self.win = win
+        
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
         self.players = []
@@ -43,12 +43,16 @@ class Data:
         winner, hand, high_card = self.current_winner()
         print(self.players[winner].player_name + " WON with a " + HANDS[hand] + " High Card: " + str(high_card) +  "!\n")
         '''
-
-    # @description - will draw the proper player's board
-    # @param - None
+        
+    # @description - draws the relevant player board
+    # @param - player_num    index of a player
     # @return - None
-    def players_draw(self, player_num): #
-        self.players[player_num].draw()
+    def players_draw(self, player_num):
+        other_players = []
+        for player in self.players:
+            if player.player_num != player_num:
+                other_players.append(player)
+        self.players[player_num].draw(other_players)
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
@@ -74,6 +78,7 @@ class Data:
                 self.add_to_pot(self.dealer + 2, blind, BIG_BLIND, bet_round)
                 curr_bet = BIG_BLIND
                 curr_player = self.dealer + 3 #Under the gun
+                self.players_draw(0) ###will be need to be changed to be more general
             else:
                 curr_bet = 0
                 curr_player = self.dealer + 1 #small blind 
@@ -81,7 +86,9 @@ class Data:
                 if curr_player >= len(self.players):
                     curr_player = 0
                 if self.player_active[curr_player]:
-                    bet = self.players[curr_player].bet(curr_bet, self.player_prev_bets[curr_player]) #WILL BECOME take_a_turn()
+                    #bet = self.players[curr_player].bet(curr_bet, self.player_prev_bets[curr_player]) #WILL BECOME take_a_turn()
+                    bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
+                    self.players_draw(0) 
                     self.player_prev_bets[curr_player] = bet
                     if bet != -1: # a fold
                         print(self.players[curr_player].player_name + " bet " + str(bet) + "!")
@@ -112,7 +119,7 @@ class Data:
         #  -add to pot
         #TESTING NO SIDE POTS
         if len(self.pots) == 0:
-            pot_list = [amt, bet_round, curr_bet, [player_num]] #[total, betting round, current bet, [player1 ... playerk]]
+            pot_list = [amt, bet_round, curr_bet, [player_num]] #[total, betting round, current bet, player1 ... playerk]
             self.pots.append(pot_list)
         else:
             for pot in self.pots:
@@ -135,7 +142,6 @@ class Data:
         self.pots = []
         self.table_cards = []
         self.player_hands = []
-        time.sleep(3)
 
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
@@ -173,7 +179,7 @@ class Data:
         self.table_cards.extend(new_cards)
         
         for player in self.players:
-            player.receive_board_cards(new_cards)
+            player.receive_board_cards(new_cards, "flop")
 
     # @description - draws one card(the fourth on the board), and updates the data structures dependent on it
     # @param - None
@@ -188,7 +194,7 @@ class Data:
             print(card.str_rank, card.str_suit)
 
         for player in self.players:
-            player.receive_board_cards(new_card)
+            player.receive_board_cards(new_card, "turn")
 
     # @description - draws one card(the fifth on the board), and updates the data structures dependent on it
     # @param - None
@@ -203,25 +209,24 @@ class Data:
             print(card.str_rank, card.str_suit)
 
         for player in self.players:
-            player.receive_board_cards(new_card)
+            player.receive_board_cards(new_card, "river")
 
     # @description - awards winning player earnings, resets data
     # @param - None
     # @return - None
-    def end_hand(self):
+    def end_game(self):
         winner, hand, high_card = self.current_winner()
-        print(self.players[winner].player_name + " WON with a " + HANDS[hand] + " High Card: " + str(high_card) +  "!\n")
-        self.award_winnings(winner)
+        self.award_winnings()
         self.reset()
-
-    # @description - gives winning player(s) moneey
-    # @param - winner index of player that wwon
+    
+    # @description - gives winner earnings
+    # @param - None
     # @return - None
-    def award_winnings(self, winner):
-        ###fix  it to account for differnt pots
-        ###bur assume for now only one pot
-        #pot = [total, betting round, current bet, player1 ... playerk]
-        self.players[winner].receive_winnings(self.pots[0][0])
+    def award_winnings(self):
+        winner, hand, high_card = self.current_winner()
+        for pot in self.pots:
+            #if winner in pot[3]:
+            self.players[winner].receive_winnings(pot[0])
 
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
