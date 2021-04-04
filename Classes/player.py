@@ -160,21 +160,21 @@ class Player:
     # @description - Draws the user interface
     # @param - other_players -- > list of players other than the current player
     # @return - nothing
-    def draw(self, other_players):
+    def draw(self, other_players): 
         self.draw_board()
         self.draw_chips() 
         self.draw_board_cards()
         self.draw_cards(True)
         self.button_area()
-        self.draw_opponents(other_players)
+        self.draw_opponents(other_players, False)
 
     # @description - Draws all the other players cards
     # @param - nothing
     # @return - nothing
-    def draw_opponents(self, other_players):
+    def draw_opponents(self, other_players, front):
         print(f'[player.py] Drawing card/hands of other players')
         for player in other_players:
-            player.draw_cards(False)
+            player.draw_cards(front) #boolean for which side to draw            
             player.draw_chips()
         # Running into errors using Card.draw(), will fix tom
 
@@ -198,13 +198,15 @@ class Player:
         self.win.blit(self.font.render(f'Idk what other info', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30 + TOKEN_FONT_SIZE))
 
     def button_area(self):
-        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 100))
-        button1 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Button 1')
+        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))
+        button1 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Check')
         button1.draw()
-        button2 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Button 2')
+        button2 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Call')
         button2.draw()
-        button3 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Button 3')
+        button3 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Raise')
         button3.draw()
+        button4 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Fold')
+        button4.draw()
 
     def get_chip_pos(self):
         if self.player_num == 0:

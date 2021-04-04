@@ -29,6 +29,7 @@ class Game:
                 self.data.river()
             
             elif(gamePhase == 3):
+                self.update()
                 self.data.end_game()
                 gameInProgress = False
             

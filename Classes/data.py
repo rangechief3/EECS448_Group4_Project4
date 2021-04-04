@@ -3,9 +3,11 @@
 # Date branch made: 3.31.2021
 
 import random
+import time
 from .card import Card
 from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
 from .player import Player
+from .computer import Computer
 
 ###TODO
 # award_winners()
@@ -86,9 +88,8 @@ class Data:
                 if curr_player >= len(self.players):
                     curr_player = 0
                 if self.player_active[curr_player]:
-                    #bet = self.players[curr_player].bet(curr_bet, self.player_prev_bets[curr_player]) #WILL BECOME take_a_turn()
-                    bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
                     self.players_draw(0) 
+                    bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
                     self.player_prev_bets[curr_player] = bet
                     if bet != -1: # a fold
                         print(self.players[curr_player].player_name + " bet " + str(bet) + "!")
@@ -147,11 +148,22 @@ class Data:
     # @param - num_players   determines how many Player objects will be created
     # @return - None
     def init_players(self, num_players):
+        '''
+        self.players.append(Player(self.win, PLAYER_NAMES[0], 0, START_STACK))
+        self.player_active.append(True)
+        self.player_prev_bets.append(0)
+        for i in range(1,num_players):
+            self.players.append(Computer(self.win, PLAYER_NAMES[i], i, START_STACK))
+            self.player_active.append(True)
+            self.player_prev_bets.append(0)
+            #print(self.players[i].player_name)
+        '''
         for i in range(num_players):
             self.players.append(Player(self.win, PLAYER_NAMES[i], i, START_STACK))
             self.player_active.append(True)
             self.player_prev_bets.append(0)
-            #print(self.players[i].player_name)
+        
+
 
     # @description - gives each player two cards, sending data to player and storing in self.player_hands
     # @param - None
@@ -217,6 +229,8 @@ class Data:
     def end_game(self):
         winner, hand, high_card = self.current_winner()
         self.award_winnings()
+        self.players_draw(0)
+        time.sleep(5)
         self.reset()
     
     # @description - gives winner earnings
