@@ -1,0 +1,337 @@
+<!--PLAYER CLASS-->
+
+PLAYER<br><br>
+
+Variables: <br><br>
+self.win #returns true for won hand<br>
+self.player_name #stores player name<br>
+self.player_num #stores player number<br>
+self.stack #chip stack count<br>
+self.hand #player hand<br>
+self.board_cards #current board cards<br>
+self.buttons #buttons for player<br>
+self.curr_hand #current made hand stored<br>
+self.playing #checks if player has folded or is still in<br> 
+self.hand_num #rank of made hand<br>
+self.high_card #rank of highest card<br>
+self.chip_pos #chip position (drawing)<br>
+self.card_pos #card position (drawing)<br>
+self.font #font<br>
+
+methods:<br><br>
+#@pre --> initialize player object<br>
+#@param --> win variable, player name, player number / seat, and starting amount<br>
+#@post --> no return<br>
+__init__(self, win, player_name, player_num, start_amt)<br><br>
+
+#@pre --> print player object<br>
+#@param --> no passed variables<br>
+#@post --> no return<br>
+__str__(self):
+
+#@pre --> add winnings to stack amount<br>
+#@param --> winning pot amount<br>
+#@post --> no return<br>
+receive_winnings(self, amt)
+
+#@pre --> update given card and hands<br>
+#@param --> hand rank and cards rank<br>
+#@post --> no return<br>
+receive_top_hand_and_card(self, hand_num, high_card): #both int<br><br>
+
+#@pre --> check for how much the player is paying for the blind<br>
+#@param --> blind amount<br>
+#@post --> return blind_amt - How much the player is paying for the blind (Not sure if the self.stack is suppose to be manipulated)<br>
+blind(self, blind_amt)<br><br> 
+
+#@pre --> Get a list of (number, suit), converts into Card object, stores Card objects into the self.hand list<br>
+#@param --> hand<br>
+#@post --> no return<br>
+receive_hand(self, hand)<br><br>
+
+#@pre --> Gets a list of (number, suit), converts into Card object, stores Card objects into the self.hand list<br>
+#@param --> list of cards<br>
+#@post --> no return<br>
+receive_board_cards(self, cards, str)<br><br>  
+
+#@pre --> Adds money to the current players stack of money<br>
+#@param --> money amount<br>
+#@post --> no return<br>
+receive_money(self, money)<br><br>
+
+#@pre --> Current player has folded. Players hand is empty<br>
+#@param --> no passed variables<br>
+#@post --> no return<br>
+fold(self)<br><br>
+
+#@pre --> player object takes turn (betting, folding etc)<br>
+#@param --> current bet, previous bet<br>
+#@post --> no return<br>
+take_turn(self, cur_bet, prev_bet)<br><br>
+
+#@pre --> Draws each card from current players hand<br>
+#@param --> front<br>
+#@post --> no return<br>
+draw_cards(self, front)<br><br>
+
+#@pre --> Draws the board cards<br>
+#@param --> no passed variables<br>
+#@post --> no return<br>
+draw_board_cards(self)<br><br>
+
+#@pre --> Draws the user interface<br>
+#@param --> other player count<br>
+#@post --> no return<br>
+draw(self, other_players)<br><br>
+
+#@pre --> Draws all the other players cards<br>
+#@param --> other players and front count<br>
+#@post --> no return<br>
+draw_opponents(self, other_players, front)<br><br>
+
+#@pre --> Draws the board cards<br>
+#@param --> no passed variables<br>
+#@post --> no return<br>
+draw_board(self)<br><br>
+
+#@pre --> draws and prints chip value<br>
+#@param --> no passed variables<br>
+#@post --> no return<br>
+draw_chips(self)<br><br>
+
+#@pre --> additional drawing (box color, info)<br>
+#@param --> no passed variables<br>
+#@post --> no return<br>
+info(self)<br><br>
+
+#@pre --> draws button area<br>
+#@param --> no passed variables<br>
+#@post --> no return<br>
+button_area(self)<br><br>
+
+#@pre --> find chip position (coordinates)<br>
+#@param --> no passed variables<br>
+#@post --> returns chip coordinates<br>
+get_chip_pos(self)<br><br>
+
+#@pre --> find card position (coordinates)<br>
+#@param --> no passed variables<br>
+#@post --> returns card coordinates<br>
+get_card_pos(self)<br><br>
+
+#@pre --> takes turn<br>
+#@param --> current bet, previous bet<br>
+#@post --> returns bet<br>
+takeATurn(self, curr_bet, prev_bet)<br><br>
+
+#@pre --> bet<br>
+#@param --> current bet, previous bet<br>
+#@post --> returns bet<br>
+bet(self, curr_bet, prev_bet)<br><br>
+
+<!---CARD CLASS--->
+CARD<br><br>
+
+Variables: <br><br>
+self.rank #card number, 0-12 (rank)<br>
+self.get_rank_string() #hand/rank name<br>
+self.suit #suit of card<br>
+self.str_suit #name of suit<br>
+self.card_num #rank of hand<br>
+
+methods:<br><br>
+#@pre --> initializes card class<br>
+#@param --> card_num<br>
+#@post --> no return<br>
+__init__(self, card_num)<br><br>
+
+#@pre --> gets the ranking of the specific string<br>
+#@param --> none<br>
+#@post --> no return<br>
+get_rank_string(self)<br><br>
+
+#@pre --> draws objects<br>
+#@param --> win, topX, topY, front<br>
+#@post --> no return <br>
+draw(self, win, topX, topY, front)<br><br>
+
+#@pre --> returns suit and rank<br>
+#@param --> none<br>
+#@post --> returns suit and rank<br>
+__str__(self)<br><br>
+
+
+<!---GAME CLASS--->
+GAME<br><br>
+
+Variables:<br><br>
+self.win #status of win<br>
+self.data #data of win<br>
+
+methods:<br><br>
+#@pre --> initializes game class<br>
+#@param --> win
+#@post --> no return<br>
+__init__(self, win)<br>
+
+#@pre --> updates pygame display<br>
+#@param --> none<br>
+#@post --> no return<br>
+update(self)<br>
+
+#@pre --> cycles through game phase<br>
+#@param --> none<br>
+#@post --> no return<br>
+gameCycle(self)<br>
+
+<!---DATA CLASS--->
+DATA<br><br>
+
+Variables:<br><br>
+self.players<br> 
+self.pots<br>  
+self.table_cards<br>  
+self.player_prev_bets<br>  
+self.player_hands<br> 
+self.player_active<br>  
+self.dealer<br> 
+self.init_players(8)<br> 
+
+Methods:<br><br>
+#@pre --> SETS the game data, initializing the player classes<br>
+#@param --> win<br>
+#@post --> no return<br>
+__init__(self, win)<br><br>
+
+#@pre --> draws the relevant player board<br>
+#@param --> player_num<br>
+#@post --> no return<br>
+players_draw(self, player_num)<br><br>
+
+#@pre --> gets the player bet for each player, keeping track of pots<br>
+#@param --> bet round<br>
+#@post --> True  if a player takes down the pot  False  if two players remain<br>
+get_player_bets(self, bet_round)<br><br>
+
+#@pre --> resets the data that changes with each hand<br>
+#@param --> player number, amount, current bet, and bet round<br>
+#@post --> no return<br>
+add_to_pot(self, player_num, amt, curr_bet, bet_round)<br><br>
+
+#@pre --> resets the data that changes with each hand<br>
+#@param --> none<br>
+#@post --> no return<br>
+reset(self)<br><br>
+
+#@pre -->  Creates Player objects<br> 
+#@param --> number of players<br>
+#@post --> no return<br>
+init_players(self, num_players)<br><br>
+
+#@pre --> gives each player two cards, sending data to player and storing in self.player_hands<br>
+#@param --> none<br>
+#@post --> no return<br>
+deal(self)<br><br>
+
+#@pre --> draws three cards for the board, sending the data to players and storing in self.table_cards<br>
+#@param --> none<br>
+#@post --> no return<br>
+flop(self)<br><br>
+
+#@pre --> draws one card(the fourth on the board), and updates the data structures dependent on it<br>
+#@param --> none<br>
+#@post --> no return<br>
+turn(self)<br><br>
+
+#@pre -->  draws one card(the fifth on the board), and updates the data structures dependent on it<br>
+#@param --> none<br>
+#@post --> no return<br>
+river(self)<br><br>
+
+#@pre --> awards winning player earnings, resets data<br>
+#@param --> none<br>
+#@post --> no return<br>
+end_game(self)<br><br>
+
+#@pre --> gives winner earnings<br>
+#@param --> none<br>
+#@post --> no return<br>
+award_winnings(self)<br><br>
+
+#@pre --> determines the hands that each player has, and determines the winner<br>
+#@param --> none<br>
+#@post -->will return the winning player(s)<br>
+current_winner(self)<br><br>
+
+#@pre -->  determines if a player's hand is a flush<br>
+#@param --> player number<br>
+#@post -->True  if five cards of a suit exist<br>
+is_flush(self, player_num)<br><br>
+
+#@pre --> will find straights, flushes, straight flushes, royal flushes<br>
+#@param --> player number<br>
+#@post --> index of hand in HANDS<br>
+check_straights_flushes(self, player_num)<br><br>
+
+#@pre --> determines a pair, 2 pair, 3 of kind, 4 of kind, and full house<br>
+#@param --> player number<br>
+#@post --> index of hand in HANDS<br>
+check_duplicates(self, player_num)<br><br>
+
+
+<!---BUTTON CLASS--->
+BUTTON<br><br>
+
+Variables:<br><br>
+
+self.x<br>
+self.y #stores y<br>
+self.width #stores width<br>
+self.height #stores height<br>
+self.border_width #stores border width<br>
+self.box_color #stores color<br>
+self.hidden<br> 
+self.clickable<br>
+self.win<br>
+
+Methods:<br><br>
+
+#@pre --> initializes button class<br>
+#@param --> win, x, y, text<br>
+#@post --> no return<br>
+__init__(self, win, x , y, text)<br><br>
+
+#@pre --> draws buttons<br>
+#@param --> none<br>
+#@post --> no return<br>
+draw(self)<br><br>
+
+<!---COMPUTER CLASS--->
+COMPUTER(Player)<br><br>
+
+Variables:<br><br>
+
+inherited from player class!<br>
+
+methods:<br><br>
+
+inherited from player class! Except for:<br>
+
+#@pre --> takes a turn just like player object, except now acting as computer<br>
+#@param --> current bet, previous bet<br>
+#@post --> returns bet
+takeATurn(self, curr_bet, prev_bet)<br><br>
+
+#@pre --> decides whether to call or fold pre flop<br>
+#@param --> current bet, previous bet<br>
+#@post --> returns true or false based on calculation<br>
+pre_flop_fold(self, curr_bet, prev_bet)<br><br>
+
+#@pre --> decides based off randomness whether to bluff or not<br>
+#@param --> none<br>
+#@post --> returns true or false randomly<br>
+bluff(self)<br><br>
+
+
+
+
