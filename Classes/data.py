@@ -39,8 +39,8 @@ class Data:
         self.get_player_bets(2)
         self.river()
         self.get_player_bets(3)
-        winner, hand, high_card = self.current_winner()
-        print(self.players[winner].player_name + " WON with a " + HANDS[hand] + " High Card: " + str(high_card) +  "!\n")
+        winner, hand = self.current_winner()
+        print(self.players[winner].player_name + " WON with a " + HANDS[hand] + "!\n")
         
 
     # @description - gets the player bet for each player, keeping track of pots
@@ -208,29 +208,38 @@ class Data:
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
     # @return - will return the winning player(s)
-        def current_winner(self):
+    def current_winner(self):
+        tiewithwinner = False
+        tie = False
         for i in range(len(self.players)):
             hand_num = max(self.check_duplicates(i), self.check_straights_flushes(i))
-            print(self.players[i].player_name + " has a " + HANDS[hand_num])
-            if i = 0
+            if i == 0:
                 bestHand = hand_num
                 playerWithBestHand = i
-            elif hand_num > bestHand   
+            elif hand_num > bestHand:
+                tiewithwinner = False   
                 bestHand = hand_num
                 playerWithBestHand = i
-            elif hand_num == bestHand
-                challenger = recieveCurrHand(i) 
-                currentWinner = recieveCurrHand(playerWithBestHand)
-                for j in range(5)
-                    if challenger[j] > currentWinner[j]
+            elif hand_num == bestHand:
+                challenger = self.recieveCurrHand(i) 
+                currentWinner = self.recieveCurrHand(playerWithBestHand)
+                for j in range(5):
+                    if challenger[j] > currentWinner[j]:
+                        tiewithwinner = False
                         playerWithBestHand = i
                         break
-                    elif challenger[j] < currentWinner[j]
+                    elif challenger[j] < currentWinner[j]:
                         break
-                    elif challenger [j] == currentWinner[j]
+                    elif challenger [j] == currentWinner[j]:
                         tie = True
-                if tie
-                    #tie
+                if tie:
+                    tiewithwinner = True
+                    tie = False
+        if tiewithwinner == False:
+            return playerWithBestHand, bestHand[0]
+        elif tiewithwinner == True:
+            print("there were two winners")
+            return playerWithBestHand, bestHand[0]
                 
     # @description - determines if a player's hand is a flush
     # @param - player_num   index of player being checked
@@ -328,130 +337,134 @@ class Data:
             return 0, highest_card #did not find anything
         
              
-    def getPlayerHand(self, player_num)
+    def getPlayerHand(self, player_num):
         hand_num = max(self.check_duplicates(player_num), self.check_straights_flushes(player_num))
         return hand_num
 
-def recieveCurrHand(self, player_num)
-        hand_num = getPlayerHand(player_num)
+    def recieveCurrHand(self, player_num):
+        hand_num = self.getPlayerHand(player_num)
+        hand_num = hand_num[0]
         player_cards = self.table_cards + self.player_hands[player_num]
         player_cards_as_int = []
 
 
-        if hand_num == 5 #flush
+        if hand_num == 5: #flush
             suits = {}
-            hand = {}
+            hand = []
             max_in_suit = 0
             for card in player_cards:
                 if card.suit in suits:
                  suits[card.suit] = suits[card.suit] + 1
                  max_in_suit = max(max_in_suit, suits[card.suit])
             for card in player_cards:
-                if card.suit == max_in_suit
+                if card.suit == max_in_suit:
                     hand.append(card)
             player_cards = hand
 
 
 
         for card in player_cards:
-            rank_ints = self.conv_rank_to_int(card.rank)
-            for num in rank_ints:
-                player_cards_as_int.append(num)
-        player_cards_as_int.sort(reverse=true)
+            player_cards_as_int.append(card.rank)
+        player_cards_as_int.sort(reverse = True)
 
-        if hand_num == 0 #highcard
-            return hand_num, player_cards_as_int
-        elif hand_num == 1 #pair and 3 distinct cards
+        if hand_num == 0: #highcard
+            return player_cards_as_int
+        elif hand_num == 1: #pair and 3 distinct cards
             prev = None
-            for num in player_cards_as_int
-                if num == prev
+            for num in player_cards_as_int:
+                if num == prev:
                     pair = num
                     break
+                prev = num
             hand = [pair,pair]
-            for num in player_cards_as_int
-                if num != pair
+            for num in player_cards_as_int:
+                if num != pair:
                     hand.append(num)          
-            return hand_num, hand
-        elif hand_num == 2 #two pair 1 high card
+            return hand
+        elif hand_num == 2: #two pair 1 high card
             prev = None
             pair = None
             pair2 = None
-            for num in player_cards_as_int
-                if num == prev and pair == None
+            hand = []
+            for num in player_cards_as_int:
+                if num == prev and pair == None:
                     pair = num
                     hand = [pair, pair]
-                elif num == prev and pair2 = None
+                elif num == prev and pair2 == None:
                     pair2 = num
                     hand.append(pair2)
                     hand.append(pair2)
-            for num in player_cards_as_int
-                if num != pair or num != pair2
+                prev = num
+            for num in player_cards_as_int:
+                if num != pair or num != pair2:
                     hand.append(num)
 
-            return hand_num, hand
-        elif hand_num == 3 #three of a kind and 2 distinct cards
+            return hand
+        elif hand_num == 3: #three of a kind and 2 distinct cards
             prev = None
-            for num in player_cards_as_int
-                if num == prev
+            for num in player_cards_as_int:
+                if num == prev:
                     threeofakind = num
                     break
+                prev = num
             hand = [threeofakind,threeofakind,threeofakind]
-            for num in player_cards_as_int
-                if num != threeofakind
+            for num in player_cards_as_int:
+                if num != threeofakind:
                     hand.append(num)          
-            return hand_num, hand
-        elif hand_num == 4 #straight no high card
+            return hand
+        elif hand_num == 4: #straight no high card
             prev = None
             prev2 = None
-            for num in player_cards_as_int
-                if num+1 = prev and num+2 = prev2
+            for num in player_cards_as_int:
+                if num+1 == prev and num+2 == prev2:
                     straightHighcard = prev2
                     break
                 prev2 = prev
                 prev = num
             hand = [straightHighcard, straightHighcard-1, straightHighcard-2, straightHighcard-3, straightHighcard-4]
-            return hand_num, hand
-        elif hand_num == 5 #flush
-            return hand_num, player_cards_as_int
-        elif hand_num == 6 #full house no highcard
+            return hand
+        elif hand_num == 5: #flush
+            return player_cards_as_int
+        elif hand_num == 6: #full house no highcard
             prev = None
             prev2 = None
-            for num in player_cards_as_int
-                if num == prev and num == prev2
+            for num in player_cards_as_int:
+                if num == prev and num == prev2:
                     threeofakind = num
                 prev2 = prev
                 prev = num
             prev = None
-            for num in player_cards_as_int
-                if num == prev and num != threeofakind
+            for num in player_cards_as_int:
+                if num == prev and num != threeofakind:
                     pair = num
                 prev = num
             hand = [threeofakind,threeofakind,threeofakind,pair,pair]
-            return hand_num, hand
-        elif hand_num == 7 #four of a kind 1 high card
+            return hand
+        elif hand_num == 7: #four of a kind 1 high card
             prev = None
-            for num in player_cards_as_int
-                if num == prev
+            for num in player_cards_as_int:
+                if num == prev:
                     fourofakind = num
                     break
+                prev = num
             hand = [fourofakind,fourofakind,fourofakind,fourofakind]
-            for num in player_cards_as_int
-                if num != fourofakind
+            for num in player_cards_as_int:
+                if num != fourofakind:
                     hand.append(num)          
-            return hand_num, hand
-        elif hand_num == 8 #straight flush no high cards
+            return hand
+        elif hand_num == 8: #straight flush no high cards
             prev = None
             prev2 = None
-            for num in player_cards_as_int
-                if num+1 = prev and num+2 = prev2
+            for num in player_cards_as_int:
+                if num+1 == prev and num+2 == prev2:
                     straightHighcard = prev2
                     break
                 prev2 = prev
                 prev = num
             hand = [straightHighcard, straightHighcard-1, straightHighcard-2, straightHighcard-3, straightHighcard-4]
-            return hand_num, hand
-        elif hand_num == 9 #royal flush no high cards
-            return hand_num, player_cards_as_int
+            return hand
+        elif hand_num == 9: #royal flush no high cards
+            return player_cards_as_int
 
         
 
