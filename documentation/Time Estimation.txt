@@ -5,3 +5,43 @@ one and two to determine how long it took us, on average, to write each line of 
 58 hours with roughly 870 lines of code. Project 2 was completed in 28.25 hours with roughly 375 lines of code. 
 Using these two projects, we have a total of 86.25 hours and 1245 lines of code. Therefore, we estimated that it 
 takes us .067 hours per line of code. Finally, our total estimation of time to complete this project is 51.6 hours.
+
+	Upon completion, our group only took roughly 35 hours to complete this project. This is because we were more 
+efficient when coding than we were in the past, which allowed us to complete the project in much less time.
+
+Time Log:
+Jake:
+3/22 -- 2.5 hours -- Delegating, Create class diagram
+3/24 -- 5   hours -- Work on data.py and eng artifact
+3/25 -- 1.5 hours -- Finish eng artifact, add README, start betting function
+3/28 -- .33 hours -- Review player.py and add comments
+3/31 -- 1   hours -- Worked on the player class
+4/01 -- 1   hours -- Worked on button class
+4/04 -- 2.5 hours -- Integrate project
+TOTAL -- 13.83 hours
+
+Umar:
+3/31 -- 1   hours -- Worked on player class
+4/01 -- 1   hours -- Worked on player class
+4/02 -- 2   hours -- Worked on player class
+4/04 -- 1.5 hours -- Finish player class
+TOTAL -- 5.5 hours
+
+Mason:
+4/01 -- 2   hours -- Worked on game class
+4/02 -- 2   hours -- Worked on game class
+4/03 -- 2   hours -- Finished game class
+TOTAL -- 6 hours
+
+Rishab:
+4/01 -- 2   hours -- Worked on computer class
+4/03 -- 3   hours -- Finished computer class
+TOTAL -- 5 hours
+
+Mitch:
+3/31 -- 3   hours -- Finished card class
+4/01 -- 1   hours -- Finished button class 
+4/03 -- 1   hours -- Finished documentation
+TOTAL -- 5 hours
+
+Total Individual Time: 34.83 hours
