@@ -9,7 +9,7 @@ class Game:
 
     def update(self):
         pygame.display.update()
-        self.data.players_draw(0) #index of player to be drawn
+        self.data.players_draw(0, False) #index of player to be drawn
         time.sleep(2)
      
     def gameCycle(self):

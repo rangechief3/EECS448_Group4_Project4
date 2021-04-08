@@ -49,12 +49,12 @@ class Data:
     # @description - draws the relevant player board
     # @param - player_num    index of a player
     # @return - None
-    def players_draw(self, player_num):
+    def players_draw(self, player_num, front):
         other_players = []
         for player in self.players:
             if player.player_num != player_num:
                 other_players.append(player)
-        self.players[player_num].draw(other_players)
+        self.players[player_num].draw(other_players, front)
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
@@ -70,25 +70,25 @@ class Data:
             done_betting = False
             counter = 0
             if bet_round == 0:
-                blind = self.players[self.dealer + 1].blind(SM_BLIND)
-                self.player_prev_bets[self.dealer + 1] = blind #if someone raises they would have to call <bet> - <prevbet>
-                print(self.players[self.dealer + 1].player_name + " put in " + str(blind) + " as small blind!")
-                self.add_to_pot(self.dealer + 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
-                blind = self.players[self.dealer + 2].blind(BIG_BLIND)
-                self.player_prev_bets[self.dealer + 2] = blind
-                print(self.players[self.dealer + 2].player_name + " put in " + str(blind) + " as big blind!")
-                self.add_to_pot(self.dealer + 2, blind, BIG_BLIND, bet_round)
+                blind = self.players[self.dealer - 1].blind(SM_BLIND)
+                self.player_prev_bets[self.dealer - 1] = blind #if someone raises they would have to call <bet> - <prevbet>
+                print(self.players[self.dealer - 1].player_name + " put in " + str(blind) + " as small blind!")
+                self.add_to_pot(self.dealer - 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
+                blind = self.players[self.dealer - 2].blind(BIG_BLIND)
+                self.player_prev_bets[self.dealer - 2] = blind
+                print(self.players[self.dealer - 2].player_name + " put in " + str(blind) + " as big blind!")
+                self.add_to_pot(self.dealer - 2, blind, BIG_BLIND, bet_round)
                 curr_bet = BIG_BLIND
-                curr_player = self.dealer + 3 #Under the gun
-                self.players_draw(0) ###will be need to be changed to be more general
+                curr_player = self.dealer - 3 #Under the gun
+                self.players_draw(0, False) ###will be need to be changed to be more general
             else:
                 curr_bet = 0
-                curr_player = self.dealer + 1 #small blind 
+                curr_player = self.dealer - 1 #small blind 
             while not done_betting:  #current player and current bet are set
-                if curr_player >= len(self.players):
+                if curr_player <= -len(self.players):
                     curr_player = 0
                 if self.player_active[curr_player]:
-                    self.players_draw(0) 
+                    self.players_draw(0, False) 
                     bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
                     self.player_prev_bets[curr_player] = bet
                     if bet != -1: # a fold
@@ -102,7 +102,7 @@ class Data:
                 counter += 1
                 if counter == len(self.players): #if it has gone to all players without a raise
                     done_betting = True
-                curr_player += 1
+                curr_player -= 1
             for i in range(len(self.player_prev_bets)): #resets player previous bets to zero at the concusion of the round
                 self.player_prev_bets[i] = 0
             print(self.pots)
@@ -229,7 +229,7 @@ class Data:
     def end_game(self):
         winner, hand, high_card = self.current_winner()
         self.award_winnings()
-        self.players_draw(0)
+        self.players_draw(0, True)
         time.sleep(5)
         self.reset()
     
@@ -376,7 +376,6 @@ class Data:
             for card in player_cards:
                 highest_card = max(highest_card, card.rank)
             return 0, highest_card #did not find anything
-        
              
 
 

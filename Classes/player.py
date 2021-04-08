@@ -43,14 +43,16 @@ class Player:
         copy_stack = self.stack
         copy_stack -= blind_amt
         # ? return the amount player added to blind ?
+        '''
         if copy_stack < 0:
             print(str(self.stack) + ' - ' + str(blind_amt) + " = " + str(copy_stack))
             new_blind_amt = self.stack
             self.stack = 0
             return new_blind_amt
         else:
-            self.stack -= blind_amt
-            return blind_amt
+        '''
+        self.stack -= blind_amt
+        return blind_amt
 
     # @description - Gets a list of (number, suit), converts into Card object, stores Card objects into the self.hand list
     # @param - A list of cards that will be the objects hand
@@ -62,10 +64,10 @@ class Player:
         ### and have added them to this branch
         i = 0
         for card in hand:
-            if i % 2 == 0:
-                print("[player.py] " + self.player_name + " receiving cards:")
+            #if i % 2 == 0:
+            #print("[player.py] " + self.player_name + " receiving cards:")
             self.hand.append(card)
-            print(f'\t [player.py] Added to hand: {self.hand[i]}')
+            #print(f'\t [player.py] Added to hand: {self.hand[i]}')
             i += 1
 
     # @description - Gets a list of (number, suit), converts into Card object, stores Card objects into the self.hand list
@@ -75,7 +77,7 @@ class Player:
         ###Same thing as above, it will come in as Card objects that can be accessed with Card.rank and card.suit
         ###Can Not just use append. Check if the card already exists in self.board_cards before using append
         ### the entire board will be sent each time so there will be duplicates
-        print(f'[player.py] {self.player_name} has access to the board cards:')
+        #print(f'[player.py] {self.player_name} has access to the board cards:')
         for card in cards:
             self.board_cards.append(card)
 
@@ -124,7 +126,7 @@ class Player:
     # @return - nothing
     def draw_cards(self, front):
         # each card is an object from card class
-        print(f'[player.py] Drawing cards on screen for player {self.player_name}')
+        #print(f'[player.py] Drawing cards on screen for player {self.player_name}')
         self.hand[0].draw(self.win, self.card_pos[0], self.card_pos[1], front)
         self.hand[1].draw(self.win, self.card_pos[0] + CARD_WIDTH + GAP, self.card_pos[1], front)
         pass
@@ -136,7 +138,7 @@ class Player:
     # @param - nothing
     # @return - nothing
     def draw_board_cards(self):
-        print(f'[player.py] Drawing board cards on screen for player {self.player_name}')
+        #print(f'[player.py] Drawing board cards on screen for player {self.player_name}')
         for i, card in enumerate(self.board_cards):
             #def draw(self, win, topX, topY, front):
             card.draw(self.win, 560 + 5 *(i+1) + OFFSET + i* CARD_WIDTH, 365 + 15 // 2, True)
@@ -160,19 +162,20 @@ class Player:
     # @description - Draws the user interface
     # @param - other_players -- > list of players other than the current player
     # @return - nothing
-    def draw(self, other_players): 
+    def draw(self, other_players, front): 
         self.draw_board()
         self.draw_chips() 
         self.draw_board_cards()
         self.draw_cards(True)
         self.button_area()
-        self.draw_opponents(other_players, False)
+        self.draw_opponents(other_players, front)
+        pygame.display.update()
 
     # @description - Draws all the other players cards
     # @param - nothing
     # @return - nothing
     def draw_opponents(self, other_players, front):
-        print(f'[player.py] Drawing card/hands of other players')
+        #print(f'[player.py] Drawing card/hands of other players')
         for player in other_players:
             player.draw_cards(front) #boolean for which side to draw            
             player.draw_chips()
@@ -188,7 +191,7 @@ class Player:
     def draw_chips(self):
         pygame.draw.circle(self.win, WHITE, (self.chip_pos[0] + OFFSET, self.chip_pos[1]), CHIP_SIZE)
         self.win.blit(self.font.render(str(self.stack), True, BLACK), (self.chip_pos[0] - (TOKEN_FONT_SIZE // 2) + OFFSET, self.chip_pos[1] - (TOKEN_FONT_SIZE // 2)))
-        print(f'[player.py] Chip coordinates for {self.player_name}: {self.chip_pos}')
+        #print(f'[player.py] Chip coordinates for {self.player_name}: {self.chip_pos}')
 
     def info(self):
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, 25, INFO_BOX_WIDTH, INFO_BOX_HEIGHT))
@@ -249,7 +252,7 @@ class Player:
             return "Error in get_card_pos()"
 
     def takeATurn(self, curr_bet, prev_bet):
-        time.sleep(0.25)
+        time.sleep(0.5)
         return self.bet(curr_bet, prev_bet)
 
     def bet(self, curr_bet, prev_bet):
@@ -259,9 +262,9 @@ class Player:
         ### return curr_bet - prev_bet
         ### if they raise, then return the value they raised, etc
         if curr_bet == 0:
-            self.stack -= (10 + prev_bet)
+            self.stack -= (10 - prev_bet)
             return 10 - prev_bet
-        self.stack -= (curr_bet + prev_bet)
+        self.stack -= (curr_bet - prev_bet)
         return curr_bet - prev_bet
         # return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         # reduce player stack by bet amount then return it
@@ -283,3 +286,6 @@ class Player:
         #return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         #reduce player stack by bet amount then return it
     '''
+
+        
+             
