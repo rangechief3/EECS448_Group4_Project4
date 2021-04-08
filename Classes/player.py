@@ -142,22 +142,7 @@ class Player:
         for i, card in enumerate(self.board_cards):
             #def draw(self, win, topX, topY, front):
             card.draw(self.win, 560 + 5 *(i+1) + OFFSET + i* CARD_WIDTH, 365 + 15 // 2, True)
-        '''
-        board_card_box = pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (560 + OFFSET, 365, BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y))
-        board_card_1 = self.board_cards[0][0].draw(self.win, 560 + 5 * 1 + OFFSET, 365 + 15 // 2)
-        board_card_2 = self.board_cards[0][1].draw(self.win, 560 + 5 * 2 + 1 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
-        board_card_3 = self.board_cards[0][2].draw(self.win, 560 + 5 * 3 + 2 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
-        try:
-            board_card_4 =self.board_cards[0][3].draw(self.win, 560 + 5 * 4 + 3 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
-        except:
-            print('[player.py] There are current only 3 board cards. Drawing 2 blank cards')
-            board_card_4 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 4 + 3 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
-        try:
-            board_card_5 =self.board_cards[0][4].draw(self.win, 560 + 5 * 5 + 4 * CARD_WIDTH + OFFSET, 365 + 15 // 2)
-        except:
-            print('[player.py] There are current only 4 board cards. Drawing 1 blank cards')
-            board_card_5 = pygame.draw.rect(self.win, WHITE, (560 + 5 * 5 + 4 * CARD_WIDTH + OFFSET, 365 + 15 // 2, CARD_WIDTH, CARD_HEIGHT))
-        '''
+        
 
     # @description - Draws the user interface
     # @param - other_players -- > list of players other than the current player
