@@ -19,5 +19,6 @@ def main():
     game = Game(WIN)
     while running:
         running = game.gameCycle()
-
+        game.update_game_status()
+    pygame.quit()
 main()

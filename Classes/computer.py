@@ -47,7 +47,7 @@ class Computer(Player):
             return amt_to_stay_in
         '''
         time.sleep(0.5)
-        if random.random() > 0.2:
+        if random.random() < 0.2:
             return self.bet(curr_bet, prev_bet)
         else:
             return -1

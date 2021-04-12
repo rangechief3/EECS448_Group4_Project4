@@ -32,6 +32,7 @@ class Data:
         self.player_hands = []
         self.player_active = []
         self.dealer = 0
+        self.gameStatus = True
         self.init_players(8)
         '''
         self.deal()
@@ -55,6 +56,12 @@ class Data:
             if player.player_num != player_num:
                 other_players.append(player)
         self.players[player_num].draw(other_players, front)
+
+    # @description - if the hand ended prematurely it returns false
+    # @param - None
+    # @return - False if the hand ended prematurely
+    def get_hand_status(self):
+        return self.gameStatus
 
     # @description - gets the player bet for each player, keeping track of pots
     # @param - bet_round    Int for betting round 0 = pre-flop, 1 = after flop, 3 = after river
@@ -87,7 +94,11 @@ class Data:
             while not done_betting:  #current player and current bet are set
                 if curr_player <= -len(self.players):
                     curr_player = 0
-                if len(self.player_active) >= 2:
+                num_active = 0
+                for item in self.player_active:
+                    if item:
+                        num_active += 1
+                if num_active >= 2:
                     if self.player_active[curr_player]:
                         self.players_draw(0, False) 
                         bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
@@ -106,7 +117,10 @@ class Data:
                         done_betting = True
                     curr_player -= 1
                 else:
+                    print("We should be ending the game early")
+                    self.gameStatus = False
                     self.end_game()
+                    done_betting = True
             for i in range(len(self.player_prev_bets)): #resets player previous bets to zero at the concusion of the round
                 self.player_prev_bets[i] = 0
             print(self.pots)

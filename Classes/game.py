@@ -22,7 +22,15 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
+            
             self.data.get_player_bets(gamePhase)  
+            self.update() #should draw cards
+            run_normally = self.data.get_hand_status()
+            print(gamePhase, run_normally)
+            if not run_normally:
+                print("We are leaving the game call, hopefully BEFORE the next card is drawn")
+                self.hand_num += 1
+                return True
             if (gamePhase == 0):
                 self.data.flop()
 
@@ -36,11 +44,14 @@ class Game:
                 self.update()
                 self.data.end_game()
                 gameInProgress = False
+
             
-            self.update() #should draw cards
             gamePhase += 1
         self.hand_num += 1
         return True
+
+    def update_game_status(self):
+        self.data.gameStatus = True
         
         
 
