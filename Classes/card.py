@@ -6,8 +6,9 @@ from .constants import SUITS, HEART, DIAMOND, CLUB, SPADE, BACK, CARD_HEIGHT, CA
 
 CARDW = 100
 CARDH = 150
-OUTLINEBUFF = 5
+OUTLINEBUFF = 3
 NUMBUFF = 10
+DECKBUFF = 4
 
 class Card:
     def __init__(self, card_num):
@@ -49,7 +50,7 @@ class Card:
     def draw(self, win, topX, topY, front):
         #win.fill((255,255,255)) ############GET RID OF THIS
         if(front == True):
-            pygame.draw.rect(win, (0,0,0), (topX, topY, CARD_WIDTH, CARD_HEIGHT), 7, 7)
+            pygame.draw.rect(win, (0,0,0), (topX, topY, CARD_WIDTH, CARD_HEIGHT), 7,7)
             pygame.draw.rect(win, (255,255,255), (topX + OUTLINEBUFF, topY + OUTLINEBUFF, CARD_WIDTH - 2*OUTLINEBUFF, CARD_HEIGHT - 2*OUTLINEBUFF), 0, 3)
             win.blit(self.suit_pic, ((topX + CARD_WIDTH//2) - self.suit_pic.get_width()//2, (topY + CARD_HEIGHT//2) - self.suit_pic.get_height()//2))
             font = pygame.font.SysFont('Arial',25)
@@ -58,6 +59,13 @@ class Card:
             win.blit(text, (topX + CARD_WIDTH - 2*NUMBUFF, topY + CARD_HEIGHT - 4*NUMBUFF))
         elif(front == False):
             win.blit(BACK, (topX,topY))
+
+    def draw_deck(self, win):
+        win.blit(BACK, (200,200)) #I dont know where exactly to put the deck so im picking a random value
+        win.blit(BACK, (200 + DECKBUFF,200))
+        win.blit(BACK, (200 + 2*DECKBUFF,200))
+        win.blit(BACK, (200 + 3*DECKBUFF,200))
+        win.blit(BACK, (200 + 4*DECKBUFF,200))
 
     def __str__(self):
         return "{0}  {1}".format(self.str_rank, self.str_suit)
