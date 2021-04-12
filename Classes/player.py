@@ -14,6 +14,7 @@ class Player:
         self.player_name = player_name
         self.player_num = player_num
         self.stack = start_amt
+        self.deck_img = Card(5)
         self.hand = []
         self.board_cards = []
         self.buttons = []
@@ -164,8 +165,15 @@ class Player:
         self.draw_board_cards()
         self.draw_cards(True)
         self.button_area()
+        self.draw_deck()
         self.draw_opponents(other_players, front)
         pygame.display.update()
+
+    # @description - draws the deck
+    # @param - None
+    # @return - nothing
+    def draw_deck(self): 
+        self.deck_img.draw_deck(self.win)
 
     # @description - Draws all the other players cards
     # @param - nothing

@@ -2,7 +2,7 @@
 # Date added: 3.31.2021
 
 import pygame
-from .constants import SUITS, HEART, DIAMOND, CLUB, SPADE, BACK, CARD_HEIGHT, CARD_WIDTH
+from .constants import SUITS, HEART, DIAMOND, CLUB, SPADE, BACK, CARD_HEIGHT, CARD_WIDTH, OFFSET
 
 CARDW = 100
 CARDH = 150
@@ -61,11 +61,13 @@ class Card:
             win.blit(BACK, (topX,topY))
 
     def draw_deck(self, win):
-        win.blit(BACK, (200,200)) #I dont know where exactly to put the deck so im picking a random value
-        win.blit(BACK, (200 + DECKBUFF,200))
-        win.blit(BACK, (200 + 2*DECKBUFF,200))
-        win.blit(BACK, (200 + 3*DECKBUFF,200))
-        win.blit(BACK, (200 + 4*DECKBUFF,200))
+        initial_x = 560 + 5 *(3) + OFFSET + 2* CARD_WIDTH
+        initial_y = 365 + 15 // 2 - CARD_HEIGHT - 5
+        win.blit(BACK, (initial_x,initial_y)) #I dont know where exactly to put the deck so im picking a random value
+        win.blit(BACK, (initial_x + DECKBUFF,initial_y))
+        win.blit(BACK, (initial_x + 2*DECKBUFF,initial_y))
+        win.blit(BACK, (initial_x + 3*DECKBUFF,initial_y))
+        win.blit(BACK, (initial_x + 4*DECKBUFF,initial_y))
 
     def __str__(self):
         return "{0}  {1}".format(self.str_rank, self.str_suit)
