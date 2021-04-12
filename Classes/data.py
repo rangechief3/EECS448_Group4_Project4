@@ -143,13 +143,16 @@ class Data:
         for player in self.players:
             player.reset()
         self.dealer -= 1
+        if self.dealer < -len(self.players):
+            self.dealer = 0
         self.curr_bet = 0
         self.pots = []
         self.table_cards = []
         self.player_hands = []
-        for item in self.player_active:
-            item = True
-            
+        self.player_active = []
+        for i in range(len(self.players)):
+            self.player_active.append(True)
+
 
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
