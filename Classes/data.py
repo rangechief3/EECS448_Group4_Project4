@@ -87,23 +87,26 @@ class Data:
             while not done_betting:  #current player and current bet are set
                 if curr_player <= -len(self.players):
                     curr_player = 0
-                if self.player_active[curr_player]:
-                    self.players_draw(0, False) 
-                    bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
-                    self.player_prev_bets[curr_player] = bet
-                    if bet != -1: # a fold
-                        print(self.players[curr_player].player_name + " bet " + str(bet) + "!")
-                        self.add_to_pot(curr_player, bet, curr_bet, bet_round)
-                        if bet > curr_bet:
-                            counter = 0
-                            curr_bet = bet
-                    else:
-                        self.player_active[curr_player] = False
-                        self.players[curr_player].playing = False
-                counter += 1
-                if counter == len(self.players): #if it has gone to all players without a raise
-                    done_betting = True
-                curr_player -= 1
+                if len(self.player_active) >= 2:
+                    if self.player_active[curr_player]:
+                        self.players_draw(0, False) 
+                        bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
+                        self.player_prev_bets[curr_player] = bet
+                        if bet != -1: # a fold
+                            print(self.players[curr_player].player_name + " bet " + str(bet) + "!")
+                            self.add_to_pot(curr_player, bet, curr_bet, bet_round)
+                            if bet > curr_bet:
+                                counter = 0
+                                curr_bet = bet
+                        else:
+                            self.player_active[curr_player] = False
+                            self.players[curr_player].playing = False
+                    counter += 1
+                    if counter == len(self.players): #if it has gone to all players without a raise
+                        done_betting = True
+                    curr_player -= 1
+                else:
+                    self.end_game()
             for i in range(len(self.player_prev_bets)): #resets player previous bets to zero at the concusion of the round
                 self.player_prev_bets[i] = 0
             print(self.pots)

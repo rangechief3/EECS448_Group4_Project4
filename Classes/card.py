@@ -50,7 +50,7 @@ class Card:
         #win.fill((255,255,255)) ############GET RID OF THIS
         if(front == True):
             pygame.draw.rect(win, (0,0,0), (topX, topY, CARD_WIDTH, CARD_HEIGHT), 7, 7)
-            pygame.draw.rect(win, (255,255,255), (topX + OUTLINEBUFF, topY + OUTLINEBUFF, CARD_WIDTH - 2*OUTLINEBUFF, CARD_HEIGHT - 2*OUTLINEBUFF), 3, 3)
+            pygame.draw.rect(win, (255,255,255), (topX + OUTLINEBUFF, topY + OUTLINEBUFF, CARD_WIDTH - 2*OUTLINEBUFF, CARD_HEIGHT - 2*OUTLINEBUFF), 0, 3)
             win.blit(self.suit_pic, ((topX + CARD_WIDTH//2) - self.suit_pic.get_width()//2, (topY + CARD_HEIGHT//2) - self.suit_pic.get_height()//2))
             font = pygame.font.SysFont('Arial',25)
             text = font.render(self.str_rank, 1, self.color)
