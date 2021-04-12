@@ -1,6 +1,7 @@
 from .constants import HANDS, BIG_BLIND
 from .player import Player
 import random
+import time
 '''
         self.win = win
         self.player_name = player_name
@@ -21,6 +22,7 @@ class Computer(Player):
         c2rank = self.hand[1].rank
         c1suit = self.hand[0].suit
         c2suit = self.hand[1].suit
+        '''
         if len(self.board_cards) == 0: #preflop
             if ( not self.pre_flop_fold(curr_bet, prev_bet)): #not folding preflop
                 if c1rank == c2rank: #pocket pair
@@ -42,6 +44,12 @@ class Computer(Player):
             else: 
                 return -1
         else: 
+            return amt_to_stay_in
+        '''
+        time.sleep(0.5)
+        if random.random() > 0.2:
+            return self.bet(curr_bet, prev_bet)
+        else:
             return -1
             
                 

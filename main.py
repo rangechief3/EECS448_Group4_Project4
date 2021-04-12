@@ -17,18 +17,7 @@ def main():
     running = True
     clock = pygame.time.Clock()
     game = Game(WIN)
-    game.gameCycle()
-    '''
     while running:
-        game.gameCycle()
-        clock.tick(FPS)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        game.update()
-
-    pygame.quit()
-    '''
+        running = game.gameCycle()
 
 main()

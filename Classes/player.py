@@ -69,6 +69,17 @@ class Player:
             self.hand.append(card)
             #print(f'\t [player.py] Added to hand: {self.hand[i]}')
             i += 1
+    
+    # @description - changes relevant cards to be null 
+    # @param - None
+    # @return - None
+    def reset(self):
+        self.board_cards = []
+        self.hand = []
+        self.hand_num = 0
+        self.playing = True
+        self.high_card = 0
+
 
     # @description - Gets a list of (number, suit), converts into Card object, stores Card objects into the self.hand list
     # @param - A list of numbers that will be the board cards
@@ -127,9 +138,9 @@ class Player:
     def draw_cards(self, front):
         # each card is an object from card class
         #print(f'[player.py] Drawing cards on screen for player {self.player_name}')
-        self.hand[0].draw(self.win, self.card_pos[0], self.card_pos[1], front)
-        self.hand[1].draw(self.win, self.card_pos[0] + CARD_WIDTH + GAP, self.card_pos[1], front)
-        pass
+        for i, card in enumerate(self.hand):
+            card.draw(self.win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
+
         # print(f'[player.py] Drawing {self.player_name} 1st card on screen: {self.hand[0].draw(self.win, 800, 800)}')
         # print(f'[player.py] Drawing {self.player_name} 2nd card on screen: {self.hand[1].draw(self.win, 500, 500)}')
         # Running into errors using Card.draw(), will fix tom
@@ -162,7 +173,8 @@ class Player:
     def draw_opponents(self, other_players, front):
         #print(f'[player.py] Drawing card/hands of other players')
         for player in other_players:
-            player.draw_cards(front) #boolean for which side to draw            
+            if player.playing:
+                player.draw_cards(front) #boolean for which side to draw            
             player.draw_chips()
         # Running into errors using Card.draw(), will fix tom
 

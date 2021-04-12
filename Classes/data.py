@@ -99,6 +99,7 @@ class Data:
                             curr_bet = bet
                     else:
                         self.player_active[curr_player] = False
+                        self.players[curr_player].playing = False
                 counter += 1
                 if counter == len(self.players): #if it has gone to all players without a raise
                     done_betting = True
@@ -139,16 +140,21 @@ class Data:
     def reset(self):
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
+        for player in self.players:
+            player.reset()
+        self.dealer -= 1
         self.curr_bet = 0
         self.pots = []
         self.table_cards = []
         self.player_hands = []
+        for item in self.player_active:
+            item = True
+            
 
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
     # @return - None
     def init_players(self, num_players):
-        '''
         self.players.append(Player(self.win, PLAYER_NAMES[0], 0, START_STACK))
         self.player_active.append(True)
         self.player_prev_bets.append(0)
@@ -162,6 +168,7 @@ class Data:
             self.players.append(Player(self.win, PLAYER_NAMES[i], i, START_STACK))
             self.player_active.append(True)
             self.player_prev_bets.append(0)
+        '''
         
 
 
@@ -227,6 +234,7 @@ class Data:
     # @param - None
     # @return - None
     def end_game(self):
+        print("ENDING HAND!!")
         winner, hand, high_card = self.current_winner()
         self.award_winnings()
         self.players_draw(0, True)
