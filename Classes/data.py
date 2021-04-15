@@ -42,8 +42,13 @@ class Data:
         self.get_player_bets(2)
         self.river()
         self.get_player_bets(3)
-        winner, hand, high_card = self.current_winner()
-        print(self.players[winner].player_name + " WON with a " + HANDS[hand] + " High Card: " + str(high_card) +  "!\n")
+        winner, hand = self.current_winner()
+        if len(winner) > 1:
+            print("TIE between ")
+            for i in winner:
+                print(self.players[i].player_name + "with a " + HANDS[self.getPlayerHand(i)[0]])
+        else:            
+            print(self.players[winner[0]].player_name + " WON with a " + HANDS[hand] + "!\n")
         '''
         
     # @description - draws the relevant player board
@@ -70,43 +75,39 @@ class Data:
             done_betting = False
             counter = 0
             if bet_round == 0:
-                blind = self.players[self.dealer - 1].blind(SM_BLIND)
-                self.player_prev_bets[self.dealer - 1] = blind #if someone raises they would have to call <bet> - <prevbet>
-                print(self.players[self.dealer - 1].player_name + " put in " + str(blind) + " as small blind!")
-                self.add_to_pot(self.dealer - 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
-                blind = self.players[self.dealer - 2].blind(BIG_BLIND)
-                self.player_prev_bets[self.dealer - 2] = blind
-                print(self.players[self.dealer - 2].player_name + " put in " + str(blind) + " as big blind!")
-                self.add_to_pot(self.dealer - 2, blind, BIG_BLIND, bet_round)
+                blind = self.players[self.dealer + 1].blind(SM_BLIND)
+                self.player_prev_bets[self.dealer + 1] = blind #if someone raises they would have to call <bet> - <prevbet>
+                print(self.players[self.dealer + 1].player_name + " put in " + str(blind) + " as small blind!")
+                self.add_to_pot(self.dealer + 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
+                blind = self.players[self.dealer + 2].blind(BIG_BLIND)
+                self.player_prev_bets[self.dealer + 2] = blind
+                print(self.players[self.dealer + 2].player_name + " put in " + str(blind) + " as big blind!")
+                self.add_to_pot(self.dealer + 2, blind, BIG_BLIND, bet_round)
                 curr_bet = BIG_BLIND
-                curr_player = self.dealer - 3 #Under the gun
+                curr_player = self.dealer + 3 #Under the gun
                 self.players_draw(0, False) ###will be need to be changed to be more general
             else:
                 curr_bet = 0
-                curr_player = self.dealer - 1 #small blind 
+                curr_player = self.dealer + 1 #small blind 
             while not done_betting:  #current player and current bet are set
-                if curr_player <= -len(self.players):
+                if curr_player >= len(self.players):
                     curr_player = 0
-                if len(self.player_active) >= 2:
-                    if self.player_active[curr_player]:
-                        self.players_draw(0, False) 
-                        bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
-                        self.player_prev_bets[curr_player] = bet
-                        if bet != -1: # a fold
-                            print(self.players[curr_player].player_name + " bet " + str(bet) + "!")
-                            self.add_to_pot(curr_player, bet, curr_bet, bet_round)
-                            if bet > curr_bet:
-                                counter = 0
-                                curr_bet = bet
-                        else:
-                            self.player_active[curr_player] = False
-                            self.players[curr_player].playing = False
-                    counter += 1
-                    if counter == len(self.players): #if it has gone to all players without a raise
-                        done_betting = True
-                    curr_player -= 1
-                else:
-                    self.end_game()
+                if self.player_active[curr_player]:
+                    self.players_draw(0, False) 
+                    bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
+                    self.player_prev_bets[curr_player] = bet
+                    if bet != -1: # a fold
+                        print(self.players[curr_player].player_name + " bet " + str(bet) + "!")
+                        self.add_to_pot(curr_player, bet, curr_bet, bet_round)
+                        if bet > curr_bet:
+                            counter = 0
+                            curr_bet = bet
+                    else:
+                        self.player_active[curr_player] = False
+                counter += 1
+                if counter == len(self.players): #if it has gone to all players without a raise
+                    done_betting = True
+                curr_player += 1
             for i in range(len(self.player_prev_bets)): #resets player previous bets to zero at the concusion of the round
                 self.player_prev_bets[i] = 0
             print(self.pots)
@@ -143,24 +144,16 @@ class Data:
     def reset(self):
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
-        for player in self.players:
-            player.reset()
-        self.dealer -= 1
-        if self.dealer < -len(self.players):
-            self.dealer = 0
         self.curr_bet = 0
         self.pots = []
         self.table_cards = []
         self.player_hands = []
-        self.player_active = []
-        for i in range(len(self.players)):
-            self.player_active.append(True)
-
 
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
     # @return - None
     def init_players(self, num_players):
+        '''
         self.players.append(Player(self.win, PLAYER_NAMES[0], 0, START_STACK))
         self.player_active.append(True)
         self.player_prev_bets.append(0)
@@ -174,7 +167,6 @@ class Data:
             self.players.append(Player(self.win, PLAYER_NAMES[i], i, START_STACK))
             self.player_active.append(True)
             self.player_prev_bets.append(0)
-        '''
         
 
 
@@ -240,62 +232,74 @@ class Data:
     # @param - None
     # @return - None
     def end_game(self):
-        print("ENDING HAND!!")
-        winner, hand, high_card = self.current_winner()
-        self.award_winnings()
-        self.players_draw(0, True)
-        time.sleep(5)
-        self.reset()
+        winner, hand = self.current_winner()
+        if len(winner) > 1:
+            #multiple winners
+            self.award_winnings()
+            self.players_draw(0, True)
+            time.sleep(5)
+            self.reset()
+        else:
+            #1 winner
+            self.award_winnings()
+            self.players_draw(0, True)
+            time.sleep(5)
+            self.reset()
     
     # @description - gives winner earnings
     # @param - None
     # @return - None
     def award_winnings(self):
-        winner, hand, high_card = self.current_winner()
+        winner, hand = self.current_winner()
         for pot in self.pots:
             #if winner in pot[3]:
-            self.players[winner].receive_winnings(pot[0])
+            self.players[winner[0]].receive_winnings(pot[0])
 
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
     # @return - will return the winning player(s)
     def current_winner(self):
-        best_hand = 0
-        best_high_card = 0
-        player_winner = 0
-        high_card_tiebreaker = 0
-        highest_duplicate_hand = 0
-        highest_duplicate_card = 0
-        highest_specials_hand = 0
-        highest_specials_card = 0
-
+        tiewithwinner = False
+        tie = False
+        playerWithBestHand = []
         for i in range(len(self.players)):
-            highest_duplicate_hand, highest_duplicate_card = self.check_duplicates(i)
-            highest_specials_hand, highest_duplicate_card = self.check_straights_flushes(i)
-            temp_hand_num = max(highest_duplicate_hand, highest_specials_hand)
-            
-            if highest_duplicate_hand > highest_specials_card:
-                temp_high_card = highest_duplicate_card
-            else:
-                temp_high_card = highest_specials_card
+            hand_num = max(self.check_duplicates(i), self.check_straights_flushes(i))
+            if i == 0:
+                bestHand = hand_num
+                playerWithBestHand.append(i)
+            elif hand_num > bestHand:
+                tiewithwinner = False   
+                bestHand = hand_num
+                playerWithBestHand = []
+                playerWithBestHand.append(i)
+            elif hand_num == bestHand:
+                challenger = self.recieveCurrHand(i) 
+                currentWinner = self.recieveCurrHand(playerWithBestHand[0])
+                for j in range(5):
+                    print (str(j) + " " + str(challenger[j]) + " " + str(currentWinner[j])) 
+                    if challenger[j] > currentWinner[j]:
+                        tiewithwinner = False
+                        tie = False
+                        playerWithBestHand = []
+                        playerWithBestHand.append(i)
+                        break
+                    elif challenger[j] < currentWinner[j]:
+                        tiewithwinner = False
+                        tie = False
+                        break
+                    elif challenger [j] == currentWinner[j]:
+                        tie = True
+                if tie:
+                    playerWithBestHand.append(i)
+                    tiewithwinner = True
+                    tie = False
 
-            if temp_hand_num == best_hand: #i.e. both have a two pair
-                if temp_high_card > best_high_card:
-                    player_winner = i
-            elif temp_hand_num > best_hand:
-                player_winner = i
-            #update the best hand and high cards    
-            best_hand = max(best_hand, temp_hand_num)
-            best_high_card = max(best_high_card, temp_high_card)
-            print(self.players[i].player_name + " has a " + HANDS[temp_hand_num])
-            player_info = []
-            for card in self.player_hands[i]:
-                player_info.append([card.str_rank + str(card.rank) + card.str_suit])
-            for card in self.table_cards:
-                player_info.append([card.str_rank + str(card.rank) + card.str_suit])
-            print(player_info)
-        return player_winner, best_hand, best_high_card
-
+        if tiewithwinner == False:
+            return playerWithBestHand, bestHand[0]
+        elif tiewithwinner == True:
+            print("there were two winners")
+            return playerWithBestHand, bestHand[0]
+                
     # @description - determines if a player's hand is a flush
     # @param - player_num   index of player being checked
     # @return - True  if five cards of a suit exist 
@@ -390,10 +394,138 @@ class Data:
             for card in player_cards:
                 highest_card = max(highest_card, card.rank)
             return 0, highest_card #did not find anything
+        
              
+    def getPlayerHand(self, player_num):
+        hand_num = max(self.check_duplicates(player_num), self.check_straights_flushes(player_num))
+        return hand_num
+
+    def recieveCurrHand(self, player_num):
+        hand_num = self.getPlayerHand(player_num)
+        hand_num = hand_num[0]
+        player_cards = self.table_cards + self.player_hands[player_num]
+        player_cards_as_int = []
+
+
+        if hand_num == 5: #flush
+            suits = {}
+            hand = []
+            max_in_suit = 0
+            for card in player_cards:
+                if card.suit in suits:
+                 suits[card.suit] = suits[card.suit] + 1
+                 max_in_suit = max(max_in_suit, suits[card.suit])
+            for card in player_cards:
+                if card.suit == max_in_suit:
+                    hand.append(card)
+            player_cards = hand
 
 
 
+        for card in player_cards:
+            player_cards_as_int.append(card.rank)
+        player_cards_as_int.sort(reverse = True)
+
+        if hand_num == 0: #highcard
+            return player_cards_as_int
+        elif hand_num == 1: #pair and 3 distinct cards
+            prev = None
+            for num in player_cards_as_int:
+                if num == prev:
+                    pair = num
+                    break
+                prev = num
+            hand = [pair,pair]
+            for num in player_cards_as_int:
+                if num != pair:
+                    hand.append(num)          
+            return hand
+        elif hand_num == 2: #two pair 1 high card
+            prev = None
+            pair = None
+            pair2 = None
+            hand = []
+            for num in player_cards_as_int:
+                if num == prev and pair == None:
+                    pair = num
+                    hand = [pair, pair]
+                elif num == prev and pair2 == None:
+                    pair2 = num
+                    hand.append(pair2)
+                    hand.append(pair2)
+                prev = num
+            for num in player_cards_as_int:
+                if num != pair or num != pair2:
+                    hand.append(num)
+
+            return hand
+        elif hand_num == 3: #three of a kind and 2 distinct cards
+            prev = None
+            for num in player_cards_as_int:
+                if num == prev:
+                    threeofakind = num
+                    break
+                prev = num
+            hand = [threeofakind,threeofakind,threeofakind]
+            for num in player_cards_as_int:
+                if num != threeofakind:
+                    hand.append(num)          
+            return hand
+        elif hand_num == 4: #straight no high card
+            prev = None
+            prev2 = None
+            for num in player_cards_as_int:
+                if num+1 == prev and num+2 == prev2:
+                    straightHighcard = prev2
+                    break
+                prev2 = prev
+                prev = num
+            hand = [straightHighcard, straightHighcard-1, straightHighcard-2, straightHighcard-3, straightHighcard-4]
+            return hand
+        elif hand_num == 5: #flush
+            return player_cards_as_int
+        elif hand_num == 6: #full house no highcard
+            prev = None
+            prev2 = None
+            for num in player_cards_as_int:
+                if num == prev and num == prev2:
+                    threeofakind = num
+                prev2 = prev
+                prev = num
+            prev = None
+            for num in player_cards_as_int:
+                if num == prev and num != threeofakind:
+                    pair = num
+                prev = num
+            hand = [threeofakind,threeofakind,threeofakind,pair,pair]
+            return hand
+        elif hand_num == 7: #four of a kind 1 high card
+            prev = None
+            for num in player_cards_as_int:
+                if num == prev:
+                    fourofakind = num
+                    break
+                prev = num
+            hand = [fourofakind,fourofakind,fourofakind,fourofakind]
+            for num in player_cards_as_int:
+                if num != fourofakind:
+                    hand.append(num)          
+            return hand
+        elif hand_num == 8: #straight flush no high cards
+            prev = None
+            prev2 = None
+            for num in player_cards_as_int:
+                if num+1 == prev and num+2 == prev2:
+                    straightHighcard = prev2
+                    break
+                prev2 = prev
+                prev = num
+            hand = [straightHighcard, straightHighcard-1, straightHighcard-2, straightHighcard-3, straightHighcard-4]
+            return hand
+        elif hand_num == 9: #royal flush no high cards
+            return player_cards_as_int
+    def playAgain(self):
+        return True
 
     
     

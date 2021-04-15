@@ -19,5 +19,5 @@ def main():
     game = Game(WIN)
     while running:
         running = game.gameCycle()
-
+        
 main()

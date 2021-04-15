@@ -40,7 +40,8 @@ class Game:
             self.update() #should draw cards
             gamePhase += 1
         self.hand_num += 1
-        return True
+        running = self.data.playAgain()
+        return running
         
         
 
