@@ -26,15 +26,16 @@ class Data:
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
         self.players = []
-        self.pots = []
+        self.pot = 0
         self.table_cards = []
         self.player_prev_bets = []
         self.player_hands = []
         self.player_active = []
         self.dealer = 0
         self.gameStatus = True
+        self.playerContributions = []
         self.init_players(8)
-        
+                
         
     # @description - draws the relevant player board
     # @param - player_num    index of a player
@@ -112,7 +113,6 @@ class Data:
                     done_betting = True
             for i in range(len(self.player_prev_bets)): #resets player previous bets to zero at the concusion of the round
                 self.player_prev_bets[i] = 0
-            print(self.pots)
 
     # @description - resets the data that changes with each hand
     # @param - player_num   Int for player index   
@@ -121,26 +121,9 @@ class Data:
     # @param - bet_round Int for number of betting round (0-3)
     # @return - None
     def add_to_pot(self, player_num, amt, curr_bet, bet_round):
-        ##self.pot += amt 
-        #CASES
-        #  -no pot
-        #  -create side pot
-        #  -add to pot
-        #TESTING NO SIDE POTS
-        if len(self.pots) == 0:
-            pot_list = [amt, bet_round, curr_bet, [player_num]] #[total, betting round, current bet, player1 ... playerk]
-            self.pots.append(pot_list)
-        else:
-            for pot in self.pots:
-                if bet_round > pot[1]:
-                    pot[1] = bet_round
-                    curr_bet = 0
-                if amt > pot[2]:
-                    pot[2] = amt
-                if player_num not in pot[3]:
-                    pot[3].append(player_num)
-                pot[0] += amt
-
+        self.pot += amt
+        self.playerContributions[player_num] += amt
+        ##self.players[player_num].recievePotValue(self.pot)
     # @description - resets the data that changes with each hand
     # @param - None
     # @return - None
@@ -153,12 +136,13 @@ class Data:
         if self.dealer < -len(self.players):
             self.dealer = 0
         self.curr_bet = 0
-        self.pots = []
+        self.pot = 0
         self.table_cards = []
         self.player_hands = []
         self.player_active = []
         for i in range(len(self.players)):
             self.player_active.append(True)
+            self.playerContributions[i] = 0
 
 
     # @description - Creates Player objects 
@@ -168,11 +152,15 @@ class Data:
         self.players.append(Player(self.win, USER_NAMES[0], 0, START_STACK))
         self.player_active.append(True)
         self.player_prev_bets.append(0)
+        self.playerContributions.append(0)
         for i in range(1,num_players):
             self.players.append(Computer(self.win, PLAYER_NAMES[i], i, START_STACK))
             self.player_active.append(True)
             self.player_prev_bets.append(0)
+            self.playerContributions.append(0)
             #print(self.players[i].player_name)
+
+        
         '''
         for i in range(num_players):
             self.players.append(Player(self.win, PLAYER_NAMES[i], i, START_STACK))
@@ -254,10 +242,10 @@ class Data:
     # @return - None
     def award_winnings(self):
         ##player_amt_in = [x,y, z ...]
-        ##player_active = []
-        ## for i, active in enumerate(self.player_active):    i, active = (0, Boolean), (1, Boolean), etc 
-        ##         if active: 
-        ##              player_Active.append(i)
+        playerActiveIndex = []
+        for i, active in enumerate(self.player_active):
+            if active: 
+                playerActiveIndex.append(i)
         ## for i in range(len(self.player_active)): length is a int. for loops in python loop over 'objects' so a range makes it 0-(len-1)
         ##      if self.player_Active[i]:
         ##keep track of if a player has put in less than the other people. Then create a list of all players that have put in at least that much
@@ -276,11 +264,37 @@ class Data:
         #       else:
         #           eligibilepot += self.player_amt_in[i] 
         #           self.player_amt_in[i] = 0
-        #      
-        winner, hand = self.current_winner([0,1,2,3,4,5,6,7])
-        for pot in self.pots:
-            #if winner in pot[3]:
-            self.players[winner[0]].receive_winnings(pot[0])
+        #    
+        maxbet = []
+        for i in playerActiveIndex:
+            betincluded = False
+            for bet in maxbet:
+                if self.playerContributions[i] == bet:    
+                    betincluded = True
+            if betincluded == False:
+                maxbet.append(self.playerContributions[i])
+        maxbet.sort()
+
+        accountedForbet = 0
+        adjustedpot = 0
+        for bet in maxbet:
+            for i in range(len(self.players)):
+                if self.playerContributions[i] >= bet:
+                    adjustedpot += bet - accountedForbet
+                elif self.playerContributions[i] <bet:
+                    adjustedpot += self.playerContributions[i] - accountedForbet
+            eligiblePlayers = []
+            for i in playerActiveIndex:
+                if self.playerContributions[i] >= bet:
+                    eligiblePlayers.append(i)
+            winner, hand = self.current_winner(eligiblePlayers)
+            for victor in winner:
+                self.players[victor].receive_winnings(adjustedpot//(len(winner)))
+            accountedForbet += bet
+            adjustedpot = 0
+
+
+        winner, hand = self.current_winner(playerActiveIndex)
 
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
