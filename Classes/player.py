@@ -29,6 +29,7 @@ class Player:
         self.card_pos = self.get_card_pos(self.player_num)
         self.font = pygame.font.SysFont('Arial', SMALL_CARD_FONT_SIZE)
         self.playAgain = True
+        self.raising = False
 
     # If needing to print out a player object, will return name and player number. To use in main: print(player)
     def __str__(self):
@@ -97,10 +98,6 @@ class Player:
         self.playing = False
         self.hand = []
 
-    #def takeATurn(self, curr_bet, prev_bet):
-    #    time.sleep(0.5)
-    #    return self.bet(curr_bet, prev_bet)
-
     def get_x_y(self, pos):
         x = pos[0]
         y= pos[1]
@@ -117,9 +114,18 @@ class Player:
         clock = pygame.time.Clock()
         running = True
         x,y = -1, -1
+        
+        if(self.raising == False):
+            betText = "Current bet: " + str(cur_bet)                            #draw current bet
+            font = pygame.font.SysFont('Arial',17)                      
+            text = font.render(betText, 1, (0, 0, 0))
+            self.win.blit(text,(147, HEIGHT - INFO_BOX_HEIGHT + 17 + 12))
+            self.raising = True
+
         while running:
             clock.tick(FPS)
-            self.draw_current_player_turn_indicator(self.card_pos[0] - 3, self.card_pos[1] - 3)
+            self.draw_current_player_turn_indicator(self.card_pos[0] - 3, self.card_pos[1] - 3)        
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -127,6 +133,7 @@ class Player:
                     pos = pygame.mouse.get_pos()
                     x,y = self.get_x_y(pos)
             ## (Check, Call, Raise, Fold)
+
             if x != -1 and y != -1:
                 for i,button in enumerate(self.buttons):
                     if (button.x <= x < (button.x + button.width)) and (button.y < y < (button.y + button.height)):
@@ -135,30 +142,42 @@ class Player:
                             if i == 0: #check
                                 self.buttons[4].hidden = True
                                 if (cur_bet - prev_bet) == 0:
+                                    self.raising = False                                    
                                     return 0
                             elif i == 1: #call
                                 self.buttons[4].hidden = True
                                 self.update_stack(cur_bet-prev_bet)
+                                self.raising = False
                                 return cur_bet - prev_bet
+                                
                             elif i == 2: #raise
                                 self.buttons[4].hidden = False  
                                 self.buttons[4].clickable = True
-                                self.buttons[4].draw()
-                                self.buttons[2].clickable = False                              
-                                return self.takeATurn(cur_bet, prev_bet)                            
+                                self.buttons[4].draw()                                              
+                                
+                                raiseText = "Current raise: " + str(cur_bet * 2)
+                                font = pygame.font.SysFont('Arial',17)                      #draw current raise
+                                text = font.render(raiseText, 1, (0, 0, 0))
+                                pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (147, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1 + 12, 125, 20))#BOARD_CARDS_BOX_COLOR
+                                self.win.blit(text,(147, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1 + 12))
+                                
+                                return self.takeATurn(cur_bet * 2, prev_bet)                            
                             elif i == 3: #fold
                                 self.buttons[4].hidden = True
                                 self.playing = False
+                                self.raising = False
                                 return -1
                             elif i == 4: #confirm raise
                                 self.buttons[2].clickable = True
                                 self.buttons[4].hidden = True
                                 self.buttons[4].clickable = False
-                                self.update_stack(cur_bet * 2 - prev_bet)
-                                return cur_bet * 2
+                                self.raising = False
+                                self.update_stack(cur_bet - prev_bet)
+                                return cur_bet
                             elif i == 5: #leave game
                                 self.playAgain = False
                                 self.playing = False
+                                self.raising = False
                                 return -1
                         
             else:
@@ -227,6 +246,7 @@ class Player:
         self.win.fill(BACKGROUND_COLOR)
         board = pygame.draw.circle(self.win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS)
         inner_circle = pygame.draw.circle(self.win, WHITE, (WIDTH // 2 + OFFSET, HEIGHT // 2), INNER_BORDER_RADIUS, width=1)
+    
 
     def draw_chips(self):
         pygame.draw.circle(self.win, WHITE, (self.chip_pos[0] + OFFSET, self.chip_pos[1]), CHIP_SIZE)
@@ -251,7 +271,7 @@ class Player:
     
     def draw_buttons(self):
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))
-        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (140, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))#############
+        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (140, HEIGHT - INFO_BOX_HEIGHT, 133, INFO_BOX_HEIGHT - 50))#############
         for button in self.buttons:
             button.draw()
 
