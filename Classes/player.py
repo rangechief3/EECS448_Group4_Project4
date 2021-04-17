@@ -28,6 +28,7 @@ class Player:
         self.chip_pos = self.get_chip_pos()
         self.card_pos = self.get_card_pos(self.player_num)
         self.font = pygame.font.SysFont('Arial', SMALL_CARD_FONT_SIZE)
+        self.playAgain = True
 
     # If needing to print out a player object, will return name and player number. To use in main: print(player)
     def __str__(self):
@@ -144,9 +145,7 @@ class Player:
                                 self.buttons[4].clickable = True
                                 self.buttons[4].draw()
                                 self.buttons[2].clickable = False                              
-                                return self.takeATurn(cur_bet, prev_bet)
-                                #self.update_stack(cur_bet * 2 - prev_bet)
-                                #return cur_bet * 2                               
+                                return self.takeATurn(cur_bet, prev_bet)                            
                             elif i == 3: #fold
                                 self.buttons[4].hidden = True
                                 self.playing = False
@@ -158,7 +157,9 @@ class Player:
                                 self.update_stack(cur_bet * 2 - prev_bet)
                                 return cur_bet * 2
                             elif i == 5: #leave game
-                                running = False
+                                self.playAgain = False
+                                self.playing = False
+                                return -1
                         
             else:
                 pass #waiting for input
@@ -250,7 +251,7 @@ class Player:
     
     def draw_buttons(self):
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))
-        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (140, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 3 + 12, 115, 67))#############
+        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (140, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))#############
         for button in self.buttons:
             button.draw()
 
