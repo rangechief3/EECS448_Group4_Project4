@@ -2,17 +2,6 @@ from .constants import HANDS, BIG_BLIND
 from .player import Player
 import random
 import time
-'''
-        self.win = win
-        self.player_name = player_name
-        self.player_num = player_num
-        self.stack = start_amt
-        self.hand = []
-        self.board_cards = []
-        self.buttons = []
-        self.hand_num = 0 #your hand + board cards
-        self.high_card = 0
-'''
 
 class Computer(Player):
     
@@ -47,7 +36,7 @@ class Computer(Player):
             return amt_to_stay_in
         '''
         time.sleep(0.5)
-        if random.random() < 0.2:
+        if random.random() < 0.5:
             return self.bet(curr_bet, prev_bet)
         else:
             return -1

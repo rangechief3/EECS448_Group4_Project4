@@ -15,7 +15,7 @@ GAP = 10
 OFFSET = 150
 CARD_WIDTH, CARD_HEIGHT = 50, 90 #50, 90 100, 150
 MAG_CARD_WIDTH, MAG_CARD_HEIGHT = 100, 180
-INFO_BOX_X, INFO_BOX_Y = 150, 50
+INFO_BOX_X, INFO_BOX_Y = 300, 50
 BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y = 279, 105
 SMALL_CARD_FONT_SIZE = 25
 BIG_CARD_FONT_SIZE = 35
@@ -50,7 +50,7 @@ CARDH = 150
 OUTLINEBUFF = 5
 NUMBUFF = 10
 
-
+USER_NAMES = ["Jake"]
 PLAYER_NAMES = ["Daniel Negreanu", "Bryn Kenney", "Phil Ivey", "Justin Bonomo",
                 "Erik Seidel", "Dan Smith", "Stephen Chidwick", "Tom Dwan"]
 SUITS = ['♣','♦','♠','♥']

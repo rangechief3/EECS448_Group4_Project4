@@ -9,7 +9,7 @@ class Game:
         self.hand_num = 0
 
     def update(self):
-        self.data.players_draw(0, False) #index of player to be drawn
+        self.data.players_draw(0, False, None) #index of player to be drawn
         pygame.display.update()
         time.sleep(2)
      
