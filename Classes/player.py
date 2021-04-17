@@ -121,6 +121,8 @@ class Player:
             text = font.render(betText, 1, (0, 0, 0))
             self.win.blit(text,(147, HEIGHT - INFO_BOX_HEIGHT + 17 + 12))
             self.raising = True
+        
+        raiseValue = cur_bet
 
         while running:
             clock.tick(FPS)
@@ -154,14 +156,14 @@ class Player:
                                 self.buttons[4].hidden = False  
                                 self.buttons[4].clickable = True
                                 self.buttons[4].draw()                                              
-                                
-                                raiseText = "Current raise: " + str(cur_bet * 2)
+                                raiseValue += 10
+                                raiseText = "Current raise: " + str(raiseValue)
                                 font = pygame.font.SysFont('Arial',17)                      #draw current raise
                                 text = font.render(raiseText, 1, (0, 0, 0))
                                 pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (147, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1 + 12, 125, 20))#BOARD_CARDS_BOX_COLOR
                                 self.win.blit(text,(147, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1 + 12))
-                                
-                                return self.takeATurn(cur_bet * 2, prev_bet)                            
+                                     
+
                             elif i == 3: #fold
                                 self.buttons[4].hidden = True
                                 self.playing = False
@@ -172,14 +174,15 @@ class Player:
                                 self.buttons[4].hidden = True
                                 self.buttons[4].clickable = False
                                 self.raising = False
-                                self.update_stack(cur_bet - prev_bet)
-                                return cur_bet
+                                self.update_stack(raiseValue - prev_bet)
+                                return raiseValue
                             elif i == 5: #leave game
                                 self.playAgain = False
                                 self.playing = False
                                 self.raising = False
                                 return -1
-                        
+                            x = -1
+                            y = -1
             else:
                 pass #waiting for input
             pygame.display.update()
