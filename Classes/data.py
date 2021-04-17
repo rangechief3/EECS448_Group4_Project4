@@ -42,6 +42,7 @@ class Data:
     # @return - None
     def players_draw(self, player_num, front, curr_player):
         other_players = []
+        self.players[player_num].recievePotValue(self.pot)
         for player in self.players:
             if player.player_num != player_num:
                 other_players.append(player)
@@ -123,7 +124,7 @@ class Data:
     def add_to_pot(self, player_num, amt, curr_bet, bet_round):
         self.pot += amt
         self.playerContributions[player_num] += amt
-        ##self.players[player_num].recievePotValue(self.pot)
+        
     # @description - resets the data that changes with each hand
     # @param - None
     # @return - None
@@ -142,6 +143,7 @@ class Data:
         self.player_active = []
         for i in range(len(self.players)):
             self.player_active.append(True)
+            self.players[i].recievePotValue(0)
             self.playerContributions[i] = 0
 
 

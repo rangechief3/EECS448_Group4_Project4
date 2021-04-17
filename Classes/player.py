@@ -30,6 +30,7 @@ class Player:
         self.font = pygame.font.SysFont('Arial', SMALL_CARD_FONT_SIZE)
         self.playAgain = True
         self.raising = False
+        self.pot = 0
 
     # If needing to print out a player object, will return name and player number. To use in main: print(player)
     def __str__(self):
@@ -160,8 +161,7 @@ class Player:
                                 font = pygame.font.SysFont('Arial',17)                      #draw current raise
                                 text = font.render(raiseText, 1, (0, 0, 0))
                                 pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (147, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1 + 12, 125, 20))#BOARD_CARDS_BOX_COLOR
-                                self.win.blit(text,(147, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1 + 12))
-                                     
+                                self.win.blit(text,(147, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1 + 12))                                     
 
                             elif i == 3: #fold
                                 self.buttons[4].hidden = True
@@ -217,6 +217,7 @@ class Player:
         self.draw_buttons()
         self.draw_deck()
         self.draw_opponents(other_players, front)
+        self.drawPot()
         if curr_player != None:
             if curr_player != 0:
                 curr_player = 8 + curr_player
@@ -229,6 +230,16 @@ class Player:
     # @return - nothing
     def draw_deck(self): 
         self.deck_img.draw_deck(self.win)
+
+    def recievePotValue(self, pot):
+        self.pot = pot      
+
+    def drawPot(self):
+        potText = "Pot: " + str(self.pot)                       #draw current pot
+        font = pygame.font.SysFont('Arial',17)                      
+        text = font.render(potText, 1, (0, 0, 0))
+        pygame.draw.circle(self.win, (255,255,255), (930, 310), 30)
+        self.win.blit(text,(910, 300))
 
     # @description - Draws all the other players cards
     # @param - nothing
@@ -246,8 +257,17 @@ class Player:
 
     def draw_board(self):
         self.win.fill(BACKGROUND_COLOR)
-        board = pygame.draw.circle(self.win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS)
+        board = pygame.draw.circle(self.win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS + 80)
         inner_circle = pygame.draw.circle(self.win, WHITE, (WIDTH // 2 + OFFSET, HEIGHT // 2), INNER_BORDER_RADIUS, width=1)
+        for i in range(8):
+            pos = self.get_card_pos(i)
+            border_thickness = 3
+            width = border_thickness* 2 + CARD_WIDTH * 2 + GAP
+            height = border_thickness* 2 + CARD_HEIGHT
+            #card.draw(self.win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
+
+            pygame.draw.rect(self.win, (255, 0, 0), (pos[0] - 3, pos[1] - 3, width, height), border_thickness)
+                 
     
 
     def draw_chips(self):
