@@ -22,6 +22,7 @@ class Player:
         self.playing = True
         self.hand_num = 0
         self.high_card = 0
+        self.init_buttons()
         self.chip_pos = self.get_chip_pos()
         self.card_pos = self.get_card_pos()
         self.font = pygame.font.SysFont('Arial', SMALL_CARD_FONT_SIZE)
@@ -59,17 +60,8 @@ class Player:
     # @param - A list of cards that will be the objects hand
     # @return - nothing
     def receive_hand(self, hand):
-        ###With that poker module, the cards are actually already in a built-in class(maybe it would have been easier to just implement with numbers idk)
-        ### but it will come in a Card object. To get the rank and suit, they can be accessed with card.suit and card.rank
-        ###  these will return strings for the rank(2-9 or T,J,Q,K,A) and suit. The suits are special characters. I have these in the constants in data.py
-        ### and have added them to this branch
-        i = 0
         for card in hand:
-            #if i % 2 == 0:
-            #print("[player.py] " + self.player_name + " receiving cards:")
             self.hand.append(card)
-            #print(f'\t [player.py] Added to hand: {self.hand[i]}')
-            i += 1
     
     # @description - changes relevant cards to be null 
     # @param - None
@@ -164,7 +156,7 @@ class Player:
         self.draw_chips() 
         self.draw_board_cards()
         self.draw_cards(True)
-        self.button_area()
+        self.draw_buttons()
         self.draw_deck()
         self.draw_opponents(other_players, front)
         pygame.display.update()
@@ -205,16 +197,16 @@ class Player:
         self.win.blit(self.font.render(f'{self.player_name} Stack = {self.stack}', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30))
         self.win.blit(self.font.render(f'Idk what other info', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30 + TOKEN_FONT_SIZE))
 
-    def button_area(self):
+    def init_buttons(self):
+        self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Check') )
+        self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Call'))
+        self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Raise'))
+        self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Fold'))
+    
+    def draw_buttons(self):
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))
-        button1 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Check')
-        button1.draw()
-        button2 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Call')
-        button2.draw()
-        button3 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Raise')
-        button3.draw()
-        button4 = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Fold')
-        button4.draw()
+        for button in self.buttons:
+            button.draw()
 
     def get_chip_pos(self):
         if self.player_num == 0:
