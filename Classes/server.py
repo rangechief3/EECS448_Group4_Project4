@@ -32,7 +32,10 @@ def threaded_client(conn, player_num):
             if not data:
                 break
             else:
-                pass
+                if data == 'get':
+                    pass
+                    #player_data = game.get_player_info(player_num)
+                    #conn.sendall(pickle.dumps(player_data))
                 #if data == value? of the bet maybe 
                 #maybe have a method of data that retrieves all of the pertinent information and sends it to the player
                 #conn.sendall(pickle.dumps(game))

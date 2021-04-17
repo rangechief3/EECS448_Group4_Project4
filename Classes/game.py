@@ -6,6 +6,7 @@ pygame.font.init()
 class Game:
     def __init__(self): #removed the window as a parameter
         self.data = Data() #same with the data class
+        self.users = 0
         self.hand_num = 0
         self.player_to_add = False
         self.players_to_add = []
@@ -14,10 +15,20 @@ class Game:
         self.data.players_draw(0, False, None) #index of player to be drawn
         pygame.display.update()
         time.sleep(2)
-
+    
     def addToQueue(self, player_num):
-        self.player_to_add = True
-        self.players_to_add.append(player_num)
+        if self.users == 0:
+            self.players_to_add.append(player_num)
+            self.create_player()
+        else:
+            self.player_to_add = True
+            self.players_to_add.append(player_num)
+
+    def createPlayer(self, player_num):
+        self.data.replace_computer_with_user(player_num)
+
+    def get_player_info(player_num):
+        return self.data.get_data(player_num)
 
     def gameCycle(self):
         self.data.deal()

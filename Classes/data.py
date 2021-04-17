@@ -27,6 +27,7 @@ class Data:
         self.player_prev_bets = []
         self.player_hands = []
         self.player_active = []
+        self.send_to_player_data = []
         self.dealer = 0
         self.gameStatus = True
         self.init_players(8)
@@ -156,6 +157,8 @@ class Data:
         for i in range(len(self.players)):
             self.player_active.append(True)
 
+    def replace_computer_with_user(player_num):
+        self.playesr[player_num] = Player(USER_NAMES[player_num], player_num, START_STACK)
 
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
