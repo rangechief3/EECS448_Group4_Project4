@@ -20,57 +20,31 @@ connected = set()
 games = Game()
 playerCount = 0
 
-
-def threaded_client(conn, p, gameId):
-    global idCount
-    conn.send(str.encode(str(p)))
+def threaded_client(conn, player_num):
+    global playerCount
+    player_info = game.createPlayer(player_num)
+    conn.send(str.encode(str(player_info)))
 
     reply = ""
     while True:
         try:
             data = conn.recv(4096).decode()
-
-            if gameId in games:
-                game = games[gameId]
-
-                if not data:
-                    break
-                else:
-                    if data == "reset":
-                        game.resetWent()
-                    elif data != "get":
-                        game.play(p, data)
-
-                    conn.sendall(pickle.dumps(game))
-            else:
+            if not data:
                 break
+            else:
+                pass
+                #if data == value? of the bet maybe 
+                #maybe have a method of data that retrieves all of the pertinent information and sends it to the player
+                #conn.sendall(pickle.dumps(game))
         except:
             break
-
     print("Lost connection")
-    try:
-        del games[gameId]
-        print("Closing Game", gameId)
-    except:
-        pass
-    idCount -= 1
+    game.create_computer(player_num)
     conn.close()
-
-
 
 while True:
     conn, addr = s.accept() #conn = IP address, port/id 
     print("Connected to:", addr)
+    playerCount += 1
 
-    idCount += 1
-    p = 0
-    gameId = (idCount - 1)//2
-    if idCount % 2 == 1:
-        games[gameId] = Game(gameId)
-        print("Creating a new game...")
-    else:
-        games[gameId].ready = True
-        p = 1
-
-
-    start_new_thread(threaded_client, (conn, p, gameId))
+    start_new_thread(threaded_client, (conn, playerCount))

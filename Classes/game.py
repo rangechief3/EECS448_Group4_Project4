@@ -1,18 +1,24 @@
 import pygame
-from .data import Data
+from data import Data
 import time
+pygame.font.init()
 
 class Game:
-    def __init__(self, win):
-        self.win = win
-        self.data = Data(win)
+    def __init__(self): #removed the window as a parameter
+        self.data = Data() #same with the data class
         self.hand_num = 0
+        self.player_to_add = False
+        self.players_to_add = []
 
     def update(self):
         self.data.players_draw(0, False, None) #index of player to be drawn
         pygame.display.update()
         time.sleep(2)
-     
+
+    def addToQueue(self, player_num):
+        self.player_to_add = True
+        self.players_to_add.append(player_num)
+
     def gameCycle(self):
         self.data.deal()
         gamePhase = 0

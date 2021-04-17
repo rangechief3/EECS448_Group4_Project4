@@ -2,7 +2,7 @@
 # Date added: 3.31.2021
 
 import pygame
-from .constants import SUITS, HEART, DIAMOND, CLUB, SPADE, BACK, CARD_HEIGHT, CARD_WIDTH, OFFSET
+from constants import SUITS, HEART, DIAMOND, CLUB, SPADE, BACK, CARD_HEIGHT, CARD_WIDTH, OFFSET
 
 CARDW = 100
 CARDH = 150

@@ -3,25 +3,21 @@
 # Date branch made: 3.31.2021
 
 import random
+import pygame
 import time
-from .card import Card
-from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, USER_NAMES, START_STACK, HANDS, SUITS
-from .player import Player
-from .computer import Computer
+from card import Card
+from constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, USER_NAMES, START_STACK, HANDS, SUITS
+from player import Player
+from computer import Computer
+pygame.font.init()
 
-###TODO
-# award_winners()
-# pot management
-# issue with high cards/determining winner for ALL cards not just the most important
-# calculating hand each turn and then sending to player. important for 
 class Data:
 
     #m = re.fullmatch('([2-9]|[ATJQK])[♣♦♠♥]', str(card))
     # @description - SETS the game data, initializing the player classes
     # @param - win    pygame WINDOW passed to players for printing purposes
     # @return - None
-    def __init__(self, win):
-        self.win = win
+    def __init__(self):  #do not store the pygame window, this will be localized to the client
         
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
@@ -165,11 +161,13 @@ class Data:
     # @param - num_players   determines how many Player objects will be created
     # @return - None
     def init_players(self, num_players):
-        self.players.append(Player(self.win, USER_NAMES[0], 0, START_STACK))
+        '''
+        self.players.append(Player(USER_NAMES[0], 0, START_STACK))
         self.player_active.append(True)
         self.player_prev_bets.append(0)
-        for i in range(1,num_players):
-            self.players.append(Computer(self.win, PLAYER_NAMES[i], i, START_STACK))
+        '''
+        for i in range(num_players):
+            self.players.append(Computer(PLAYER_NAMES[i], i, START_STACK))
             self.player_active.append(True)
             self.player_prev_bets.append(0)
             #print(self.players[i].player_name)

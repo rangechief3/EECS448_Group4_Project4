@@ -1,5 +1,5 @@
-from .constants import HANDS, BIG_BLIND
-from .player import Player
+from constants import HANDS, BIG_BLIND
+from player import Player
 import random
 import time
 

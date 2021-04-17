@@ -1,9 +1,9 @@
 import random 
-from . data import *
-from . constants import *
-from . button import *
+from data import *
+from constants import *
+from button import *
 import time
-from . card import Card
+from card import Card
 import gc
 import pygame
 import sys
@@ -11,8 +11,7 @@ import sys
 FPS = 60
 
 class Player:
-    def __init__(self, win, player_name, player_num, start_amt):
-        self.win = win
+    def __init__(self, player_name, player_num, start_amt): #remove the windows as a parameter
         self.player_name = player_name
         self.player_num = player_num
         self.stack = start_amt
@@ -105,20 +104,20 @@ class Player:
         y= pos[1]
         return x,y 
 
-    def draw_current_player_turn_indicator(self, x, y):
+    def draw_current_player_turn_indicator(self, x, y, win):
         border_thickness = 3
         width = border_thickness* 2 + CARD_WIDTH * 2 + GAP
         height = border_thickness* 2 + CARD_HEIGHT
         #card.draw(self.win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
-        pygame.draw.rect(self.win, (0, 255, 0), (x, y, width, height), border_thickness)
+        pygame.draw.rect(win, (0, 255, 0), (x, y, width, height), border_thickness)
 
-    def takeATurn(self, cur_bet, prev_bet):
+    def takeATurn(self, cur_bet, prev_bet, win):
         clock = pygame.time.Clock()
         running = True
         x,y = -1, -1
         while running:
             clock.tick(FPS)
-            self.draw_current_player_turn_indicator(self.card_pos[0] - 3, self.card_pos[1] - 3)
+            self.draw_current_player_turn_indicator(self.card_pos[0] - 3, self.card_pos[1] - 3, win)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -151,87 +150,80 @@ class Player:
     # @description - Draws each card from current players hand
     # @param - front True if drawing front false if back
     # @return - nothing
-    def draw_cards(self, front):
+    def draw_cards(self, win, front ):
         if self.playing:
             for i, card in enumerate(self.hand):
-                card.draw(self.win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
+                card.draw(win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
 
-    def draw_player_name(self, x, y, name):
-        self.win.blit(self.font.render(name, True, BLACK), (x - (TOKEN_FONT_SIZE // 2) + OFFSET, y - (TOKEN_FONT_SIZE // 2)))
+    def draw_player_name(self, win, x, y, name):
+        win.blit(self.font.render(name, True, BLACK), (x - (TOKEN_FONT_SIZE // 2) + OFFSET, y - (TOKEN_FONT_SIZE // 2)))
 
     # @description - Draws the board cards
     # @param - nothing
     # @return - nothing
-    def draw_board_cards(self):
+    def draw_board_cards(self, win):
         for i, card in enumerate(self.board_cards):
-            card.draw(self.win, 560 + 5 *(i+1) + OFFSET + i* CARD_WIDTH, 365 + 15 // 2, True)
+            card.draw(win, 560 + 5 *(i+1) + OFFSET + i* CARD_WIDTH, 365 + 15 // 2, True)
 
     # @description - Draws the user interface
     # @param - other_players -- > list of players other than the current player
     # @return - nothing
-    def draw(self, other_players, front, curr_player): 
-        self.draw_board()
-        self.draw_chips() 
-        self.draw_board_cards()
-        self.draw_cards(True)
-        self.draw_player_name(self.chip_pos[0] - 3* len(self.player_name), self.chip_pos[1] + 50, self.player_name)
-        self.draw_buttons()
-        self.draw_deck()
-        self.draw_opponents(other_players, front)
+    def draw(self, win, other_players, front, curr_player): 
+        self.draw_board(win)
+        self.draw_chips(win) 
+        self.draw_board_cards(win)
+        self.draw_cards(win,True)
+        self.draw_player_name(win,self.chip_pos[0] - 3* len(self.player_name), self.chip_pos[1] + 50, self.player_name)
+        self.draw_buttons(win)
+        self.draw_deck(win)
+        self.draw_opponents(win,other_players, front)
         if curr_player != None:
             if curr_player != 0:
                 curr_player = 8 + curr_player
             pos = self.get_card_pos(curr_player)
-            self.draw_current_player_turn_indicator(pos[0] - 3, pos[1] - 3)
+            self.draw_current_player_turn_indicator(win,pos[0] - 3, pos[1] - 3)
         pygame.display.update()
 
     # @description - draws the deck
     # @param - None
     # @return - nothing
-    def draw_deck(self): 
-        self.deck_img.draw_deck(self.win)
+    def draw_deck(self, win): 
+        self.deck_img.draw_deck(win)
 
     # @description - Draws all the other players cards
     # @param - nothing
     # @return - nothing
-    def draw_opponents(self, other_players, front):
+    def draw_opponents(self, win,other_players, front):
         for player in other_players:
             if player.playing:
-                player.draw_cards(front) #boolean for which side to draw            
-            player.draw_chips()
+                player.draw_cards(win,front) #boolean for which side to draw            
+            player.draw_chips(win)
             sign = 1
             if player.chip_pos[1] < HEIGHT//2:
                 sign = -1
             str_length = len(player.player_name)
-            player.draw_player_name(player.chip_pos[0]-3 * str_length , player.chip_pos[1] - 50* sign, player.player_name)
+            player.draw_player_name(win,player.chip_pos[0]-3 * str_length , player.chip_pos[1] - 50* sign, player.player_name)
 
-    def draw_board(self):
-        self.win.fill(BACKGROUND_COLOR)
-        board = pygame.draw.circle(self.win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS)
-        inner_circle = pygame.draw.circle(self.win, WHITE, (WIDTH // 2 + OFFSET, HEIGHT // 2), INNER_BORDER_RADIUS, width=1)
+    def draw_board(self, win):
+        win.fill(BACKGROUND_COLOR)
+        board = pygame.draw.circle(win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS)
+        inner_circle = pygame.draw.circle(win, WHITE, (WIDTH // 2 + OFFSET, HEIGHT // 2), INNER_BORDER_RADIUS, width=1)
 
-    def draw_chips(self):
-        pygame.draw.circle(self.win, WHITE, (self.chip_pos[0] + OFFSET, self.chip_pos[1]), CHIP_SIZE)
-        self.win.blit(self.font.render(str(self.stack), True, BLACK), (self.chip_pos[0] - (TOKEN_FONT_SIZE // 2) + OFFSET, self.chip_pos[1] - (TOKEN_FONT_SIZE // 2)))
-
-    def info(self):
-        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, 25, INFO_BOX_WIDTH, INFO_BOX_HEIGHT))
-        self.hand[0].draw_big(self.win, 35, 35)
-        self.hand[1].draw_big(self.win, 35 + MAG_CARD_WIDTH + 15, 35)
-        self.win.blit(self.font.render(f'{self.player_name} Stack = {self.stack}', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30))
-        self.win.blit(self.font.render(f'Idk what other info', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30 + TOKEN_FONT_SIZE))
+    def draw_chips(self, win):
+        pygame.draw.circle(win, WHITE, (self.chip_pos[0] + OFFSET, self.chip_pos[1]), CHIP_SIZE)
+        win.blit(self.font.render(str(self.stack), True, BLACK), (self.chip_pos[0] - (TOKEN_FONT_SIZE // 2) + OFFSET, self.chip_pos[1] - (TOKEN_FONT_SIZE // 2)))
 
     def init_buttons(self):
-        self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Check') )
-        self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Call'))
-        self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Raise'))
-        self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Fold'))
-        self.buttons.append(Button(self.win, 60, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Confirm Raise'))
+        self.buttons.append(Button( 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Check') )
+        self.buttons.append(Button( 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Call'))
+        self.buttons.append(Button( 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Raise'))
+        self.buttons.append(Button( 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Fold'))
+        self.buttons.append(Button( 60, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Confirm Raise'))
     
-    def draw_buttons(self):
-        pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))
+    def draw_buttons(self, win):
+        pygame.draw.rect(win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))
         for button in self.buttons:
-            button.draw()
+            button.draw(win)
 
     def get_chip_pos(self):
         if self.player_num == 0:
@@ -285,29 +277,12 @@ class Player:
         # return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         # reduce player stack by bet amount then return it
     
-    def playAgainQuery(self):
-        buttonyes = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'yes')
+    def playAgainQuery(self, win):
+        buttonyes = Button(win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'yes')
         buttonyes.draw()
-        buttonno = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'no')
+        buttonno = Button(win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'no')
         buttonno.draw()
 
-    '''
-        def bet(self, curr_bet, prev_bet):
-        if curr_bet == 0:
-            bet = int(random.random() * 100)
-            self.stack -= bet
-            return bet
-        elif curr_bet > (self.stack + prev_bet):
-            bet = self.stack
-            self.stack = 0
-            return bet
-        else:
-            bet = curr_bet - prev_bet
-            self.stack -= bet
-            return bet
-        #return 0 for check, curr_bet for call, higher value for raise, -1 for fold
-        #reduce player stack by bet amount then return it
-    '''
 
         
              
