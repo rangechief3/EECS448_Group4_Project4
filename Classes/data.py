@@ -50,12 +50,12 @@ class Data:
     # @description - draws the relevant player board
     # @param - player_num    index of a player
     # @return - None
-    def players_draw(self, player_num, front):
+    def players_draw(self, player_num, front, curr_player):
         other_players = []
         for player in self.players:
             if player.player_num != player_num:
                 other_players.append(player)
-        self.players[player_num].draw(other_players, front)
+        self.players[player_num].draw(other_players, front, curr_player)
 
     # @description - if the hand ended prematurely it returns false
     # @param - None
@@ -87,7 +87,7 @@ class Data:
                 self.add_to_pot(self.dealer - 2, blind, BIG_BLIND, bet_round)
                 curr_bet = BIG_BLIND
                 curr_player = self.dealer - 3 #Under the gun
-                self.players_draw(0, False) ###will be need to be changed to be more general
+                self.players_draw(0, False, curr_player) ###will be need to be changed to be more general
             else:
                 curr_bet = 0
                 curr_player = self.dealer - 1 #small blind 
@@ -100,7 +100,7 @@ class Data:
                         num_active += 1
                 if num_active >= 2:
                     if self.player_active[curr_player]:
-                        self.players_draw(0, False) 
+                        self.players_draw(0, False, curr_player) 
                         bet = self.players[curr_player].takeATurn(curr_bet, self.player_prev_bets[curr_player])
                         self.player_prev_bets[curr_player] = bet
                         if bet != -1: # a fold
@@ -257,7 +257,7 @@ class Data:
         print("ENDING HAND!!")
         winner, hand, high_card = self.current_winner()
         self.award_winnings()
-        self.players_draw(0, True)
+        self.players_draw(0, True, None)
         time.sleep(5)
         self.reset()
     
