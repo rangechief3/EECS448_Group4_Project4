@@ -34,23 +34,7 @@ class Data:
         self.dealer = 0
         self.gameStatus = True
         self.init_players(8)
-        '''
-        self.deal()
-        self.get_player_bets(0)
-        self.flop()
-        self.get_player_bets(1)
-        self.turn()
-        self.get_player_bets(2)
-        self.river()
-        self.get_player_bets(3)
-        winner, hand = self.current_winner()
-        if len(winner) > 1:
-            print("TIE between ")
-            for i in winner:
-                print(self.players[i].player_name + "with a " + HANDS[self.getPlayerHand(i)[0]])
-        else:            
-            print(self.players[winner[0]].player_name + " WON with a " + HANDS[hand] + "!\n")
-        '''
+        
         
     # @description - draws the relevant player board
     # @param - player_num    index of a player
@@ -82,22 +66,22 @@ class Data:
             done_betting = False
             counter = 0
             if bet_round == 0:
-                blind = self.players[self.dealer + 1].blind(SM_BLIND)
-                self.player_prev_bets[self.dealer + 1] = blind #if someone raises they would have to call <bet> - <prevbet>
-                print(self.players[self.dealer + 1].player_name + " put in " + str(blind) + " as small blind!")
-                self.add_to_pot(self.dealer + 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
-                blind = self.players[self.dealer + 2].blind(BIG_BLIND)
-                self.player_prev_bets[self.dealer + 2] = blind
-                print(self.players[self.dealer + 2].player_name + " put in " + str(blind) + " as big blind!")
-                self.add_to_pot(self.dealer + 2, blind, BIG_BLIND, bet_round)
+                blind = self.players[self.dealer - 1].blind(SM_BLIND)
+                self.player_prev_bets[self.dealer - 1] = blind #if someone raises they would have to call <bet> - <prevbet>
+                print(self.players[self.dealer - 1].player_name + " put in " + str(blind) + " as small blind!")
+                self.add_to_pot(self.dealer - 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
+                blind = self.players[self.dealer - 2].blind(BIG_BLIND)
+                self.player_prev_bets[self.dealer - 2] = blind
+                print(self.players[self.dealer - 2].player_name + " put in " + str(blind) + " as big blind!")
+                self.add_to_pot(self.dealer - 2, blind, BIG_BLIND, bet_round)
                 curr_bet = BIG_BLIND
                 curr_player = self.dealer - 3 #Under the gun
                 self.players_draw(0, False, curr_player) ###will be need to be changed to be more general
             else:
                 curr_bet = 0
-                curr_player = self.dealer + 1 #small blind 
+                curr_player = self.dealer - 1 #small blind 
             while not done_betting:  #current player and current bet are set
-                if curr_player >= len(self.players):
+                if curr_player <= -len(self.players):
                     curr_player = 0
                 num_active = 0
                 for item in self.player_active:
@@ -129,7 +113,7 @@ class Data:
             for i in range(len(self.player_prev_bets)): #resets player previous bets to zero at the concusion of the round
                 self.player_prev_bets[i] = 0
             print(self.pots)
-            
+
     # @description - resets the data that changes with each hand
     # @param - player_num   Int for player index   
     # @param - amt   Int for amount bet
@@ -137,6 +121,7 @@ class Data:
     # @param - bet_round Int for number of betting round (0-3)
     # @return - None
     def add_to_pot(self, player_num, amt, curr_bet, bet_round):
+        ##self.pot += amt 
         #CASES
         #  -no pot
         #  -create side pot
@@ -162,10 +147,19 @@ class Data:
     def reset(self):
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
+        for player in self.players:
+            player.reset()
+        self.dealer -= 1
+        if self.dealer < -len(self.players):
+            self.dealer = 0
         self.curr_bet = 0
         self.pots = []
         self.table_cards = []
         self.player_hands = []
+        self.player_active = []
+        for i in range(len(self.players)):
+            self.player_active.append(True)
+
 
     # @description - Creates Player objects 
     # @param - num_players   determines how many Player objects will be created
@@ -259,6 +253,30 @@ class Data:
     # @param - None
     # @return - None
     def award_winnings(self):
+        ##player_amt_in = [x,y, z ...]
+        ##player_active = []
+        ## for i, active in enumerate(self.player_active):    i, active = (0, Boolean), (1, Boolean), etc 
+        ##         if active: 
+        ##              player_Active.append(i)
+        ## for i in range(len(self.player_active)): length is a int. for loops in python loop over 'objects' so a range makes it 0-(len-1)
+        ##      if self.player_Active[i]:
+        ##keep track of if a player has put in less than the other people. Then create a list of all players that have put in at least that much
+        # eligiblepot = check all players + that amount to this pot if they put in more than that
+        # winner, hand = self.current_winner(list of players eligible for this pot)
+        ## minimum_amt = -1
+        ## for i in player_active:
+        #      if minimum_amt = -1:
+        #           minimum_amt = self.player_amt_in[i] //assign to the first amount that a player has put in 
+        #       else:
+        #          find the lowest minimum 
+        # for i, amt in enumerate(self.player_amt_in):
+        #      if self.player_active[i]:
+        #           elibiglepot += minimum_amt
+        #           self.player_amt_in[i] -= minumum_amt
+        #       else:
+        #           eligibilepot += self.player_amt_in[i] 
+        #           self.player_amt_in[i] = 0
+        #      
         winner, hand = self.current_winner([0,1,2,3,4,5,6,7])
         for pot in self.pots:
             #if winner in pot[3]:
