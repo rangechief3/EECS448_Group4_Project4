@@ -266,7 +266,7 @@ class Player:
         # return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         # reduce player stack by bet amount then return it
     
-    def playAgainQuery(self)
+    def playAgainQuery(self):
         buttonyes = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'yes')
         buttonyes.draw()
         buttonno = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'no')

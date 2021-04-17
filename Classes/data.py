@@ -232,25 +232,26 @@ class Data:
     # @param - None
     # @return - None
     def end_game(self):
-        winner, hand = self.current_winner()
-        if len(winner) > 1:
-            #multiple winners
-            self.award_winnings()
-            self.players_draw(0, True)
-            time.sleep(5)
-            self.reset()
-        else:
-            #1 winner
-            self.award_winnings()
-            self.players_draw(0, True)
-            time.sleep(5)
-            self.reset()
+        self.award_winnings()
+       # winner, hand = self.current_winner()
+       # if len(winner) > 1:
+        #    multiple winners
+        #    self.award_winnings()
+        #    self.players_draw(0, True)
+        #    time.sleep(5)
+        #    self.reset()
+        #else:
+        #    #1 winner
+        #    self.award_winnings()
+        #    self.players_draw(0, True)
+        #    time.sleep(5)
+        #    self.reset()
     
     # @description - gives winner earnings
     # @param - None
     # @return - None
     def award_winnings(self):
-        winner, hand = self.current_winner()
+        winner, hand = self.current_winner([0,1,2,3,4,5,6,7])
         for pot in self.pots:
             #if winner in pot[3]:
             self.players[winner[0]].receive_winnings(pot[0])
@@ -258,13 +259,15 @@ class Data:
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
     # @return - will return the winning player(s)
-    def current_winner(self):
+    def current_winner(self, activePlayers):
         tiewithwinner = False
         tie = False
         playerWithBestHand = []
-        for i in range(len(self.players)):
+        firstactiveplayer = True
+        for i in activePlayers:
             hand_num = max(self.check_duplicates(i), self.check_straights_flushes(i))
-            if i == 0:
+            if firstactiveplayer == True:
+                firstactiveplayer = False
                 bestHand = hand_num
                 playerWithBestHand.append(i)
             elif hand_num > bestHand:
@@ -279,7 +282,7 @@ class Data:
                     print (str(j) + " " + str(challenger[j]) + " " + str(currentWinner[j])) 
                     if challenger[j] > currentWinner[j]:
                         tiewithwinner = False
-                        tie = False
+                        tie = False 
                         playerWithBestHand = []
                         playerWithBestHand.append(i)
                         break
