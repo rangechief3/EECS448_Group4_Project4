@@ -50,7 +50,7 @@ CARDH = 150
 OUTLINEBUFF = 5
 NUMBUFF = 10
 
-USER_NAMES = ["Jake"]
+USER_NAMES = ["Jake", "Mitch", "Mason", "Rishab", "Umar"]
 PLAYER_NAMES = ["Daniel Negreanu", "Bryn Kenney", "Phil Ivey", "Justin Bonomo",
                 "Erik Seidel", "Dan Smith", "Stephen Chidwick", "Tom Dwan"]
 SUITS = ['♣','♦','♠','♥']

@@ -17,7 +17,7 @@ s.listen()
 print("Waiting for a connection, Server Started")
 
 connected = set()
-games = Game()
+game = Game()
 playerCount = 0
 
 def threaded_client(conn, player_num):
@@ -48,6 +48,5 @@ def threaded_client(conn, player_num):
 while True:
     conn, addr = s.accept() #conn = IP address, port/id 
     print("Connected to:", addr)
-    playerCount += 1
-
     start_new_thread(threaded_client, (conn, playerCount))
+    playerCount += 1

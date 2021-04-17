@@ -36,7 +36,7 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
 
-        #draw, #receive_hand, #receive_winnings, #receive_board_cards
+        #draw, #receive_hand, #receive_winnings, #receive_board_cards, #receive_pot_value
         #self, win, other_players, front, curr_player): 
         #other_players = draw_parameters[0]
         #front = draw_parameters[1]

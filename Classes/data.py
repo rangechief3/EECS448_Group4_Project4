@@ -157,7 +157,7 @@ class Data:
         for i in range(len(self.players)):
             self.player_active.append(True)
 
-    def replace_computer_with_user(player_num):
+    def replace_computer_with_user(self, player_num):
         self.playesr[player_num] = Player(USER_NAMES[player_num], player_num, START_STACK)
 
     # @description - Creates Player objects 
