@@ -23,6 +23,7 @@ playerCount = 0
 def threaded_client(conn, player_num):
     global playerCount
     player_info = game.createPlayer(player_num)
+    print(player_info)
     conn.send(str.encode(str(player_info)))
 
     reply = ""

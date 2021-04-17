@@ -25,10 +25,13 @@ class Game:
             self.players_to_add.append(player_num)
 
     def createPlayer(self, player_num):
-        self.data.replace_computer_with_user(player_num)
+        return self.data.replace_computer_with_user(player_num)
 
     def get_player_info(player_num):
         return self.data.get_data(player_num)
+
+    def create_computer(self, player_num):
+        self.data.replace_user_with_computer(player_num)
 
     def gameCycle(self):
         self.data.deal()

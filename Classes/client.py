@@ -15,7 +15,7 @@ def main():
     n = Network()
     try:
         player = n.get_player_object()
-        print("You are a player object", player.player_num)
+        print("You are a player object with name: ", player.player_num)
     except:
         print("Could not connect")
         running = False
