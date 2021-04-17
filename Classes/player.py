@@ -1,15 +1,3 @@
-class Player:
-    def __init__(self, win, player_name, player_num, start_amt):
-        self.win = win
-        self.player_name = player_name
-        self.player_num = player_num
-        self.start_amt = start_amt
-
-    def receive_hand(self, hand):
-        pass
-
-    def receive_board_cards(self, cards): #list of cards. WILL be duplicates
-        pass
 import random 
 from . data import *
 from . constants import *
@@ -144,17 +132,33 @@ class Player:
                         if button.clickable:
 
                             if i == 0: #check
+                                self.buttons[4].hidden = True
                                 if (cur_bet - prev_bet) == 0:
                                     return 0
                             elif i == 1: #call
+                                self.buttons[4].hidden = True
                                 self.update_stack(cur_bet-prev_bet)
                                 return cur_bet - prev_bet
                             elif i == 2: #raise
-                                self.update_stack(cur_bet * 2 - prev_bet)
-                                return cur_bet * 2
+                                self.buttons[4].hidden = False  
+                                self.buttons[4].clickable = True
+                                self.buttons[4].draw()
+                                self.buttons[2].clickable = False                              
+                                return self.takeATurn(cur_bet, prev_bet)
+                                #self.update_stack(cur_bet * 2 - prev_bet)
+                                #return cur_bet * 2                               
                             elif i == 3: #fold
+                                self.buttons[4].hidden = True
                                 self.playing = False
                                 return -1
+                            elif i == 4: #confirm raise
+                                self.buttons[2].clickable = True
+                                self.buttons[4].hidden = True
+                                self.buttons[4].clickable = False
+                                self.update_stack(cur_bet * 2 - prev_bet)
+                                return cur_bet * 2
+                            elif i == 5: #leave game
+                                running = False
                         
             else:
                 pass #waiting for input
@@ -241,6 +245,8 @@ class Player:
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Fold'))
         self.buttons.append(Button(self.win, 147, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Confirm Raise'))
         self.buttons.append(Button(self.win, 1250, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Leave Game'))
+        self.buttons[4].hidden = True                                                                          ###Might not want this
+        self.buttons[4].clickable = False
     
     def draw_buttons(self):
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))
