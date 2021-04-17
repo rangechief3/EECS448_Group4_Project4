@@ -293,9 +293,6 @@ class Data:
             accountedForbet += bet
             adjustedpot = 0
 
-
-        winner, hand = self.current_winner(playerActiveIndex)
-
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
     # @return - will return the winning player(s)
