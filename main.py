@@ -1,11 +1,9 @@
-#Author: Jake Wagner
-#Date Started: 3/22/2021
-
+# Author: Jake Wagner
+# Date Started: 3/22/2021
 
 import pygame
-from Classes.constants import WIDTH, HEIGHT
+from Classes.constants import WIDTH, HEIGHT, PLAYER_NAMES
 from Classes.game import Game
-
 FPS = 60
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -18,16 +16,9 @@ pygame.init()
 def main():
     running = True
     clock = pygame.time.Clock()
-    
     game = Game(WIN)
     while running:
-        clock.tick(FPS)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        game.update()
-
-    pygame.quit
-
+        running = game.gameCycle()
+        game.update_game_status()
+    pygame.quit()
 main()

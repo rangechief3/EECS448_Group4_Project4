@@ -135,7 +135,6 @@ class Player:
                     pos = pygame.mouse.get_pos()
                     x,y = self.get_x_y(pos)
             ## (Check, Call, Raise, Fold)
-
             if x != -1 and y != -1:
                 for i,button in enumerate(self.buttons):
                     if (button.x <= x < (button.x + button.width)) and (button.y < y < (button.y + button.height)):
