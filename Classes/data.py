@@ -5,7 +5,7 @@
 import random
 import time
 from .card import Card
-from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, START_STACK, HANDS, SUITS
+from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, USER_NAMES, START_STACK, HANDS, SUITS
 from .player import Player
 from .computer import Computer
 
@@ -175,7 +175,7 @@ class Data:
     # @param - num_players   determines how many Player objects will be created
     # @return - None
     def init_players(self, num_players):
-        self.players.append(Player(self.win, PLAYER_NAMES[0], 0, START_STACK))
+        self.players.append(Player(self.win, USER_NAMES[0], 0, START_STACK))
         self.player_active.append(True)
         self.player_prev_bets.append(0)
         for i in range(1,num_players):

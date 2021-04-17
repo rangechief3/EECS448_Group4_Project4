@@ -156,6 +156,8 @@ class Player:
             for i, card in enumerate(self.hand):
                 card.draw(self.win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
 
+    def draw_player_name(self, x, y, name):
+        self.win.blit(self.font.render(name, True, BLACK), (x - (TOKEN_FONT_SIZE // 2) + OFFSET, y - (TOKEN_FONT_SIZE // 2)))
 
     # @description - Draws the board cards
     # @param - nothing
@@ -172,6 +174,7 @@ class Player:
         self.draw_chips() 
         self.draw_board_cards()
         self.draw_cards(True)
+        self.draw_player_name(self.chip_pos[0] - 3* len(self.player_name), self.chip_pos[1] + 50, self.player_name)
         self.draw_buttons()
         self.draw_deck()
         self.draw_opponents(other_players, front)
@@ -196,6 +199,11 @@ class Player:
             if player.playing:
                 player.draw_cards(front) #boolean for which side to draw            
             player.draw_chips()
+            sign = 1
+            if player.chip_pos[1] < HEIGHT//2:
+                sign = -1
+            str_length = len(player.player_name)
+            player.draw_player_name(player.chip_pos[0]-3 * str_length , player.chip_pos[1] - 50* sign, player.player_name)
 
     def draw_board(self):
         self.win.fill(BACKGROUND_COLOR)
