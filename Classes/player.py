@@ -1,5 +1,4 @@
 import random 
-from data import *
 from constants import *
 from button import *
 import time
@@ -15,7 +14,6 @@ class Player:
         self.player_name = player_name
         self.player_num = player_num
         self.stack = start_amt
-        self.deck_img = Card(5)
         self.hand = []
         self.board_cards = []
         self.buttons = []
@@ -26,7 +24,6 @@ class Player:
         self.init_buttons()
         self.chip_pos = self.get_chip_pos()
         self.card_pos = self.get_card_pos(self.player_num)
-        self.font = pygame.font.SysFont('Arial', SMALL_CARD_FONT_SIZE)
 
     # If needing to print out a player object, will return name and player number. To use in main: print(player)
     def __str__(self):
@@ -155,8 +152,8 @@ class Player:
             for i, card in enumerate(self.hand):
                 card.draw(win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
 
-    def draw_player_name(self, win, x, y, name):
-        win.blit(self.font.render(name, True, BLACK), (x - (TOKEN_FONT_SIZE // 2) + OFFSET, y - (TOKEN_FONT_SIZE // 2)))
+    def draw_player_name(self, win, x, y, name, font):
+        win.blit(font.render(name, True, BLACK), (x - (TOKEN_FONT_SIZE // 2) + OFFSET, y - (TOKEN_FONT_SIZE // 2)))
 
     # @description - Draws the board cards
     # @param - nothing
@@ -168,12 +165,12 @@ class Player:
     # @description - Draws the user interface
     # @param - other_players -- > list of players other than the current player
     # @return - nothing
-    def draw(self, win, other_players, front, curr_player): 
+    def draw(self, win, other_players, front, curr_player, font): 
         self.draw_board(win)
-        self.draw_chips(win) 
+        self.draw_chips(win, font) 
         self.draw_board_cards(win)
         self.draw_cards(win,True)
-        self.draw_player_name(win,self.chip_pos[0] - 3* len(self.player_name), self.chip_pos[1] + 50, self.player_name)
+        self.draw_player_name(win,self.chip_pos[0] - 3* len(self.player_name), self.chip_pos[1] + 50, self.player_name, font)
         self.draw_buttons(win)
         self.draw_deck(win)
         self.draw_opponents(win,other_players, front)
@@ -209,9 +206,9 @@ class Player:
         board = pygame.draw.circle(win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS)
         inner_circle = pygame.draw.circle(win, WHITE, (WIDTH // 2 + OFFSET, HEIGHT // 2), INNER_BORDER_RADIUS, width=1)
 
-    def draw_chips(self, win):
+    def draw_chips(self, win, font):
         pygame.draw.circle(win, WHITE, (self.chip_pos[0] + OFFSET, self.chip_pos[1]), CHIP_SIZE)
-        win.blit(self.font.render(str(self.stack), True, BLACK), (self.chip_pos[0] - (TOKEN_FONT_SIZE // 2) + OFFSET, self.chip_pos[1] - (TOKEN_FONT_SIZE // 2)))
+        win.blit(font.render(str(self.stack), True, BLACK), (self.chip_pos[0] - (TOKEN_FONT_SIZE // 2) + OFFSET, self.chip_pos[1] - (TOKEN_FONT_SIZE // 2)))
 
     def init_buttons(self):
         self.buttons.append(Button( 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Check') )

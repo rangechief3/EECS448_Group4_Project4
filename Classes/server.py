@@ -22,25 +22,38 @@ playerCount = 0
 
 def threaded_client(conn, player_num):
     global playerCount
-    player_info = game.createPlayer(player_num)
-    print(player_info)
-    conn.send(str.encode(str(player_info)))
-
+    player= game.createPlayer(player_num)
+    
+    try:
+        
+        #conn.sendall(pickle.dumps(player)) #consider passing just the player number and then updating from there. Is there really antything that 
+                                           # the data class does to the player classes that aren't within a function call? 
+        conn.send(str.encode(str(player_num)))
+        print("sending data...")
+    except socket.error as e:
+        print(e)
+        print("could not send data")
     reply = ""
     while True:
+        print("in the while loop")
         try:
-            data = conn.recv(4096).decode()
+            print("receiving data...")
+            data = conn.recv(4096).decode() 
             if not data:
+                print("No data to receive")
                 break
             else:
+                print("We found data")
+                print(data)
                 if data == 'get':
-                    pass
+                    
                     #player_data = game.get_player_info(player_num)
                     #conn.sendall(pickle.dumps(player_data))
                 #if data == value? of the bet maybe 
                 #maybe have a method of data that retrieves all of the pertinent information and sends it to the player
                 #conn.sendall(pickle.dumps(game))
         except:
+            print("could not receive the data")
             break
     print("Lost connection")
     game.create_computer(player_num)

@@ -7,17 +7,18 @@ class Network:
         self.server = "192.168.0.18"
         self.port = 5555
         self.addr = (self.server, self.port)
-        self.player_object = self.connect() #first information received fromt the 
+        self.player_number = self.connect() #first information received from the 
 
-    def get_player_object(self):
-        return self.player_object
+    def get_player_number(self):
+        return self.player_number
 
     def connect(self):
         try:
             self.client.connect(self.addr)
             return self.client.recv(2048).decode()
-        except:
-            pass
+        except socket.error as e:
+            print("Network could not connect")
+            print(e)
 
     def send(self, data):
         try:
