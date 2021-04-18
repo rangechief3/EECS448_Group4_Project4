@@ -44,8 +44,9 @@ class Computer(Player):
         else:
             if len(self.board_cards) == 3: #flop
                 if (self.bluff()):
-                    self.update_stack(math.floor(amt_to_stay_in * 2.25))
-                    return math.floor(amt_to_stay_in * 2.25)
+                    amt_to_go = min(self.stack, math.floor(amt_to_stay_in * 2.25))
+                    self.update_stack(amt_to_go)
+                    return amt_to_go
                 else:
                     if self.hand_num == 0:
                         if amt_to_stay_in > 0:
