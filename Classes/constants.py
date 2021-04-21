@@ -20,18 +20,30 @@ BOARD_CARD_BOX_X, BOARD_CARD_BOX_Y = 279, 105
 SMALL_CARD_FONT_SIZE = 25
 BIG_CARD_FONT_SIZE = 35
 
+
+#MenuButton decorator images
+MENU_HRT = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (45, 45))
+MENU_DMD = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (45, 45))
+MENU_CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (45, 45))
+MENU_SPD = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (45, 45))
+
+#background object images
+BLACK_CHIP = pygame.transform.scale(pygame.image.load('Pictures/black_100_chip.png'), (35,35))
+GREEN_CHIP = pygame.transform.scale(pygame.image.load('Pictures/green_20_chip.png'), (35,35))
+GREEN2_CHIP = pygame.transform.scale(pygame.image.load('Pictures/green_chip.png'), (35,35))
+RED_CHIP = pygame.transform.scale(pygame.image.load('Pictures/red_50_chip.png'), (35,35))
+WHITE_CHIP = pygame.transform.scale(pygame.image.load('Pictures/white_chip.png'), (35,35))
+BTC_CHIP = pygame.transform.scale(pygame.image.load('Pictures/bitcon_chip.png'), (35,35))
+COIN = pygame.transform.scale(pygame.image.load('Pictures/coin.png'), (35,35))
+RED_DIE = pygame.transform.scale(pygame.image.load('Pictures/red_die.png'), (35,35))
+
+BACKGROUND_OBJECTS = [BLACK_CHIP, GREEN_CHIP, GREEN2_CHIP, RED_CHIP, WHITE_CHIP, BTC_CHIP, COIN, RED_DIE ]
+
 HEART = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (17,13))
 DIAMOND = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (17,13))
 CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (17,13))
 SPADE = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (17,13))
 BACK = pygame.transform.scale(pygame.image.load('Pictures/Card_back.jpg'), (CARD_WIDTH,CARD_HEIGHT))
-
-'''
-HEART = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (36,28))
-DIAMOND = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (36,28))
-CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (36,28))
-SPADE = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (36,28))
-'''
 
 BACKGROUND_COLOR = pygame.Color("#373737")
 BOARD_COLOR = pygame.Color("#114636")

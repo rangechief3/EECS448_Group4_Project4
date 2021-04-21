@@ -176,6 +176,7 @@ class Player:
                                 self.update_stack(raiseValue - prev_bet)
                                 return raiseValue
                             elif i == 5: #leave game
+                                pygame.quit()
                                 self.playAgain = False
                                 self.playing = False
                                 self.raising = False
