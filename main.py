@@ -45,7 +45,7 @@ def init_buttons():
 init_buttons()
 
 def init_background_objects():
-    for i in range(WIDTH//2):
+    for i in range(WIDTH//64):
         if random.random() > 0.8:
             background_objects.append(backgroundObject())
 
@@ -56,7 +56,7 @@ def draw_buttons():
         btn.draw(WIN)
 
 def add_background_objects():
-    for i in range(50):
+    for i in range(2):
         background_objects.append(backgroundObject())
 
 def update_background():

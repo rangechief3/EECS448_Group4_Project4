@@ -28,14 +28,14 @@ MENU_CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), 
 MENU_SPD = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (55,55))
 
 #background object images
-BLACK_CHIP = pygame.transform.scale(pygame.image.load('Pictures/black_100_chip.png'), (35,35))
-GREEN_CHIP = pygame.transform.scale(pygame.image.load('Pictures/green_20_chip.png'), (35,35))
-GREEN2_CHIP = pygame.transform.scale(pygame.image.load('Pictures/green_chip.png'), (35,35))
-RED_CHIP = pygame.transform.scale(pygame.image.load('Pictures/red_50_chip.png'), (35,35))
-WHITE_CHIP = pygame.transform.scale(pygame.image.load('Pictures/white_chip.png'), (35,35))
-BTC_CHIP = pygame.transform.scale(pygame.image.load('Pictures/bitcon_chip.png'), (35,35))
-COIN = pygame.transform.scale(pygame.image.load('Pictures/coin.png'), (35,35))
-RED_DIE = pygame.transform.scale(pygame.image.load('Pictures/red_die.png'), (35,35))
+BLACK_CHIP = pygame.transform.scale(pygame.image.load('Pictures/black_100_chip.png'), (45, 45))
+GREEN_CHIP = pygame.transform.scale(pygame.image.load('Pictures/green_20_chip.png'), (45, 45))
+GREEN2_CHIP = pygame.transform.scale(pygame.image.load('Pictures/green_chip.png'), (45, 45))
+RED_CHIP = pygame.transform.scale(pygame.image.load('Pictures/red_50_chip.png'), (45, 45))
+WHITE_CHIP = pygame.transform.scale(pygame.image.load('Pictures/white_chip.png'), (45, 45))
+BTC_CHIP = pygame.transform.scale(pygame.image.load('Pictures/bitcon_chip.png'), (45, 45))
+COIN = pygame.transform.scale(pygame.image.load('Pictures/coin.png'), (45, 45))
+RED_DIE = pygame.transform.scale(pygame.image.load('Pictures/red_die.png'), (45, 45))
 
 BACKGROUND_OBJECTS = [BLACK_CHIP, GREEN_CHIP, GREEN2_CHIP, RED_CHIP, WHITE_CHIP, BTC_CHIP, COIN, RED_DIE ]
 
