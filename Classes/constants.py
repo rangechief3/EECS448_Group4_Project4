@@ -66,6 +66,9 @@ NUMBUFF = 10
 USER_NAMES = ["Jake"]
 PLAYER_NAMES = ["Daniel Negreanu", "Bryn Kenney", "Phil Ivey", "Justin Bonomo",
                 "Erik Seidel", "Dan Smith", "Stephen Chidwick", "Tom Dwan"]
+ALT_COUNTER = 0
+ALT_NAMES = ["Benny Binion", "Johnny Moss", "Nick Dandolos", "Jeffrey Pollack", 
+            "Mike Sexton", "Red Winn", "Sid Wyman"]
 SUITS = ['♣','♦','♠','♥']
 HANDS = ['High Card', 'Pair', 'Two Pair', 'Three of a kind',
         'Straight', 'Flush', 'Full House', 'Four of a kind',

@@ -1,6 +1,7 @@
 import pygame
 from .data import Data
 import time
+pygame.font.init()
 
 class Game:
     def __init__(self, win):
@@ -42,6 +43,11 @@ class Game:
             
             elif(gamePhase == 3):
                 self.update()
+                if self.data.players[0].stack <= 0:
+                    font = pygame.font.SysFont('Arial',60)                      
+                    text = font.render("YOU LOST!!!", 1, (0, 0, 0))
+                    self.win.blit(text,(WIDTH//2 - text.get_width() //2, HEIGHT//2 - text.get_height() //2))
+                    return False
                 self.data.end_game()
                 gameInProgress = False
 

@@ -5,7 +5,7 @@
 import random
 import time
 from .card import Card
-from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, USER_NAMES, START_STACK, HANDS, SUITS
+from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, USER_NAMES, START_STACK, HANDS, SUITS, ALT_COUNTER, ALT_NAMES
 from .player import Player
 from .computer import Computer
 
@@ -136,6 +136,10 @@ class Data:
         self.dealer -= 1
         if self.dealer < -len(self.players):
             self.dealer = 0
+        for i,player in enumerate(self.players):
+            if player.stack <= 0:
+                self.players[i] = Computer(self.win, ALT_NAMES[0], i, START_STACK)
+                ALT_NAMES.pop(0)
         self.curr_bet = 0
         self.pot = 0
         self.table_cards = []
