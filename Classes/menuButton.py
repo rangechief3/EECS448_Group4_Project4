@@ -24,9 +24,9 @@ class MenuButton:
     
     def draw(self, win):
         PADDING = 5
-        pygame.draw.rect(win, (0, 0, 0), (self.x, self.y, self.width, self.height))
-        pygame.draw.rect(win, (128, 128, 128), (self.x + PADDING, self.y+ PADDING, self.width-PADDING * 2, self.height-PADDING * 2))
-        font = pygame.font.SysFont('Arial',36)
+        pygame.draw.rect(win, (0, 0, 0), (self.x, self.y, self.width, self.height), border_radius=10)
+        pygame.draw.rect(win, (128, 128, 128), (self.x + PADDING, self.y+ PADDING, self.width-PADDING * 2, self.height-PADDING * 2), border_radius=10)
+        font = pygame.font.SysFont('Arial',33)
         text = font.render(self.text, 1, self.font_color)
         win.blit(text, ((self.x + self.width//2) - text.get_width()//2, (self.y + self.height//2) - text.get_height()//2))
         text = font.render(self.text, 1, self.font_shadow)

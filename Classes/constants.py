@@ -22,10 +22,10 @@ BIG_CARD_FONT_SIZE = 35
 
 
 #MenuButton decorator images
-MENU_HRT = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (45, 45))
-MENU_DMD = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (45, 45))
-MENU_CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (45, 45))
-MENU_SPD = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (45, 45))
+MENU_HRT = pygame.transform.scale(pygame.image.load('Pictures/Card_heart.png'), (55,55))
+MENU_DMD = pygame.transform.scale(pygame.image.load('Pictures/Card_diamond.png'), (55,55))
+MENU_CLUB = pygame.transform.scale(pygame.image.load('Pictures/Card_club.png'), (55,55))
+MENU_SPD = pygame.transform.scale(pygame.image.load('Pictures/Card_spade.png'), (55,55))
 
 #background object images
 BLACK_CHIP = pygame.transform.scale(pygame.image.load('Pictures/black_100_chip.png'), (35,35))
@@ -48,7 +48,8 @@ BACK = pygame.transform.scale(pygame.image.load('Pictures/Card_back.jpg'), (CARD
 BACKGROUND_COLOR = pygame.Color("#373737")
 BOARD_COLOR = pygame.Color("#114636")
 BOARD_CARDS_BOX_COLOR = pygame.Color("#2f4f4f")
-
+BROWN = (139, 69, 19)
+YELLOW = (230, 191, 0)
 #Poker values
 START_STACK = 1000
 SM_BLIND = 5

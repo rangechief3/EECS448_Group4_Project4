@@ -292,7 +292,7 @@ class Computer(Player):
                 '''
 
     def bluff(self):
-        if random.random() > 0.7:
+        if random.random() > 0.5: #Altered to make less folds
             return True
         else:
             return False

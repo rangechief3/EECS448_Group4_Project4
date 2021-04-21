@@ -5,9 +5,10 @@ from .constants import WIDTH, HEIGHT,BACKGROUND_OBJECTS
 
 class backgroundObject:
     def __init__(self):
-        self.x = self.get_random(WIDTH)
+        self.x = 100 + self.get_random(WIDTH- 250) #to stay on the menu "casino board"
         self.y = 0
-        self.vel = self.get_random(3) + 1
+        self.counter = 0
+        self.vel = self.get_random(1) + 1
         self.acc = self.get_random(2) + 1
         self.img = random.choice(BACKGROUND_OBJECTS)
 
@@ -18,8 +19,9 @@ class backgroundObject:
         win.blit(self.img, (self.x + self.img.get_width()//2, self.y))
     
     def update(self):
+        if self.counter % 2 == 0:
+            self.vel += self.acc
         self.y += self.vel
-        self.vel += self.acc
         if (self.y >= HEIGHT):
             return True #if returning true(delete), then remove item 
         return False

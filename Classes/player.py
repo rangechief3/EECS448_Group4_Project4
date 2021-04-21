@@ -258,6 +258,7 @@ class Player:
 
     def draw_board(self):
         self.win.fill(BACKGROUND_COLOR)
+        pygame.draw.circle(self.win, BROWN, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS + 140)
         board = pygame.draw.circle(self.win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS + 80)
         inner_circle = pygame.draw.circle(self.win, WHITE, (WIDTH // 2 + OFFSET, HEIGHT // 2), INNER_BORDER_RADIUS, width=1)
         for i in range(8):

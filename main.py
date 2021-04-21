@@ -4,7 +4,7 @@
 import pygame
 import random
 import time
-from Classes.constants import WIDTH, HEIGHT, PLAYER_NAMES, BACKGROUND_COLOR
+from Classes.constants import WIDTH, HEIGHT, PLAYER_NAMES, BOARD_COLOR, BACKGROUND_COLOR, BROWN, YELLOW
 from Classes.game import Game
 from Classes.menuButton import MenuButton
 from Classes.backgroundObj import backgroundObject
@@ -14,11 +14,12 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Texas Hold 'em")
 pygame.init()
 
-PAD_LEFT = WIDTH//3 #margin left and right
-PAD_TOP = HEIGHT//5 #margin top and bot
-BTN_NUM = 2
-BTN_HEIGHT = (HEIGHT - 2*PAD_TOP) / BTN_NUM
-BTN_WIDTH = WIDTH - PAD_LEFT*2
+PAD_LEFT = WIDTH//6 #margin left and right
+PAD_TOP = HEIGHT//3 #margin top and bot
+BTN_NUM = 5
+SPACE = 15
+BTN_HEIGHT = PAD_TOP
+BTN_WIDTH = ((WIDTH - PAD_LEFT * 2) - ((BTN_NUM-1)*SPACE))/ BTN_NUM
 buttons = []
 background_objects = []
 
@@ -36,12 +37,15 @@ def main():
 
 def init_buttons():
     buttons.append(MenuButton(PAD_LEFT, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (255, 0, 0), 'red', "Start Game"))
-    buttons.append(MenuButton(PAD_LEFT, PAD_TOP + BTN_HEIGHT, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'black', "Leave Game"))
+    buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH + SPACE, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'black', "Leave Game"))
+    buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH*2 + SPACE*2, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'red', "A"))
+    buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH*3 + SPACE*3, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'black', "K"))
+    buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH*4 + SPACE*4, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'red', "Q"))
 
 init_buttons()
 
 def init_background_objects():
-    for i in range(WIDTH):
+    for i in range(WIDTH//2):
         if random.random() > 0.8:
             background_objects.append(backgroundObject())
 
@@ -52,10 +56,11 @@ def draw_buttons():
         btn.draw(WIN)
 
 def add_background_objects():
-    for i in range(100):
+    for i in range(50):
         background_objects.append(backgroundObject())
 
 def update_background():
+    
     add_background_objects()
     for obj in background_objects:
         obj.draw(WIN)
@@ -64,9 +69,14 @@ def update_background():
             background_objects.remove(obj)
 
 def display_menu():
-    WIN.fill(BACKGROUND_COLOR) #black background
+    WIN.fill(BACKGROUND_COLOR)
+    pygame.draw.rect(WIN, BOARD_COLOR, (0, 0, WIDTH, HEIGHT), border_radius = 150) #felt color
     update_background()
-    #pygame.draw.rect(WIN,)
+    pygame.draw.rect(WIN, BROWN, (0, 0 , WIDTH, HEIGHT), 50, 150)
+    for i in range(5):
+        pygame.draw.rect(WIN, YELLOW, (PAD_LEFT + i *BTN_WIDTH + i*SPACE, PAD_TOP, BTN_WIDTH, BTN_HEIGHT), width = 10)
+    
+
     draw_buttons()
 
     
