@@ -376,18 +376,20 @@ class Player:
     '''
     def draw_winners(self, message):
         print("it made it to winners")
-        font = pygame.font.SysFont('Arial', 30)
-        myRender = self.font.render(message, True, BLACK)
-        self.win.blit(myRender,(700,400))
-        print(message)
-        time.sleep(3)
-    
-    def draw_losers(self, message):
-        print("it made it to losers")
-        font = pygame.font.SysFont('Arial', 30)
-        myRender = self.font.render(message, True, BLACK)
+        font = pygame.font.SysFont('Arial', 25)
+        myRender = font.render(message, True, (0,200,0))
         self.win.blit(myRender,(0,0))
         print(message)
+        pygame.display.update()
+        time.sleep(3)
+    
+    def draw_losers(self, message, offset):
+        print("it made it to losers")
+        font = pygame.font.SysFont('Arial', 20)
+        myRender = font.render(message, True, BLACK)
+        self.win.blit(myRender,(0,100+offset))
+        print(message)
+        pygame.display.update()
         time.sleep(3)
         
              

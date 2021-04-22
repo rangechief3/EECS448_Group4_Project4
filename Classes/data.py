@@ -299,6 +299,8 @@ class Data:
                 if self.playerContributions[i] >= bet:
                     eligiblePlayers.append(i)
             winner, hand = self.current_winner(eligiblePlayers)
+            self.players_draw(0, False, None)
+            pygame.display.update()
             self.displayWinner(adjustedpot, winner)
             self.displayNonWinner(winner, playerActiveIndex)
             for victor in winner:
@@ -583,9 +585,10 @@ class Data:
         return True
 
     def displayWinner(self, potsize, winnerarray):
+        
         winnerhand = self.getPlayerHand(winnerarray[0])
         if len(winnerarray)==2:
-            message = PLAYER_NAMES[winnerarray[0]] + "and" + PLAYER_NAMES[winnerarray[1]] + " split the pot of $" +str(potsize)  +" and won with a " + HANDS[winnerhand[0]]
+            message = PLAYER_NAMES[winnerarray[0]] + " and " + PLAYER_NAMES[winnerarray[1]] + " split the pot of $" +str(potsize)  +" and won with a " + HANDS[winnerhand[0]]
             self.players[0].draw_winners(message)
         elif len(winnerarray) == 1:
             message = PLAYER_NAMES[winnerarray[0]] + " won a pot of $" +str(potsize)  +" with a " + HANDS[winnerhand[0]]
@@ -594,7 +597,7 @@ class Data:
             message = "3 or more players split the pot of $" + str(potsize) + "and all tied with a " + HANDS[winnerhand[0]]
             self.players[0].draw_winners(message)
     def displayNonWinner(self, winnerarray, playersStillIn):
-        
+        offset = 0
         for index in playersStillIn:
             playerin = True
             for victor in winnerarray:
@@ -603,8 +606,10 @@ class Data:
             if playerin == True:
                 hand = self.getPlayerHand(index)
                 cards = self.recieveCurrHand(index)
-                self.losingMessage += PLAYER_NAMES[index] + " lost with a "+ HANDS[hand[0]] +"\n"
-        self.players[0].draw_losers(self.losingMessage)
+                self.losingMessage = PLAYER_NAMES[index] + " lost with a "+ HANDS[hand[0]]
+                self.players[0].draw_losers(self.losingMessage, offset)
+                offset += 20
+        
 
             
                 

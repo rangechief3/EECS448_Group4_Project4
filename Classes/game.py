@@ -47,9 +47,10 @@ class Game:
                 self.update()
                 if self.data.players[0].stack <= 0:
                     font = pygame.font.SysFont('Arial',60)                      
-                    text = font.render("YOU LOST!!!", 1, (0, 0, 0))
+                    text = font.render("YOU LOST!!!", 1, (250, 0, 0))
                     self.win.blit(text,(WIDTH//2 - text.get_width() //2, HEIGHT//2 - text.get_height() //2))
                     print("you lost, exiting game")
+                    pygame.display.update()
                     time.sleep(3)
                     return False
                 self.data.end_game()
