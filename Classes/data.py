@@ -22,7 +22,7 @@ class Data:
     # @description - SETS the game data, initializing the player classes
     # @param - win    pygame WINDOW passed to players for printing purposes
     # @return - None
-    def __init__(self, win):
+    def __init__(self, win, testing):
         self.win = win
         self.losingMessage = ""
         pygame.font.init()
@@ -37,7 +37,10 @@ class Data:
         self.dealer = 0
         self.gameStatus = True
         self.playerContributions = []
-        self.init_players(8)
+        if testing == False:
+            self.init_players(8)
+        elif testing == True:
+            print("data initialized as test")
                 
         
     # @description - draws the relevant player board
@@ -610,8 +613,20 @@ class Data:
                 self.players[0].draw_losers(self.losingMessage, offset)
                 offset += 20
         
-
-            
-                
+    def pairBeatsHighCard(self):
+        self.player_active = [True,True,False,False,False,False,False,False]
+        self.player_hands = [None,None,None,None,None,None,None,None]
+        self.table_cards.append(Card(0))
+        self.table_cards.append(Card(16)) 
+        self.table_cards.append(Card(7)) 
+        self.table_cards.append(Card(22)) 
+        self.table_cards.append(Card(30))   #♣2 ♣5 ♥9 ♠j ♠6
+        self.player_hands[0] = [Card(13),Card(21)] #♦2 ♦10
+        self.player_hands[1] = [Card(51),Card(11)] #♥A #♥K
+        pwbh, bh = self.current_winner([0,1])
+        if pwbh == [0] and bh == 1:
+            return True
+        else:
+            return False
     
 

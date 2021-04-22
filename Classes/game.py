@@ -6,9 +6,9 @@ from . constants import *
 pygame.font.init()
 
 class Game:
-    def __init__(self, win):
+    def __init__(self, win, Test):
         self.win = win
-        self.data = Data(win)
+        self.data = Data(win, Test)
         self.hand_num = 0
 
     def update(self):
@@ -63,6 +63,17 @@ class Game:
 
     def update_game_status(self):
         self.data.gameStatus = True
+
+
+    def testCycle(self):
+        print("testing if a pair beat a highcard: ")
+        if self.data.pairBeatsHighCard():
+            print("passed \n")
+        else:
+            print("failed \n")
+        #print("testing if a 2 players have the same hand \n")
+        #print("testing if  \n")
+        #print("testing \n")
         
         
 

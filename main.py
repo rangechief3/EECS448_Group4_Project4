@@ -29,7 +29,7 @@ background_objects = []
 def main():
     running = True
     clock = pygame.time.Clock()
-    game = Game(WIN)
+    game = Game(WIN, False)
     while running:
         running = game.gameCycle()
         game.update_game_status()
@@ -100,6 +100,12 @@ def menu():
                         if (x > btn.x and x < (btn.x +btn.width)) and (y > btn.y and y < (btn.y + btn.height)):
                             if i == 0:
                                 running = False
+                            elif i == 1:
+                                clock = pygame.time.Clock()
+                                game = Game(WIN, True)
+                                game.testCycle()
+                                pygame.quit()
+
                             elif i == 4:
                                 pygame.quit()
         pygame.display.update()
