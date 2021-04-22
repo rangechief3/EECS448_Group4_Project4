@@ -46,7 +46,7 @@ class Data:
         for player in self.players:
             if player.player_num != player_num:
                 other_players.append(player)
-        self.players[player_num].draw(other_players, front, curr_player)
+        self.players[player_num].draw(other_players, front, curr_player, self.dealer)
 
     # @description - if the hand ended prematurely it returns false
     # @param - None
