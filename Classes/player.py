@@ -180,6 +180,11 @@ class Player:
                                 self.playing = False
                                 self.raising = False
                                 return -1
+                            elif i == 6:
+                                temp = self.stack
+                                self.update_stack(self.stack)
+                                return temp
+                            
                             x = -1
                             y = -1
             else:
@@ -286,8 +291,9 @@ class Player:
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Call'))
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Raise'))
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Fold'))
-        self.buttons.append(Button(self.win, 147, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Confirm Raise'))
+        self.buttons.append(Button(self.win, 147, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Confirm Raise'))
         self.buttons.append(Button(self.win, 1250, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Leave Game'))
+        self.buttons.append(Button(self.win, 147, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'All In'))
         self.buttons[4].hidden = True                                                                          ###Might not want this
         self.buttons[4].clickable = False
     
