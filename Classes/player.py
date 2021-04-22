@@ -290,7 +290,7 @@ class Player:
         small = (dealer_num + 1) % 8
         big = (dealer_num + 2) % 8
 
-        pygame.draw.circle(self.win, (255,255,255), (spots[dealer_num][0],spots[dealer_num][1]), 20)       #Dealer Chip
+        pygame.draw.circle(self.win, (128,0,0), (spots[dealer_num][0],spots[dealer_num][1]), 20)       #Dealer Chip
         dealText = "Dealer"                       
         font = pygame.font.SysFont('Arial',15)                      
         text = font.render(dealText, 1, (0, 0, 0))
