@@ -335,7 +335,6 @@ class Data:
                 challenger = self.recieveCurrHand(i) 
                 currentWinner = self.recieveCurrHand(playerWithBestHand[0])
                 for j in range(5):
-                    print (str(j) + " " + str(challenger[j]) + " " + str(currentWinner[j])) 
                     if challenger[j] > currentWinner[j]:
                         tiewithwinner = False
                         tie = False 
@@ -356,7 +355,6 @@ class Data:
         if tiewithwinner == False:
             return playerWithBestHand, bestHand[0]
         elif tiewithwinner == True:
-            print("there were two winners")
             return playerWithBestHand, bestHand[0]
                 
     # @description - determines if a player's hand is a flush
@@ -628,5 +626,13 @@ class Data:
             return True
         else:
             return False
-    
 
+    def samehandtest(self):
+        self.table_cards = [Card(0), Card(16), Card(7), Card(22), Card(30)]   #♣2 ♣5 ♥9 ♠j ♠6
+        self.player_hands[0] = [Card(13),Card(21)] #♦2 ♦10
+        self.player_hands[1] = [Card(13),Card(21)] #♦2 ♦10
+        pwbh, bh = self.current_winner([0,1])
+        if pwbh == [0,1] and bh == 1:
+            return True
+        else:
+            return False

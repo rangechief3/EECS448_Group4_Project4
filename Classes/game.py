@@ -66,14 +66,18 @@ class Game:
 
 
     def testCycle(self):
-        print("testing if a pair beat a highcard: ")
+        print("\ntesting if a pair beat a highcard: ")
         if self.data.pairBeatsHighCard():
             print("passed \n")
         else:
             print("failed \n")
-        #print("testing if a 2 players have the same hand \n")
-        #print("testing if  \n")
-        #print("testing \n")
+        print("testing if a 2 players have the same hand: ")
+        if self.data.samehandtest():
+            print("passed \n")
+        else:
+            print("failed \n")
+        #print("testing if: ")
+        #print("testing if: ")
         
         
 
