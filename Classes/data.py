@@ -24,6 +24,7 @@ class Data:
     # @return - None
     def __init__(self, win):
         self.win = win
+        self.losingMessage = ""
         pygame.font.init()
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
@@ -299,6 +300,7 @@ class Data:
                     eligiblePlayers.append(i)
             winner, hand = self.current_winner(eligiblePlayers)
             self.displayWinner(adjustedpot, winner)
+            self.displayNonWinner(winner, playerActiveIndex)
             for victor in winner:
                 
                 self.players[victor].receive_winnings(adjustedpot//(len(winner)))
@@ -591,6 +593,20 @@ class Data:
         else:
             message = "3 or more players split the pot of $" + str(potsize) + "and all tied with a " + HANDS[winnerhand[0]]
             self.players[0].draw_winners(message)
+    def displayNonWinner(self, winnerarray, playersStillIn):
+        
+        for index in playersStillIn:
+            playerin = True
+            for victor in winnerarray:
+                if index == victor:
+                    playerin = False
+            if playerin == True:
+                hand = self.getPlayerHand(index)
+                cards = self.recieveCurrHand(index)
+                self.losingMessage += PLAYER_NAMES[index] + " lost with a "+ HANDS[hand[0]] +"\n"
+        self.players[0].draw_losers(self.losingMessage)
 
+            
+                
     
 

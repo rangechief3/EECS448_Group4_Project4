@@ -375,10 +375,18 @@ class Player:
         #reduce player stack by bet amount then return it
     '''
     def draw_winners(self, message):
-        print("it made it here")
+        print("it made it to winners")
         font = pygame.font.SysFont('Arial', 30)
         myRender = self.font.render(message, True, BLACK)
         self.win.blit(myRender,(700,400))
+        print(message)
+        time.sleep(3)
+    
+    def draw_losers(self, message):
+        print("it made it to losers")
+        font = pygame.font.SysFont('Arial', 30)
+        myRender = self.font.render(message, True, BLACK)
+        self.win.blit(myRender,(0,0))
         print(message)
         time.sleep(3)
         
