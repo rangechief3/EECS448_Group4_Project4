@@ -29,9 +29,9 @@ class MenuButton:
         font = pygame.font.SysFont('Arial',33)
         text = font.render(self.text, 1, self.font_color)
         win.blit(text, ((self.x + self.width//2) - text.get_width()//2, (self.y + self.height//2) - text.get_height()//2))
-        text = font.render(self.text, 1, self.font_shadow)
+        #text = font.render(self.text, 1, self.font_shadow)
         TEXT_OFFSET = 1
-        win.blit(text, ((self.x + self.width//2 + TEXT_OFFSET) - text.get_width()//2, (self.y + self.height//2 + TEXT_OFFSET) - text.get_height()//2))
+        #win.blit(text, ((self.x + self.width//2 + TEXT_OFFSET) - text.get_width()//2, (self.y + self.height//2 + TEXT_OFFSET) - text.get_height()//2))
         self.draw_decorators(win)
 
     def draw_decorators(self, win):

@@ -37,10 +37,10 @@ def main():
 
 def init_buttons():
     buttons.append(MenuButton(PAD_LEFT, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (255, 0, 0), 'red', "Start Game"))
-    buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH + SPACE, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'black', "Leave Game"))
+    buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH + SPACE, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'black', "Run Tests"))
     buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH*2 + SPACE*2, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'red', "A"))
     buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH*3 + SPACE*3, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'black', "K"))
-    buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH*4 + SPACE*4, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'red', "Q"))
+    buttons.append(MenuButton(PAD_LEFT + BTN_WIDTH*4 + SPACE*4, PAD_TOP, BTN_WIDTH, BTN_HEIGHT, (0, 0, 0), 'red', "Leave Game"))
 
 init_buttons()
 
@@ -100,7 +100,7 @@ def menu():
                         if (x > btn.x and x < (btn.x +btn.width)) and (y > btn.y and y < (btn.y + btn.height)):
                             if i == 0:
                                 running = False
-                            elif i == 1:
+                            elif i == 4:
                                 pygame.quit()
         pygame.display.update()
     main()
