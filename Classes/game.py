@@ -1,6 +1,8 @@
 import pygame
 from .data import Data
 import time
+from . constants import *
+
 pygame.font.init()
 
 class Game:
@@ -47,6 +49,8 @@ class Game:
                     font = pygame.font.SysFont('Arial',60)                      
                     text = font.render("YOU LOST!!!", 1, (0, 0, 0))
                     self.win.blit(text,(WIDTH//2 - text.get_width() //2, HEIGHT//2 - text.get_height() //2))
+                    print("you lost, exiting game")
+                    time.sleep(3)
                     return False
                 self.data.end_game()
                 gameInProgress = False

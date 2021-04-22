@@ -374,6 +374,12 @@ class Player:
         #return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         #reduce player stack by bet amount then return it
     '''
-
+    def draw_winners(self, message):
+        print("it made it here")
+        font = pygame.font.SysFont('Arial', 30)
+        myRender = self.font.render(message, True, BLACK)
+        self.win.blit(myRender,(700,400))
+        print(message)
+        time.sleep(3)
         
              

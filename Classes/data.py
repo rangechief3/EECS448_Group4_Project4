@@ -3,6 +3,8 @@
 # Date branch made: 3.31.2021
 
 import random
+import sys
+import pygame
 import time
 from .card import Card
 from .constants import SM_BLIND, BIG_BLIND, PLAYER_NAMES, USER_NAMES, START_STACK, HANDS, SUITS, ALT_COUNTER, ALT_NAMES
@@ -22,7 +24,7 @@ class Data:
     # @return - None
     def __init__(self, win):
         self.win = win
-        
+        pygame.font.init()
         self.deck = list(Card(i) for i in range(52))
         random.shuffle(self.deck)
         self.players = []
@@ -280,6 +282,8 @@ class Data:
             if betincluded == False:
                 maxbet.append(self.playerContributions[i])
         maxbet.sort()
+        #for num in maxbet:
+            #print("bet number" + str(num))
 
         accountedForbet = 0
         adjustedpot = 0
@@ -287,14 +291,16 @@ class Data:
             for i in range(len(self.players)):
                 if self.playerContributions[i] >= bet:
                     adjustedpot += bet - accountedForbet
-                elif self.playerContributions[i] <bet:
+                elif self.playerContributions[i] <bet and self.playerContributions[i]- accountedForbet > 0:
                     adjustedpot += self.playerContributions[i] - accountedForbet
             eligiblePlayers = []
             for i in playerActiveIndex:
                 if self.playerContributions[i] >= bet:
                     eligiblePlayers.append(i)
             winner, hand = self.current_winner(eligiblePlayers)
+            self.displayWinner(adjustedpot, winner)
             for victor in winner:
+                
                 self.players[victor].receive_winnings(adjustedpot//(len(winner)))
             accountedForbet += bet
             adjustedpot = 0
@@ -571,8 +577,20 @@ class Data:
         elif hand_num == 9: #royal flush no high cards
             return player_cards_as_int
     def playAgain(self):
+
         return True
 
-    
+    def displayWinner(self, potsize, winnerarray):
+        winnerhand = self.getPlayerHand(winnerarray[0])
+        if len(winnerarray)==2:
+            message = PLAYER_NAMES[winnerarray[0]] + "and" + PLAYER_NAMES[winnerarray[1]] + " split the pot of $" +str(potsize)  +" and won with a " + HANDS[winnerhand[0]]
+            self.players[0].draw_winners(message)
+        elif len(winnerarray) == 1:
+            message = PLAYER_NAMES[winnerarray[0]] + " won a pot of $" +str(potsize)  +" with a " + HANDS[winnerhand[0]]
+            self.players[0].draw_winners(message)
+        else:
+            message = "3 or more players split the pot of $" + str(potsize) + "and all tied with a " + HANDS[winnerhand[0]]
+            self.players[0].draw_winners(message)
+
     
 
