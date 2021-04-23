@@ -63,8 +63,8 @@ CARDH = 150
 OUTLINEBUFF = 5
 NUMBUFF = 10
 
-USER_NAMES = ["Jake"]
-PLAYER_NAMES = ["Daniel Negreanu", "Bryn Kenney", "Phil Ivey", "Justin Bonomo",
+USER_NAMES = ["Player One"]
+PLAYER_NAMES = ["Player One", "Bryn Kenney", "Phil Ivey", "Justin Bonomo",
                 "Erik Seidel", "Dan Smith", "Stephen Chidwick", "Tom Dwan"]
 ALT_COUNTER = 0
 ALT_NAMES = ["Benny Binion", "Johnny Moss", "Nick Dandolos", "Jeffrey Pollack", 

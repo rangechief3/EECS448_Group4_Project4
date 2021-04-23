@@ -162,7 +162,7 @@ class Data:
     # @param - num_players   determines how many Player objects will be created
     # @return - None
     def init_players(self, num_players):
-        self.players.append(Player(self.win, USER_NAMES[0], 0, START_STACK))
+        self.players.append(Player(self.win, PLAYER_NAMES[0], 0, START_STACK))
         self.player_active.append(True)
         self.player_prev_bets.append(0)
         self.playerContributions.append(0)
@@ -244,9 +244,10 @@ class Data:
     # @param - None
     # @return - None
     def end_game(self):
-        self.award_winnings()
         self.players_draw(0, True, None)
-        time.sleep(5)
+        pygame.display.update()
+        self.award_winnings()
+        time.sleep(3)
         ##if player has no money, remove player and replace them
         self.reset()
     
@@ -303,7 +304,7 @@ class Data:
                 if self.playerContributions[i] >= bet:
                     eligiblePlayers.append(i)
             winner, hand = self.current_winner(eligiblePlayers)
-            self.players_draw(0, False, None)
+            self.players_draw(0, True, None)
             pygame.display.update()
             self.displayWinner(adjustedpot, winner)
             self.displayNonWinner(winner, playerActiveIndex)

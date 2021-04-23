@@ -428,7 +428,7 @@ class Player:
         self.win.blit(myRender,(0,0))
         print(message)
         pygame.display.update()
-        time.sleep(3)
+        time.sleep(1.5)
     
     def draw_losers(self, message, offset):
         print("it made it to losers")
@@ -437,6 +437,6 @@ class Player:
         self.win.blit(myRender,(0,100+offset))
         print(message)
         pygame.display.update()
-        time.sleep(3)
+        time.sleep(1.5)
         
              
