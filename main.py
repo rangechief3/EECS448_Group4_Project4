@@ -104,7 +104,6 @@ def menu():
                                 clock = pygame.time.Clock()
                                 game = Game(WIN, True)
                                 game.testCycle()
-                                pygame.quit()
 
                             elif i == 4:
                                 pygame.quit()

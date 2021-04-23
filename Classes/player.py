@@ -177,10 +177,16 @@ class Player:
                                 return raiseValue
                             elif i == 5: #leave game
                                 pygame.quit()
-                                self.playAgain = False
-                                self.playing = False
-                                self.raising = False
-                                return -1
+                                running = False
+                                #self.playAgain = False
+                                #self.playing = False
+                                #self.raising = False
+                                #return -1
+                            elif i == 6: #All in
+                                temp = self.stack
+                                self.update_stack(self.stack)
+                                return temp
+                            
                             x = -1
                             y = -1
             else:
@@ -209,8 +215,9 @@ class Player:
     # @description - Draws the user interface
     # @param - other_players -- > list of players other than the current player
     # @return - nothing
-    def draw(self, other_players, front, curr_player): 
-        self.draw_board()
+    def draw(self, other_players, front, curr_player, dealer_num): 
+        self.other_players = other_players
+        self.draw_board(dealer_num)
         self.draw_chips() 
         self.draw_board_cards()
         self.draw_cards(True)
@@ -256,7 +263,7 @@ class Player:
             str_length = len(player.player_name)
             player.draw_player_name(player.chip_pos[0]-3 * str_length , player.chip_pos[1] - 50* sign, player.player_name)
 
-    def draw_board(self):
+    def draw_board(self, dealer_num):
         self.win.fill(BACKGROUND_COLOR)
         pygame.draw.circle(self.win, BROWN, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS + 140)
         board = pygame.draw.circle(self.win, BOARD_COLOR, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS + 80)
@@ -266,11 +273,50 @@ class Player:
             border_thickness = 3
             width = border_thickness* 2 + CARD_WIDTH * 2 + GAP
             height = border_thickness* 2 + CARD_HEIGHT
-            #card.draw(self.win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
-
             pygame.draw.rect(self.win, (255, 0, 0), (pos[0] - 3, pos[1] - 3, width, height), border_thickness)
-                 
+        
+        #drawing the dealer, big blind, and small blind
+        self.draw_markers(abs(dealer_num))
+        
     
+    def draw_markers(self, dealer_num):
+        spots = [   [645, 400],
+                    [735, 225],
+                    [905, 135],
+                    [965, 225],
+                    [1060, 400],
+                    [965, 575],
+                    [800, 663],
+                    [735, 575]]
+
+        small = (dealer_num + 1) % 8
+        big = (dealer_num + 2) % 8
+
+        pygame.draw.circle(self.win, (128,0,0), (spots[dealer_num][0],spots[dealer_num][1]), 20)       #Dealer Chip
+        dealText = "Dealer"                       
+        font = pygame.font.SysFont('Arial',15)                      
+        text = font.render(dealText, 1, (0, 0, 0))
+        self.win.blit(text,(spots[dealer_num][0] - text.get_width() // 2, spots[dealer_num][1] - text.get_height() // 2))
+
+        pygame.draw.circle(self.win, (69,88,255), (spots[small][0],spots[small][1]), 20)                    #Small Blind
+        smallText1 = "Small"                       
+        font = pygame.font.SysFont('Arial',15)                      
+        text = font.render(smallText1, 1, (0, 0, 0))
+        self.win.blit(text,(spots[small][0] - text.get_width() // 2, spots[small][1] - text.get_height()))
+        smallText2 = "Blind"                       
+        font = pygame.font.SysFont('Arial',15)                      
+        text = font.render(smallText2, 1, (0, 0, 0))
+        self.win.blit(text,(spots[small][0] - text.get_width() // 2, spots[small][1]))
+
+        pygame.draw.circle(self.win, (255,255,0), (spots[big][0],spots[big][1]), 20)                    #Big Blind
+        bigText1 = "Big"                       
+        font = pygame.font.SysFont('Arial',15)                      
+        text = font.render(bigText1, 1, (0, 0, 0))
+        self.win.blit(text,(spots[big][0] - text.get_width() // 2, spots[big][1] - text.get_height()))
+        bigText2 = "Blind"                       
+        font = pygame.font.SysFont('Arial',15)                      
+        text = font.render(bigText2, 1, (0, 0, 0))
+        self.win.blit(text,(spots[big][0] - text.get_width() // 2, spots[big][1]))
 
     def draw_chips(self):
         pygame.draw.circle(self.win, WHITE, (self.chip_pos[0] + OFFSET, self.chip_pos[1]), CHIP_SIZE)
@@ -288,8 +334,9 @@ class Player:
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Call'))
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Raise'))
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Fold'))
-        self.buttons.append(Button(self.win, 147, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Confirm Raise'))
+        self.buttons.append(Button(self.win, 147, HEIGHT - INFO_BOX_HEIGHT + 17 * 3 + 40 * 2, f'Confirm Raise'))
         self.buttons.append(Button(self.win, 1250, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'Leave Game'))
+        self.buttons.append(Button(self.win, 147, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'All In'))
         self.buttons[4].hidden = True                                                                          ###Might not want this
         self.buttons[4].clickable = False
     
@@ -300,41 +347,41 @@ class Player:
             button.draw()
 
     def get_chip_pos(self):
-        if self.player_num == 0:
+        if self.player_num % 8 == 0:
             return (437.5, 400)
-        elif self.player_num == 1:
+        elif self.player_num % 8 == 1:
             return (525, 575)
-        elif self.player_num == 2:
+        elif self.player_num % 8 == 2:
             return (700, 662.5)
-        elif self.player_num == 3:
+        elif self.player_num % 8 == 3:
             return (875, 575)
-        elif self.player_num == 4:
+        elif self.player_num % 8 == 4:
             return (962.5, 400)
-        elif self.player_num == 5:
+        elif self.player_num % 8 == 5:
             return (875, 225)
-        elif self.player_num == 6:
+        elif self.player_num % 8 == 6:
             return (700, 137.5)
-        elif self.player_num == 7:
+        elif self.player_num % 8 == 7:
             return (525, 225)
         else:
             return "Error in get_chip_pos()"
 
     def get_card_pos(self, player_num):
-        if player_num == 0:
+        if player_num % 8 == 0:
             return (475 - CARD_WIDTH, 400 - (CARD_WIDTH // 2))
-        elif player_num == 1:
+        elif player_num % 8 == 1:
             return (582 - CARD_WIDTH, 663 - (CARD_WIDTH // 2))
-        elif player_num == 2:
+        elif player_num % 8 == 2:
             return (850 - CARD_WIDTH, 775 - CARD_WIDTH - 30)
-        elif player_num == 3:
+        elif player_num % 8 == 3:
             return (1117 - CARD_WIDTH, 663 - (CARD_WIDTH // 2))
-        elif player_num == 4:
+        elif player_num % 8 == 4:
             return (1225 - CARD_WIDTH, 400 - (CARD_WIDTH // 2))
-        elif player_num == 5:
+        elif player_num % 8 == 5:
             return (1112 - CARD_WIDTH, 133 - (CARD_WIDTH // 2))
-        elif player_num == 6:
+        elif player_num % 8 == 6:
             return (850 - CARD_WIDTH, 25 - (CARD_WIDTH // 2) + 10)
-        elif player_num == 7:
+        elif player_num % 8 == 7:
             return (582 - CARD_WIDTH, 133 - (CARD_WIDTH // 2))
         else:
             return "Error in get_card_pos()"
