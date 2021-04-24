@@ -189,14 +189,13 @@ class Data:
     # @param - None
     # @return - None
     def deal(self):
-        print("ROUND STARTING\n")
         for i in range(len(self.players)):
             hand = [self.deck.pop() for card in range(2)]
             self.player_hands.append(hand)
             self.players[i].receive_hand(hand)
-            print(self.players[i].player_name)
-            for j in range(2):
-                print(self.player_hands[i][j])
+            #print(self.players[i].player_name)
+            #for j in range(2):
+                #print(self.player_hands[i][j])
 
     # @description - draws three cards for the board, sending the data to players and storing in self.table_cards
     # @param - None
@@ -663,6 +662,57 @@ class Data:
         self.player_hands[0] = [Card(25),Card(46)] # A♦ 9♠
         hand = self.getPlayerHand(0)
         if(hand[0]) == 4:
+            return True
+        else:
+            return False
+    def testthreeofakind(self):
+        self.table_cards = [Card(45), Card(22), Card(6), Card(31), Card(51)]   #8♦ j♠ 8♠ 7♥ A♥
+        self.player_hands[0] = [Card(19),Card(46)] # 8♥ 9♠
+        hand = self.getPlayerHand(0)
+        if(hand[0]) == 3:
+            return True
+        else:
+            return False
+
+    def testflush(self):
+        self.table_cards = [Card(39), Card(11), Card(6), Card(31), Card(51)] #2♥ k♥ 8♠ 7♥ A♥
+        self.player_hands[0] = [Card(19),Card(46)] # 8♥ 9♠
+        hand = self.getPlayerHand(0)
+        if(hand[0]) == 5:
+            return True
+        else:
+            return False
+    def testdealing(self):
+        self.players = [Player(self.win, PLAYER_NAMES[0], 0, START_STACK)]
+        self.deal()
+        hand = self.players[0].hand
+        if len(hand) == 2:
+            return True
+        else:
+            return False
+    def testreset(self):
+        self.players = []
+        self.player_hands = []
+        self.init_players(8)
+        self.reset()
+        failedreset = False
+        if self.curr_bet != 0:
+            print(1)
+            failedreset = True
+        if self.pot != 0:
+            print(2)
+            failedreset = True
+        if self.table_cards != []:
+            print(3)
+            failedreset = True
+        if self.player_hands != []:
+            print(4)
+            failedreset = True
+        if self.player_active != [True,True,True,True,True,True,True,True]:
+            print(5)
+            failedreset = True
+        
+        if failedreset != True:
             return True
         else:
             return False

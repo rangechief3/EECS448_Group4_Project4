@@ -83,10 +83,31 @@ class Game:
             print("passed \n")
         else:
             print("failed \n")
-        print("(4)testing if: game can determine best hand")
+        print("(4)testing if: game can pick best hand when given pair and straight")
         if self.data.determinebesthandtest():
             print("passed \n")
         else:
-            print("failed \n")   
+            print("failed \n")
+        print("(5)testing if: game can determine three of a kind correctly")
+        if self.data.testthreeofakind():
+            print("passed \n")
+        else:
+            print("failed \n")
+        print("(6)testing if: game can determine a flush")
+        if self.data.testflush():
+            print("passed \n")
+        else:
+            print("failed \n")
+        print("(7)testing if: Dealing gives the player 2 new cards")
+        if self.data.testdealing():
+            print("passed \n")
+        else:
+            print("failed \n")
+        print("(8)testing if: reset correctly resets")
+        if self.data.testreset():
+            print("passed \n")
+        else:
+            print("failed \n")
+           
         
 
