@@ -37,9 +37,12 @@ class Data:
         self.dealer = 0
         self.gameStatus = True
         self.playerContributions = []
+        self.testingsplitpotarray = []
+        self.init_players(8)
         if testing == False:
-            self.init_players(8)
+            self.testing = False
         elif testing == True:
+            self.testing = True
             print("data initialized as test")
                 
         
@@ -288,7 +291,6 @@ class Data:
         maxbet.sort()
         #for num in maxbet:
             #print("bet number" + str(num))
-
         accountedForbet = 0
         adjustedpot = 0
         for bet in maxbet:
@@ -302,15 +304,21 @@ class Data:
                 if self.playerContributions[i] >= bet:
                     eligiblePlayers.append(i)
             winner, hand = self.current_winner(eligiblePlayers)
-            self.players_draw(0, False, None)
-            pygame.display.update()
-            self.displayWinner(adjustedpot, winner)
-            self.displayNonWinner(winner, playerActiveIndex)
-            for victor in winner:
+            if self.testing == False:
+                self.players_draw(0, False, None)
+                pygame.display.update()
+                self.displayWinner(adjustedpot, winner)
+                self.displayNonWinner(winner, playerActiveIndex)
+                for victor in winner:
                 
-                self.players[victor].receive_winnings(adjustedpot//(len(winner)))
+                    self.players[victor].receive_winnings(adjustedpot//(len(winner)))
+            elif self.testing == True:
+                self.testingsplitpotarray.append(adjustedpot)
+                for victor in winner:
+                    self.testingsplitpotarray.append(victor)
             accountedForbet += bet
             adjustedpot = 0
+        
 
     # @description - determines the hands that each player has, and determines the winner
     # @param - None
@@ -633,6 +641,26 @@ class Data:
         self.player_hands[1] = [Card(13),Card(21)] #♦2 ♦10
         pwbh, bh = self.current_winner([0,1])
         if pwbh == [0,1] and bh == 1:
+            return True
+        else:
+            return False
+    def splitpottest(self):
+        self.player_active = [True,True,True,False,False,False,False,False]
+        self.playerContributions = [50,100,100,0,0,0,0,0]
+        self.table_cards = [Card(0), Card(16), Card(7), Card(22), Card(30)]   #♣2 ♣5 ♥9 ♠j ♠6
+        self.player_hands[0] = [Card(33),Card(20)] #♦9 ♣9
+        self.player_hands[1] = [Card(13),Card(45)] #♦2 ♦8
+        self.player_hands[2] = [Card(1),Card(21)] #♦3 ♦10
+        self.award_winnings()
+        if self.testingsplitpotarray == [150, 0, 100, 1]:
+            return True
+        else:
+            return False
+    def determinebesthandtest(self):
+        self.table_cards = [Card(21), Card(22), Card(6), Card(31), Card(51)]   #10♦ j♠ 8♠ 7♥ A♥
+        self.player_hands[0] = [Card(25),Card(46)] # A♦ 9♠
+        hand = self.getPlayerHand(0)
+        if(hand[0]) == 4:
             return True
         else:
             return False
