@@ -109,5 +109,6 @@ class Game:
         else:
             print("failed \n")
            
+        self.data.players[0].run_test()
         
 
