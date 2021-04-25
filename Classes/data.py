@@ -75,14 +75,20 @@ class Data:
             done_betting = False
             counter = 0
             if bet_round == 0:
-                blind = self.players[self.dealer - 1].blind(SM_BLIND)
-                self.player_prev_bets[self.dealer - 1] = blind #if someone raises they would have to call <bet> - <prevbet>
-                print(self.players[self.dealer - 1].player_name + " put in " + str(blind) + " as small blind!")
-                self.add_to_pot(self.dealer - 1, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
-                blind = self.players[self.dealer - 2].blind(BIG_BLIND)
-                self.player_prev_bets[self.dealer - 2] = blind
-                print(self.players[self.dealer - 2].player_name + " put in " + str(blind) + " as big blind!")
-                self.add_to_pot(self.dealer - 2, blind, BIG_BLIND, bet_round)
+                sm_blind = self.dealer -1 
+                if (sm_blind) <= -len(self.players):
+                    sm_blind = sm_blind + len(self.players) - 1
+                blind = self.players[sm_blind].blind(SM_BLIND)
+                self.player_prev_bets[sm_blind] = blind #if someone raises they would have to call <bet> - <prevbet>
+                print(self.players[sm_blind].player_name + " put in " + str(blind) + " as small blind!")
+                self.add_to_pot(sm_blind, blind, SM_BLIND, bet_round) #value may not be equal to blind if player has less
+                big_blind = self.dealer - 2
+                if (big_blind) <= -len(self.players):
+                    big_blind = big_blind + len(self.players) -1
+                blind = self.players[big_blind].blind(BIG_BLIND)
+                self.player_prev_bets[big_blind] = blind
+                print(self.players[big_blind].player_name + " put in " + str(blind) + " as big blind!")
+                self.add_to_pot(big_blind, blind, BIG_BLIND, bet_round)
                 curr_bet = BIG_BLIND
                 curr_player = self.dealer - 3 #Under the gun
                 self.players_draw(0, False, curr_player) ###will be need to be changed to be more general
