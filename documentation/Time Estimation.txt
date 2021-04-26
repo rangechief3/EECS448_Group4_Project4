@@ -5,3 +5,44 @@ To do this, we first looked at previous projects to estimate how long it takes u
 the first three projects with 2161 lines of code in 121.25 hours. This comes out to .056 hours per line of code. From here, we
 estimated that it would take us an additional 300 lines of code to complete our project. This comes out to 16.8 hours to
 complete the project.
+
+Time Log:
+
+Jake:
+4/8 -- 1 hour -- work on bugs
+4/9 -- 0.5 hours -- work on bugs
+4/10 -- 2 hours -- work on bugs
+4/12 -- 3 hours -- work on bugs
+4/14 -- 3 hours -- work on bugs
+4/17 -- 4.5 hours -- Tried in vain to create a server. Recognized code would need to be re-factored a good deal
+4/20 -- 3 hours -- create menu
+4/22 -- 1 hour -- create powerpoint for presentation
+Total -- 18 hours
+
+Umar:
+4/12 -- 2 hours -- work on bugs
+4/17 -- 2 hours -- work on bugs
+4/22 -- 2 hours -- work on bugs
+Total -- 6 hours
+
+Mason:
+4/10 -- 1 hour -- work on bugs
+4/20 -- 4 hours -- computer class update
+4/22 -- 3 hours -- work on bugs
+4/23 -- 2 hours -- make video and integrate latest changes
+Total -- 10 hours
+
+Rishab:
+4/20 -- 4 hours -- computer class update
+4/22 -- 2 hours -- work on bugs
+Total -- 6 hours
+
+Mitch:
+4/17 -- 4 hours -- clean up board, add more buttons
+4/22 -- 4 hours -- add all in button, add dealer markers
+Total -- 8 hours
+
+Total person hours -- 48 hours
+
+
+
