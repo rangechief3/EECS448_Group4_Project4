@@ -467,11 +467,18 @@ class Data:
                 highest_card = max(highest_card, card.rank)
             return 0, highest_card #did not find anything
         
-             
+
+    # @description - get the hand that a player has
+    # @param - player number
+    # @return - hand number, indicating which hand they have
     def getPlayerHand(self, player_num):
         hand_num = max(self.check_duplicates(player_num), self.check_straights_flushes(player_num))
         return hand_num
 
+
+    # @description - recieves the current hand a player has
+    # @param - playernumber
+    # @return - which hand the player has
     def recieveCurrHand(self, player_num):
         hand_num = self.getPlayerHand(player_num)
         hand_num = hand_num[0]
@@ -596,10 +603,17 @@ class Data:
             return hand
         elif hand_num == 9: #royal flush no high cards
             return player_cards_as_int
+    
+    # @description - determines if the player will play again
+    # @param - none
+    # @return - true
     def playAgain(self):
 
         return True
 
+    # @description - displays who won the hand
+    # @param - size of the pot
+    # @return - array of players that won the hand
     def displayWinner(self, potsize, winnerarray):
         
         winnerhand = self.getPlayerHand(winnerarray[0])
@@ -612,6 +626,10 @@ class Data:
         else:
             message = "3 or more players split the pot of $" + str(potsize) + "and all tied with a " + HANDS[winnerhand[0]]
             self.players[0].draw_winners(message)
+    
+    # @description - displays who lost the hand
+    # @param - array of winners, array of players that havent folded
+    # @return - none
     def displayNonWinner(self, winnerarray, playersStillIn):
         offset = 0
         for index in playersStillIn:
@@ -625,7 +643,10 @@ class Data:
                 self.losingMessage = PLAYER_NAMES[index] + " lost with a "+ HANDS[hand[0]]
                 self.players[0].draw_losers(self.losingMessage, offset)
                 offset += 20
-        
+
+    # @description - tests to see if pair beats high card
+    # @param - none
+    # @return - true if it passed, false if not
     def pairBeatsHighCard(self):
         self.player_active = [True,True,False,False,False,False,False,False]
         self.player_hands = [None,None,None,None,None,None,None,None]
@@ -642,6 +663,9 @@ class Data:
         else:
             return False
 
+    # @description - tests to see if game splits pot for same hand
+    # @param - none
+    # @return - true if passed, false otherwise
     def samehandtest(self):
         self.table_cards = [Card(0), Card(16), Card(7), Card(22), Card(30)]   #♣2 ♣5 ♥9 ♠j ♠6
         self.player_hands[0] = [Card(13),Card(21)] #♦2 ♦10
@@ -651,6 +675,10 @@ class Data:
             return True
         else:
             return False
+
+    # @description - tests split pot
+    # @param - none
+    # @return - true if passed, false otherwise
     def splitpottest(self):
         self.player_active = [True,True,True,False,False,False,False,False]
         self.playerContributions = [50,100,100,0,0,0,0,0]
@@ -663,6 +691,10 @@ class Data:
             return True
         else:
             return False
+
+    # @description - tests determining of best hand
+    # @param - none
+    # @return - true if passed, false otherwise
     def determinebesthandtest(self):
         self.table_cards = [Card(21), Card(22), Card(6), Card(31), Card(51)]   #10♦ j♠ 8♠ 7♥ A♥
         self.player_hands[0] = [Card(25),Card(46)] # A♦ 9♠
@@ -671,6 +703,10 @@ class Data:
             return True
         else:
             return False
+
+    # @description - tests identifying three of a kind
+    # @param - none
+    # @return - true if passed, false otherwise
     def testthreeofakind(self):
         self.table_cards = [Card(45), Card(22), Card(6), Card(31), Card(51)]   #8♦ j♠ 8♠ 7♥ A♥
         self.player_hands[0] = [Card(19),Card(46)] # 8♥ 9♠
@@ -680,6 +716,9 @@ class Data:
         else:
             return False
 
+    # @description - tests identification of a flush
+    # @param - none
+    # @return - true if passed, false otherwise
     def testflush(self):
         self.table_cards = [Card(39), Card(11), Card(6), Card(31), Card(51)] #2♥ k♥ 8♠ 7♥ A♥
         self.player_hands[0] = [Card(19),Card(46)] # 8♥ 9♠
@@ -688,6 +727,10 @@ class Data:
             return True
         else:
             return False
+
+    # @description - tests dealing functionality
+    # @param - none
+    # @return - true if passed, false otherwise            
     def testdealing(self):
         self.players = [Player(self.win, PLAYER_NAMES[0], 0, START_STACK)]
         self.deal()
@@ -696,6 +739,10 @@ class Data:
             return True
         else:
             return False
+
+    # @description - tests moving from one hand to next
+    # @param - none
+    # @return - true if passed, false otherwise
     def testreset(self):
         self.players = []
         self.player_hands = []

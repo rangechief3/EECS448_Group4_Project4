@@ -6,11 +6,17 @@ import time
 
 class Computer(Player):
     
+    # @description - updates the number of chips a player has
+    # @param - number of chips to remove from the stack
+    # @return - the number of chips removed
     def update_stack(self, amt):
         amt = math.floor(min(self.stack, amt))
         self.stack -= amt
         return amt
 
+    # @description - the computer takes its turn
+    # @param - current bet around the table, previous bet
+    # @return - amount of chips bet
     def takeATurn(self, curr_bet, prev_bet):
         time.sleep(0.4)
         amt_to_stay_in = curr_bet - prev_bet
@@ -279,7 +285,10 @@ class Computer(Player):
                         amt_to_go = self.stack
                         amt = self.update_stack(self.stack)
                         return amt
-                        
+
+    # @description - determines if the AI will fold pre flop
+    # @param - current bet and previous bet
+    # @return - true if computer is folding, false otherwise               
     def pre_flop_fold(self, curr_bet, prev_bet):
         #returns true if folding
         #false if elsewise
@@ -322,6 +331,9 @@ class Computer(Player):
                 cutoff = cutoff + 0.1
                 '''
 
+    # @description - determines if the computer will bluff
+    # @param - none
+    # @return - true if the computer will bluff, false otherwise
     def bluff(self):
         if random.random() > 0.5: #Altered to make less folds
             return True

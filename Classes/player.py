@@ -11,6 +11,10 @@ import sys
 FPS = 60
 
 class Player:
+
+    # @description - initializes player
+    # @param - drawing window, player name, player number, starting chip number
+    # @return - none
     def __init__(self, win, player_name, player_num, start_amt):
         self.win = win
         self.player_name = player_name
@@ -34,18 +38,29 @@ class Player:
         self.test = []      # variable under init
         self.testPlayerList = []    # variable under init
 
+    # @description - obtains string representation of player
+    # @param - none
+    # @return - player string
     # If needing to print out a player object, will return name and player number. To use in main: print(player)
     def __str__(self):
         return "Player Name: " + self.player_name + " --- " + "Player Number: " + str(self.player_num)
 
+    # @description - add winnings to player chips
+    # @param - number of chips to add
+    # @return - none
     def receive_winnings(self, amt):
         self.stack += amt
 
+    # @description - recieve hand number and high card
+    # @param - hand number, high card number
+    # @return - none
     def receive_top_hand_and_card(self, hand_num, high_card): #both int
         self.hand_num = hand_num
         self.high_card = high_card
-
-    # @return - How much the player is paying for the blind (Not sure if the self.stack is suppose to be manipulated)
+    
+    # @description - pays the blind
+    # @param - size of blind
+    # @return - amount payed
     def blind(self, blind_amt):  
         ###same as in bet, determine if the player has that much money left
         ###if it doesn't then return the maxium amt it cant(subtracting so that self.stack = 0) and the data class will handle
@@ -101,11 +116,17 @@ class Player:
         self.playing = False
         self.hand = []
 
+    # @description - obtain position of player on drawing surface
+    # @param - position tuple
+    # @return - integer representations of x and y coordinates
     def get_x_y(self, pos):
         x = pos[0]
         y= pos[1]
         return x,y 
 
+    # @description - draws indicators for player turn
+    # @param - player location
+    # @return - none
     def draw_current_player_turn_indicator(self, x, y):
         border_thickness = 3
         width = border_thickness* 2 + CARD_WIDTH * 2 + GAP
@@ -113,6 +134,9 @@ class Player:
         #card.draw(self.win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
         pygame.draw.rect(self.win, (0, 255, 0), (x, y, width, height), border_thickness)
 
+    # @description - player takes a turn
+    # @param - current bet, previous bet
+    # @return - amount bet
     def takeATurn(self, cur_bet, prev_bet):
         clock = pygame.time.Clock()
         running = True
@@ -204,6 +228,9 @@ class Player:
             for i, card in enumerate(self.hand):
                 card.draw(self.win, self.card_pos[0] + i*CARD_WIDTH + i*GAP, self.card_pos[1], front)
 
+    # @description - draws player name
+    # @param - coordinates, name to draw
+    # @return - none
     def draw_player_name(self, x, y, name):
         self.win.blit(self.font.render(name, True, BLACK), (x - (TOKEN_FONT_SIZE // 2) + OFFSET, y - (TOKEN_FONT_SIZE // 2)))
 
@@ -241,9 +268,15 @@ class Player:
     def draw_deck(self): 
         self.deck_img.draw_deck(self.win)
 
+    # @description - recieve size of pot
+    # @param - pot size
+    # @return - none
     def recievePotValue(self, pot):
         self.pot = pot      
 
+    # @description - draws pot value on table
+    # @param - none
+    # @return - none
     def drawPot(self):
         potText = "Pot: " + str(self.pot)                       #draw current pot
         font = pygame.font.SysFont('Arial',17)                      
@@ -265,6 +298,9 @@ class Player:
             str_length = len(player.player_name)
             player.draw_player_name(player.chip_pos[0]-3 * str_length , player.chip_pos[1] - 50* sign, player.player_name)
 
+    # @description - draws board and relavent objects
+    # @param - positon of dealer with respect to player numbers
+    # @return - none
     def draw_board(self, dealer_num):
         self.win.fill(BACKGROUND_COLOR)
         pygame.draw.circle(self.win, BROWN, (WIDTH // 2 + OFFSET, HEIGHT // 2), BOARD_RADIUS + 140)
@@ -280,7 +316,9 @@ class Player:
         #drawing the dealer, big blind, and small blind
         self.draw_markers(abs(dealer_num))
         
-    
+    # @description - draws dealer and blind markers
+    # @param - position of dealer with respect to player numbers
+    # @return - none   
     def draw_markers(self, dealer_num):
         spots = [   [645, 400],
                     [735, 225],
@@ -320,10 +358,16 @@ class Player:
         text = font.render(bigText2, 1, (0, 0, 0))
         self.win.blit(text,(spots[big][0] - text.get_width() // 2, spots[big][1]))
 
+    # @description - draws player chips
+    # @param - none
+    # @return - none
     def draw_chips(self):
         pygame.draw.circle(self.win, WHITE, (self.chip_pos[0] + OFFSET, self.chip_pos[1]), CHIP_SIZE)
         self.win.blit(self.font.render(str(self.stack), True, BLACK), (self.chip_pos[0] - (TOKEN_FONT_SIZE // 2) + OFFSET, self.chip_pos[1] - (TOKEN_FONT_SIZE // 2)))
 
+    # @description - draws on board
+    # @param - none
+    # @return - none
     def info(self):
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, 25, INFO_BOX_WIDTH, INFO_BOX_HEIGHT))
         self.hand[0].draw_big(self.win, 35, 35)
@@ -331,6 +375,9 @@ class Player:
         self.win.blit(self.font.render(f'{self.player_name} Stack = {self.stack}', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30))
         self.win.blit(self.font.render(f'Idk what other info', True, BLACK), (25, 15 + MAG_CARD_HEIGHT + 30 + TOKEN_FONT_SIZE))
 
+    # @description - initializes player UI buttons
+    # @param - none
+    # @return - none
     def init_buttons(self):
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'Check') )
         self.buttons.append(Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17 * 2 + 40 * 1, f'Call'))
@@ -341,13 +388,19 @@ class Player:
         self.buttons.append(Button(self.win, 147, HEIGHT - INFO_BOX_HEIGHT + 17 * 4 + 40 * 3, f'All In'))
         self.buttons[4].hidden = True                                                                          ###Might not want this
         self.buttons[4].clickable = False
-    
+
+    # @description - draws player UI buttons
+    # @param - none
+    # @return - none    
     def draw_buttons(self):
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (25, HEIGHT - INFO_BOX_HEIGHT, 115, INFO_BOX_HEIGHT - 50))
         pygame.draw.rect(self.win, BOARD_CARDS_BOX_COLOR, (140, HEIGHT - INFO_BOX_HEIGHT, 133, INFO_BOX_HEIGHT - 50))#############
         for button in self.buttons:
             button.draw()
 
+    # @description - gets positions of player chips
+    # @param - none
+    # @return - position of chips
     def get_chip_pos(self):
         if self.player_num % 8 == 0:
             return (437.5, 400)
@@ -368,6 +421,9 @@ class Player:
         else:
             return "Error in get_chip_pos()"
 
+    # @description - gets position of players cards
+    # @param - player number
+    # @return - position of cards
     def get_card_pos(self, player_num):
         if player_num % 8 == 0:
             return (475 - CARD_WIDTH, 400 - (CARD_WIDTH // 2))
@@ -388,9 +444,15 @@ class Player:
         else:
             return "Error in get_card_pos()"
 
+    # @description - updates player chip count
+    # @param - amount to remove from stack
+    # @return - none
     def update_stack(self, amt):
         self.stack -= amt
 
+    # @description - makes a bet
+    # @param - current bet, previous bet
+    # @return - bet difference
     def bet(self, curr_bet, prev_bet):
         if curr_bet == 0:
             self.stack -= (10 - prev_bet)
@@ -399,7 +461,10 @@ class Player:
         return curr_bet - prev_bet
         # return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         # reduce player stack by bet amount then return it
-    
+
+    # @description - determines if player will play again
+    # @param - none
+    # @return - none    
     def playAgainQuery(self):
         buttonyes = Button(self.win, 30, HEIGHT - INFO_BOX_HEIGHT + 17, f'yes')
         buttonyes.draw()
@@ -423,6 +488,9 @@ class Player:
         #return 0 for check, curr_bet for call, higher value for raise, -1 for fold
         #reduce player stack by bet amount then return it
     '''
+    # @description - draws winners
+    # @param - message to display
+    # @return - none
     def draw_winners(self, message):
         print("it made it to winners")
         font = pygame.font.SysFont('Arial', 25)
@@ -431,7 +499,10 @@ class Player:
         print(message)
         pygame.display.update()
         time.sleep(1.5)
-    
+
+    # @description - draws losers
+    # @param - message to draw, message offset
+    # @return - none    
     def draw_losers(self, message, offset):
         print("it made it to losers")
         font = pygame.font.SysFont('Arial', 20)
@@ -440,18 +511,27 @@ class Player:
         print(message)
         pygame.display.update()
         time.sleep(1.5)
-        
+
+    # @description - run test methods
+    # @param - none
+    # @return - none       
     def run_test(self):
         self.test_blind()
         self.test_receive_winnings()
         self.test_takeATurn_check()
 
+    # @description - creates players for testing
+    # @param - none
+    # @return - none
     def create_test_players(self):
         for i in range(8):
             self.testPlayerList.append(Player(self.win, PLAYER_NAMES[i], i, 1000))
             # print(self.testPlayerList[i])
         print('\n')
-    
+
+    # @description - checks array of tests to see if passed or failed
+    # @param - test to check, array of tests, pass message, fail message
+    # @return - none    
     def check_test_array(self, test_number, array, messageP, messageF):
         state = True
         for i in range(len(array)):
@@ -486,6 +566,9 @@ class Player:
             self.testPlayerList[i].stack = 1000
         self.check_test_array(test_number, test_array, messageP, messageF)
 
+    # @description - tests recieve winnings
+    # @param - none
+    # @return - true if passed, false otherwise
     def test_receive_winnings(self):
         test_number = 2
         self.create_test_players()
@@ -506,6 +589,9 @@ class Player:
             self.testPlayerList[i].stack = 1000
         self.check_test_array(test_number, test_array, messageP, messageF)
 
+    # @description - checks take a turn
+    # @param - none
+    # @return - none
     def test_takeATurn_check(self):
         test_number = 3
         self.create_test_players()
@@ -526,6 +612,9 @@ class Player:
 
         self.check_test_array(test_number, test_array, messageP, messageF)
 
+    # @description - helps take a turn test
+    # @param - player to take a turn
+    # @return - true if passed, false otherwise
     def test_helper_takeATurn(self, i):
         cur_bet = 100
         prev_bet = 100

@@ -11,6 +11,9 @@ NUMBUFF = 10
 DECKBUFF = 4
 
 class Card:
+    # @description - initializes card
+    # @param - card number
+    # @return - None
     def __init__(self, card_num):
         self.rank = card_num % 13 # (0-12) 2 => 0 A => 12
         self.get_rank_string()
@@ -31,6 +34,9 @@ class Card:
             self.suit_pic = HEART
             self.color = (255,0,0)
 
+    # @description - determines card rank
+    # @param - self
+    # @return - card rank string
     def get_rank_string(self):
         if (0 <= self.rank and self.rank <= 7):
             new_rank = self.rank + 2
@@ -47,6 +53,10 @@ class Card:
             if self.rank == 12:
                 self.str_rank = 'A'           
 
+
+    # @description - draws the card
+    # @param - drawing window, top x coordinate, top y coordinate, boolean determining if the front or back is drawn
+    # @return - None
     def draw(self, win, topX, topY, front):
         #win.fill((255,255,255)) ############GET RID OF THIS
         if(front == True):
@@ -60,6 +70,9 @@ class Card:
         elif(front == False):
             win.blit(BACK, (topX,topY))
 
+    # @description - draws the deck in the center of the board
+    # @param - drawing window
+    # @return - None
     def draw_deck(self, win):
         initial_x = 560 + 5 *(3) + OFFSET + 2* CARD_WIDTH
         initial_y = 365 + 15 // 2 - CARD_HEIGHT - 5
@@ -69,6 +82,9 @@ class Card:
         win.blit(BACK, (initial_x + 3*DECKBUFF,initial_y))
         win.blit(BACK, (initial_x + 4*DECKBUFF,initial_y))
 
+    # @description - returns the string version of the card
+    # @param - none
+    # @return - card rank and suit in a string
     def __str__(self):
         return "{0}  {1}".format(self.str_rank, self.str_suit)
 

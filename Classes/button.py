@@ -3,6 +3,10 @@ import pygame
 BUTTON_HEIGHT = 50
 BUTTON_WIDTH = 100
 
+
+    # @description - initializes button
+    # @param - drawing window,   button coordinates,  button text
+    # @return - None
 class Button:
     def __init__(self, win, x , y, text):
         self.x = x
@@ -15,7 +19,10 @@ class Button:
         self.hidden = False
         self.clickable = True
         self.win = win
-
+    
+    # @description - draws the button
+    # @param - self
+    # @return - None
     def draw(self):
         if(self.hidden == False):
             pygame.draw.rect(self.win, (0,0,0), (self.x, self.y, self.width, self.height), 0, 7)

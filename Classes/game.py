@@ -6,16 +6,26 @@ from . constants import *
 pygame.font.init()
 
 class Game:
+
+    # @description - initializes game
+    # @param - drawing window, tests
+    # @return - none
     def __init__(self, win, Test):
         self.win = win
         self.data = Data(win, Test)
         self.hand_num = 0
 
+    # @description - draws players
+    # @param - none
+    # @return - none
     def update(self):
         self.data.players_draw(0, False, None) #index of player to be drawn
         pygame.display.update()
         time.sleep(2)
-     
+
+    # @description - progresses through the cycle of the game
+    # @param - none
+    # @return - true if continuing play, false otherwise     
     def gameCycle(self):
         self.data.deal()
         gamePhase = 0
@@ -63,10 +73,15 @@ class Game:
         self.hand_num += 1
         return True
 
+    # @description - updates status of game
+    # @param - none
+    # @return - true
     def update_game_status(self):
         self.data.gameStatus = True
 
-
+    # @description - tests cycle of game
+    # @param - none
+    # @return - true if passed, false otherwise
     def testCycle(self):
         print("\n(1)testing if a pair beat a highcard: ")
         if self.data.pairBeatsHighCard():

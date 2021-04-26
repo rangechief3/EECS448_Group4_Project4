@@ -2,6 +2,10 @@ import pygame
 from .constants import *
 
 class MenuButton:
+
+    # @description - initialize menu button
+    # @param - coordinates of button, width and height of button, colors, text of button
+    # @return - none   
     def __init__(self, x, y, width, height, color, suit_colors, text):
         self.x = x
         self.y = y
@@ -12,6 +16,9 @@ class MenuButton:
         self.text = text
         self.get_decorator_images()
 
+    # @description - gets images for background
+    # @param - none
+    # @return - none
     def get_decorator_images(self):
         if self.suit_colors == "red":
             self.images = [MENU_DMD, MENU_HRT]
@@ -21,7 +28,10 @@ class MenuButton:
             self.images = [MENU_CLUB, MENU_SPD]
             self.font_color = (0, 0, 0)
             self.font_shadow = (255, 0, 0)
-    
+
+    # @description - draws menu
+    # @param - drawing window
+    # @return - none   
     def draw(self, win):
         PADDING = 5
         pygame.draw.rect(win, (0, 0, 0), (self.x, self.y, self.width, self.height), border_radius=10)
@@ -34,6 +44,9 @@ class MenuButton:
         #win.blit(text, ((self.x + self.width//2 + TEXT_OFFSET) - text.get_width()//2, (self.y + self.height//2 + TEXT_OFFSET) - text.get_height()//2))
         self.draw_decorators(win)
 
+    # @description - draws background of menu
+    # @param - drawing window
+    # @return - none
     def draw_decorators(self, win):
         img_width = self.images[0].get_width()
         img_height = self.images[0].get_height()
